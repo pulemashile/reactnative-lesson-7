@@ -1,26 +1,61 @@
-import { router } from 'expo-router';
-import React from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useEffect } from "react";
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icons from "@/utils/Icons";
 
-const LandingPage = () => {
+ const Splash = () =>{
+  const router = useRouter();
+
+  useEffect(() => {   
+
+    const checkOnboardingStatus = async () => {
+      // await AsyncStorage.removeItem("onboardingComplete");
+      
+      const hasCompletedOnboarding = await AsyncStorage.getItem("onboardingComplete");
+      if (hasCompletedOnboarding) 
+      {
+        router.replace("/(auth)/login"); // Skip to login if onboarding is complete
+      }
+      else 
+      {
+        router.replace("/(onboarding)/onboarding"); // Show onboarding
+      }
+    };
+
+    setTimeout(checkOnboardingStatus, 3000); // Simulate splash screen duration
+  }, [router]);
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24, marginBottom: 8 }}>Welcome to the ReserveIt</Text>
-      <Text style={{ fontSize: 18, marginBottom: 20 }}>Restaurant Reservation App</Text>
+    <View style={styles.container}>
+      <View style={styles.iconLogo }>
+        <Icons name="logo" color="black" size={86}/>
+      </View>
+      <Text style={styles.title}>ClimateVoyage</Text>
       
-      {/* Button to navigate to Login Page */}
-      <Button
-        title="Go to Login"
-        onPress={() => router.push('/(auth)/login')}
-      />
-      
-      {/* Button to skip login and go to Home Page */}
-      <Button
-        title="Continue Without Login"
-        onPress={() => router.replace('/(tabs)')}        
-      />
+      <ActivityIndicator size="large" color="black" />
     </View>
   );
-};
+}
 
-export default LandingPage;
+export default Splash;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#c",
+    marginBottom: 16
+  },
+
+  iconLogo:
+  {
+    padding: 16,
+  }
+});

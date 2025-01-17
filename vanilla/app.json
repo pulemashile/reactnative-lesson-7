@@ -7,13 +7,27 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
-    "runtimeVersion": "1.0.1",  // You can set this to the version of your app or any custom version string
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
     "android": {
-      "runtimeVersion": "1.0.1",  // Match this version with the one in your AndroidManifest.xml
-      "package": "com.matlakalakabelo1.RestaurantReservationApp",
-      "versionCode": 5
-    },        
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION", 
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION" 
+      ],
+      "foregroundService": {
+        "notification": {
+          "title": "Location service",
+          "body": "We are tracking your location in the background."
+        }
+      }
+    },
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -33,20 +47,12 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow ClimaVoyage App to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow Restaurant Reservation App to use your location."
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      }      
     }
-    
-
-
   }
 }

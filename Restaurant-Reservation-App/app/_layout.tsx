@@ -1,20 +1,38 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-// import { Stack } from 'expo-router'
-import { Stack } from 'expo-router/stack';
 
-const AppLayout = () => {   
+import { Stack } from "expo-router";
+import { Provider } from 'react-redux';
 
-    return (
-        <Stack>
-            <Stack.Screen name="(onboarding)" />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)/register" options={{ headerShown: false }} />
-        </Stack>
-    );
+import store from '@/redux/store';
+import { SessionProvider } from "@/context/AuthContext";
+
+export default function RootLayout() 
+{
+  return (
+    // <Provider store={store} children={undefined}>
+      <SessionProvider>
+        <Stack 
+          screenOptions={{
+            headerStyle: { backgroundColor: "#6200ea" },
+            headerTintColor: "#fff",
+            headerTitleStyle: { fontWeight: "bold" },
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(onboarding)/onboarding" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)/login" />
+          <Stack.Screen name="(auth)/register" />
+
+          <Stack.Screen name="(app)" />
+          <Stack.Screen name="(app)/activities/:id" />
+          <Stack.Screen name="(app)/accommodations/:id" />
+          <Stack.Screen name="(app)/restaurants/:id" />
+          <Stack.Screen name="(app)/places/:id" />
+
+          {/* <Stack.Screen name="(app)/" /> */}
+        </Stack>  
+      </SessionProvider>    
+    // </Provider>
   
+  )
 }
-
-export default AppLayout
-

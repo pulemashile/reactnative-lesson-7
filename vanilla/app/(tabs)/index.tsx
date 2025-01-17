@@ -1,13 +1,36 @@
 // app/index.tsx
-import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { Link } from 'expo-router';
+import { MapPin } from 'lucide-react';
 
 export default function Home() {
+  
   return (
     <ScrollView style={styles.container}>
 
-      {/* <View style={styles.mapViewContainer}>
-      </View> */}
+      <View style={styles.mapViewContainer}>
+        <View>
+          <Text style={styles.mapViewText}>
+            <MapPin />
+            Polokwane
+          </Text>
+        </View>
+        
+      </View>
+      <View style={styles.searchContainer}>
+        <TextInput
+          placeholder="Search restaurants..."
+          style={styles.searchInput}
+        />
+        <Text style={{ width: "100%", textAlign:"right", color: "blue", fontWeight: 700 }}>See All</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>          
+          {['Italian', 'Japanese', 'Mexican', 'Indian'].map((cuisine) => (
+            <View key={cuisine} style={styles.cuisineTag}>
+              <Text>{cuisine}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
 
       <View style={styles.content}>
         {/* Featured Restaurants */}
@@ -50,8 +73,40 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   mapViewContainer:{
-    height:300
+    height:128,
   },
+  mapViewText:{
+    padding: 8,
+    display: "flex",
+    alignItems:"center"
+  },
+
+  searchContainer: {
+    backgroundColor: '#FFF',
+    borderRadius: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    padding: 16,
+    marginBottom: 16,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  cuisineTag: {
+    backgroundColor: '#F3F4F6',
+    borderRadius: 50,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginRight: 8,
+  },
+  
   content: {
     padding: 0,
   },

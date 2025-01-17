@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
-const ExploreScreen = () => {
+const ProfileScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.sectionHeader}>Trending Now</Text>
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
   category: { padding: 10, backgroundColor: '#e0e0e0', marginVertical: 5, borderRadius: 6 },
 });
 
-export default ExploreScreen;
+export default ProfileScreen;
