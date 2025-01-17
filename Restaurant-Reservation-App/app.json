@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ClimaVoyage-native-app",
-    "slug": "ClimaVoyage-native-app",
+    "name": "Restaurant-Reservation-App",
+    "slug": "Restaurant-Reservation-App",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -11,7 +11,7 @@
     "runtimeVersion": "1.0.1",  // You can set this to the version of your app or any custom version string
     "android": {
       "runtimeVersion": "1.0.1",  // Match this version with the one in your AndroidManifest.xml
-      "package": "com.matlakalakabelo1.ClimaVoyagenativeapp",
+      "package": "com.matlakalakabelo1.RestaurantReservationApp",
       "versionCode": 5
     },
         

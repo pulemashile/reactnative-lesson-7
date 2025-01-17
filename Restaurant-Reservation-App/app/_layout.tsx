@@ -1,9 +1,10 @@
-
+import "@/global.css"
 import { Stack } from "expo-router";
 import { Provider } from 'react-redux';
 
 import store from '@/redux/store';
 import { SessionProvider } from "@/context/AuthContext";
+
 
 export default function RootLayout() 
 {
