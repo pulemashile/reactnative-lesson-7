@@ -47,22 +47,23 @@ type IconProps = {
 
       case "map-signs":
         return <Icon name="map-signs" size={size} color={color} />
-        break;      
+        break;
+      
 
-      case "home":
-          return <Icon name="house" size={size} color={color} />
+      case "plus":
+          return <Icon name="plus-square" size={size} color={color} />
           break;
 
-      case "utensils":
-          return <Icon name="utensils" size={30} color="white" />
+      case "play":
+          return <Icon name="play" size={30} color="white" />
           break;
 
-      case "filter":
-          return <Icon name="filter" size={30} color="white" />
+      case "stop":
+          return <Icon name="stop" size={30} color="white" />
           break;
 
-      case "user":
-          return <Icon name="user" size={30} color="white" />
+      case "pause":
+          return <Icon name="pause" size={30} color="white" />
           break;
       
       case "rename":

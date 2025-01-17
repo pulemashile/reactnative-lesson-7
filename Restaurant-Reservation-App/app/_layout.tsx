@@ -1,5 +1,3 @@
-import React from 'react';
-import "@/global.css";
 
 import { Stack } from "expo-router";
 import { Provider } from 'react-redux';
@@ -26,7 +24,12 @@ export default function RootLayout()
           <Stack.Screen name="(auth)/register" />
 
           <Stack.Screen name="(app)" />
-         
+          <Stack.Screen name="(app)/activities/:id" />
+          <Stack.Screen name="(app)/accommodations/:id" />
+          <Stack.Screen name="(app)/restaurants/:id" />
+          <Stack.Screen name="(app)/places/:id" />
+
+          {/* <Stack.Screen name="(app)/" /> */}
         </Stack>  
       </SessionProvider>    
     // </Provider>

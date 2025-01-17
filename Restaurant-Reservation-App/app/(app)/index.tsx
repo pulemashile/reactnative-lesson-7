@@ -10,7 +10,7 @@ import useCurrentLocation from '@/hooks/useCurrentLocation';
 import useForecast from '@/hooks/useForecast';
 import { accommodations, activities, places, restaurants } from '@/utils/data';
 import { getSuggestedActivities } from '@/utils/getSuggestedActivities';
-import MapScreen from '../../component/MapLibreMap';
+import MapScreen from '../component/MapLibreMap';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('activities');
@@ -111,16 +111,65 @@ const Index = () => {
       setNearbyPlaces(data.elements); // Set the fetched places into state
     } 
     catch (error) { console.error('Error fetching nearby places:', error); }
-  };  
+  };
+
+  const [selectedForecast, setSelectedForecast] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const handleCardPress = (forecast) => {
+    setSelectedForecast(forecast);
+    setModalVisible(true);
+  };
+
+  const handleActivityClick = (id) => {
+    router.push(`/activities/${id}`);
+  };
+
+  const handleAccommodationClick = (id) => {
+    router.push(`/accommodations/${id}`);
+  };
+
+  const handleRestaurantClick = (id) => {
+    router.push(`/restaurants/${id}`);
+  };
+
+  const handlePlaceClick = (id) => {
+    router.push(`/places/${id}`);
+  };
+
+  const closeModal = () => setModalVisible(false);
 
   return (
-    <View style={styles.container}>    
+    <View style={styles.container}>
+      {/* <Map 
+        currentLat={currentLat}
+        currentLon={currentLon}
+        searchedLat={searchedLat}
+        searchedLon={searchedLon}
+        curLocation={curLocation}
+        searchedLocation={searchedLocation}
+        curLocationWeather={curLocationWeather}
+        weatherData={weatherData}
+        nearbyPlaces={nearbyPlaces}
+      /> */}
+
+      {/* <MapLibreMap 
+        currentLat={currentLat}
+        currentLon={currentLon}
+        searchedLat={searchedLat}
+        searchedLon={searchedLon}
+        curLocation={curLocation}
+        searchedLocation={searchedLocation}
+        curLocationWeather={curLocationWeather}
+        weatherData={weatherData}
+        nearbyPlaces={nearbyPlaces}    
+      /> */}
 
       <MapScreen 
         currentLat={currentLat}
         currentLon={currentLon}            
       />
-
+      
       <View style={styles.searchContainer}>
         <View style={styles.inputWrapper}>
           <TextInput
@@ -136,7 +185,121 @@ const Index = () => {
         </View>
       </View>
 
-      
+      <ScrollView horizontal style={{backgroundColor: "wheat", padding:10}}>
+        {daily.map((forecast, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.card}
+            onPress={() => handleCardPress(forecast)}
+          >
+            <Text style={styles.cardText}>{formatDate(forecast.dt_txt)}</Text>
+            <Text style={styles.cardText}>{forecast.main.temp}°C</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      <Modal visible={isModalVisible} animationType="slide" onRequestClose={closeModal}>
+        <View style={styles.modalContainer}>
+          {selectedForecast && (
+            <View>
+              <Text style={styles.modalTitle}>{formatDate(selectedForecast.dt_txt)}</Text>
+              <Text style={styles.modalText}>Temperature: {selectedForecast.main.temp}°C</Text>
+              <Text style={styles.modalText}>Weather: {selectedForecast.weather[0].description}</Text>
+              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>              
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </Modal>
+
+      <ScrollView 
+        horizontal showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.tabsContainer}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'activities' && styles.activeTab]}
+          onPress={() => setActiveTab('activities')}
+        >
+          <Text style={[styles.tabText, activeTab === 'activities' && styles.activeTabText]}>Activities</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'places' && styles.activeTab]}
+          onPress={() => setActiveTab('places')}
+        >
+          <Text style={[styles.tabText, activeTab === 'places' && styles.activeTabText]}>Destinations</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'restaurants' && styles.activeTab]}
+          onPress={() => setActiveTab('restaurants')}
+        >
+          <Text style={[styles.tabText, activeTab === 'restaurants' && styles.activeTabText]}>Restaurants</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'accommodations' && styles.activeTab]}
+          onPress={() => setActiveTab('accommodations')}
+        >
+          <Text style={[styles.tabText, activeTab === 'accommodations' && styles.activeTabText]}>Accommodations</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      <View style={styles.tabContent}>
+        {activeTab === 'activities' && (
+          <ScrollView style={styles.activeCardContainer}>
+            {suggestedActivities.map((activity, index) => (
+              <View key={index} style={styles.activityCard}>
+                <Pressable onPress={() => handleActivityClick(index)}>
+                  <Text style={styles.tabContentText}>{activity}</Text>
+                  {/* <Text style={styles.tabContentText}>{activity.description}</Text> */}
+                </Pressable>
+              </View>
+            ))}
+          </ScrollView>
+        )}
+
+        {activeTab === 'places' && (
+          <ScrollView style={styles.activeCardContainer}>
+            {nearbyPlaces.map((place, index) => (
+              <View key={index} style={styles.activityCard}>
+                <Pressable onPress={() => handlePlaceClick(index)}>
+                  <Text style={styles.tabContentText}>
+                    {place.tags.name}
+                  </Text>
+
+                  <Text style={styles.tabContentText}>
+                    {place.tags['amenity'] || place.tags['tourism'] || place.tags['leisure']}
+                  </Text>
+                </Pressable>
+              </View>
+            ))}
+          </ScrollView>
+        )}
+
+        {activeTab === 'restaurants' && (
+          <ScrollView style={styles.activeCardContainer}>
+            {restaurants.map((restaurant) => (
+              <View key={restaurant.id} style={styles.activityCard}>
+                <Pressable onPress={() => handleRestaurantClick(restaurant.id)}>
+                  <Text style={styles.tabContentText}>{restaurant.name}</Text>
+                  <Text style={styles.tabContentText}>{restaurant.description}</Text>
+                </Pressable>
+              </View>
+            ))}
+          </ScrollView>
+        )}
+
+        {activeTab === 'accommodations' && (
+          <ScrollView style={styles.activeCardContainer}>
+            {accommodations.map((accommodation) => (
+              <View key={accommodation.id} style={styles.activityCard}>
+                <Pressable onPress={() => handleAccommodationClick(accommodation.id)}>
+                  <Text style={styles.tabContentText}>{accommodation.name}</Text>
+                  <Text style={styles.tabContentText}>{accommodation.description}</Text>
+                </Pressable>
+              </View>
+            ))}
+          </ScrollView>
+        )}
+      </View>
     </View>
   );
 };

@@ -1,106 +1,195 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Image } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; 
+import React, { useState } from "react";
+import {ActivityIndicator, View, Text, TextInput, Button, StyleSheet, Pressable } from "react-native";
+import { useSession } from "@/context/AuthContext";
+import { useRouter } from "expo-router";
+import Icons from "@/utils/Icons";
 
-const Login = () => {
-  // State variables for managing form data
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isEmailLogin, setIsEmailLogin] = useState(true); // Toggling email login or password login
+export default function LoginScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { SignIn, isLoading } = useSession();
+  const router = useRouter();
+
+  const handleGuestLogin = () => {
+    SignIn("Guest", undefined, true).then(() => router.push("/(app)"))
+  };
+
+  const handleLogin = () => {
+    SignIn(email, password).then(() => router.push("/(app)"));
+  };
 
   return (
-    <View className="flex-1 justify-between px-5 py-10 bg-gray-50">
-      {/* Login Text */}
-      <View>
-        <Text className="text-3xl font-bold text-center text-black mb-4">Login</Text>
-        <Text className="text-sm text-center text-gray-600 mb-8">Sign in to your account to get access to various features</Text>
-
-        {/* Input fields */}
-        <View className="space-y-5">
-          {/* Email Input */}
-          {isEmailLogin && (
-            <View className="relative">
-              <TextInput
-                placeholder="Enter your email"
-                value={email}
-                onChangeText={setEmail}
-                className="block rounded-full w-full px-10 py-4 text-gray-400
-                 bg-white border border-gray-400 shadow-"
-              />
-              <MaterialIcons
-                name="email"
-                size={24}
-                color="gray"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 "
-              />
-            </View>
-          )}
-
-          {/* Password Input */}
-          <View className="relative">
-            <TextInput
-              placeholder="Enter your password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              className="block rounded-full w-full shadow-sm px-10 py-4 text-gray-400 bg-white border border-gray-400"
-            />
-            <MaterialIcons
-              name="lock"
-              size={24}
-              color="gray"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2"
-            />
-          </View>
-
-          {/* Login Button */}
-          <Pressable className="bg-[#FE0000] rounded-full h-[3rem] w-full pt-2 mt-10 align-self-center">
-            <Text className="text-white text-center text-lg font-semibold">Login</Text>
-          </Pressable>
-
-          {/* Line Break with Text */}
-          <View className="flex-row items-center justify-center mt-8 mb-4">
-            {/* Left Line */}
-            <View style={{ flex: 1, borderBottomWidth: 1, borderColor: '#ccc' }} />
-            
-            {/* Text */}
-            <Text className="mx-4 text-sm text-gray-600">Login with</Text>
-            
-            {/* Right Line */}
-            <View style={{ flex: 1, borderBottomWidth: 1, borderColor: '#ccc' }} />
-          </View>
-
-          {/* Social Login Buttons (Facebook and Google) */}
-          <View className="flex-row justify-between space-x-4">
-            <Pressable style={{ flex: 1, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderBlockColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
-              <Image 
-                source={require('@/assets/images/facebook.png')} 
-                style={{ width: 22, height: 20 }} 
-              />
-              <Text className="text-gray-600 text-center">Facebook</Text>  
-            </Pressable>
-            <Pressable style={{ flex: 1, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderWidth: 1, borderColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
-              <Image 
-                source={require('@/assets/images/google.png')} 
-                style={{ width: 20, height: 20 }} 
-              />
-              <Text className="text-gray-600 text-center">Google</Text>
-            </Pressable>
-          </View>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.iconLogo }>
+          <Icons name="logo" color="#BCF2F6" size={86}/>
+          <Text style={styles.logoTitle}>ClimaVoyage</Text>
+        </View> 
       </View>
 
-      {/* Signup Link - Aligned to the Bottom */}
-      <View className="mb-5">
-        <Text className="text-sm text-gray-600 text-center ">
-          Don't have an account?{' '}
-          <Pressable>
-            <Text className="font-medium text-blue-300 text-arial">Sign up here</Text>
-          </Pressable>
+      <View style={styles.loginForm}>
+        <Text style={styles.loginTitleTxt}>
+           Login to <Icons name="logo" color="black" size={20}/> ClimaVoyage
         </Text>
+
+        <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail}  />
+        <TextInput style={styles.input}placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry  />
+        <Text style={styles.forgotPass_link}>Forgot Password</Text>
+        <Pressable style={styles.loginBtn}
+          onPress={handleLogin} >
+          <Text style={styles.loginBtnTxt}>
+            {isLoading ? "Loading..." : "Login"}
+          </Text>
+        </Pressable>  
+
+        <View style={{flex:1, gap:16}}>
+          <Text style={{textAlign:"center"}}>
+            Don't have an account?
+            <Text style={styles.link} onPress={() => router.push("/(auth)/register")}> Register Now</Text> 
+          </Text>
+          <Text style={{textAlign:"center"}}>  or </Text>
+
+          <View style={styles.h_btn_group}>
+            <Pressable style={styles.guest_button}
+              onPress={handleGuestLogin}>
+                <Text style={styles.loginBtnTxt}>Login as Guest</Text>
+            </Pressable> 
+
+            <Pressable style={styles.G_button} onPress={handleGuestLogin}>
+              <Icons name="google" />
+            </Pressable>
+
+            <Pressable style={styles.F_button} onPress={handleGuestLogin}>
+              <Icons name="facebook" />
+            </Pressable>
+
+            <Pressable style={styles.F_button} onPress={handleGuestLogin}>
+              <Icons name="apple" color="grey" />
+            </Pressable>
+          </View>
+
+        </View>          
       </View>
+      
     </View>
   );
-};
+}
 
-export default Login;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 0,
+    backgroundColor: "#006BFF",
+  },
+  header:{
+    width:"100%",
+    height:"36%",
+    backgroundColor:"#006BFF"
+  },
+  iconLogo:
+  {
+    flex:1,
+    padding: 16,
+    justifyContent:"center",
+    alignItems:"center"
+  },
+  logoTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    // color: "#6200ea",
+    color:"#BCF2F6",
+    marginTop: 10,
+  },
+  loginForm:{
+    flex:1,
+    width:"100%",
+    // height:"64%",
+    padding:16,
+    justifyContent: "center",
+    alignItems: "center",    
+    backgroundColor:"white",
+    borderTopLeftRadius:56,
+  },
+  loginTitleTxt:{
+    width:"100%",
+    fontSize: 21,
+    fontWeight: "bold",
+    padding:8,
+    textAlign:"right",
+    alignItems:"center",
+
+  },
+  input: {
+    width: "100%",
+    borderColor: "black", 
+    padding: 10,    
+    borderBottomWidth: 1,
+    marginTop: 28,
+  },
+
+  forgotPass_link:{
+    marginTop: 10,
+    width:"100%",
+    color: "red",
+    fontWeight:700,
+    textDecorationLine: "underline",
+    textAlign:"right"
+  },
+  link: {
+    marginTop: 10,
+    color: "red",
+    fontWeight:700,
+    textDecorationLine: "underline",
+  },
+
+  loginBtn:{
+    margin:16,
+    padding:12,
+    width:"100%",
+    backgroundColor:"#006BFF",
+    borderRadius:4,
+  },
+
+  loginBtnTxt:{
+    textAlign:"center", 
+    fontSize:18, 
+    fontWeight:"bold", 
+    color:"white"
+  },
+
+  h_btn_group:{
+
+    width:"100%",
+    height: 64,
+    padding:8,
+    flexDirection:"row",
+    justifyContent:"space-around",
+    alignItems:"center",
+    gap:8,
+    backgroundColor:"white",
+  },
+
+  guest_button:{
+    padding:8,    
+    height:44,
+    backgroundColor:"grey",
+    borderRadius:8,
+  },
+  G_button:{    
+    padding:8, 
+    width:44,
+    backgroundColor:"red",
+    borderRadius:8,
+  },
+
+  F_button:{    
+    padding:8, 
+    width:44,
+    backgroundColor:"lightgrey",
+    borderRadius:8,
+  },
+
+ 
+});
