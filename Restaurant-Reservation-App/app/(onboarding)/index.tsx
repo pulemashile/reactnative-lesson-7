@@ -8,7 +8,7 @@ export default function OnBoarding() {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    router.push('/drawer'); // Navigate to drawer after login
+    router.push('/explore'); // Navigate to drawer after login
   };
 
   if (!isLoggedIn) {

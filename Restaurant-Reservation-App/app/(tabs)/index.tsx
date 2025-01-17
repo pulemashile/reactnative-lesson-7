@@ -1,137 +1,118 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-// import { Picker } from '@react-native-picker/picker'; // for dropdown (if needed)
-// import { Icon } from 'react-native-elements';
+// app/index.tsx
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
 
-const ReservationScreen = () => {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [partySize, setPartySize] = useState(2);
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-
-  const handleReservation = () => {
-    // Handle reservation logic
-    console.log('Reservation made for:', name, phone, partySize, date, time);
-  };
-
+export default function Home() {
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Restaurant Reservation</Text>
-      
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Full Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your name"
-          value={name}
-          onChangeText={setName}
-        />
-      </View>
 
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Phone Number</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your phone number"
-          value={phone}
-          onChangeText={setPhone}
-          keyboardType="phone-pad"
-        />
-      </View>
+      {/* <View style={styles.mapViewContainer}>
+      </View> */}
 
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Party Size</Text>
-        {/* <Picker
-          selectedValue={partySize}
-          style={styles.picker}
-          onValueChange={(itemValue) => setPartySize(itemValue)}
-        >
-          <Picker.Item label="2 people" value={2} />
-          <Picker.Item label="4 people" value={4} />
-          <Picker.Item label="6 people" value={6} />
-          <Picker.Item label="8+ people" value={8} />
-        </Picker> */}
-      </View>
+      <View style={styles.content}>
+        {/* Featured Restaurants */}
+        <View style={styles.featuredContainer}>
+          <Text style={styles.sectionTitle}>Popular Restaurants</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {[1, 2, 3].map((i) => (
+              <Link href={`/restaurant/${i}`} key={i} asChild>
+                <TouchableOpacity style={styles.restaurantCard}>
+                  <View style={styles.restaurantBox}>
+                    <View style={styles.imagePlaceholder} />
+                    <Text style={styles.restaurantName}>Restaurant {i}</Text>
+                    <Text style={styles.restaurantDetails}>Italian • $$$ • 2.5mi</Text>
+                  </View>
+                </TouchableOpacity>
+              </Link>
+            ))}
+          </ScrollView>
+        </View>
 
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Date</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Select Date"
-          value={date}
-          onChangeText={setDate}
-        />
+        {/* Available Time Slots */}
+        <View style={styles.availabilityContainer}>
+          <Text style={styles.sectionTitle}>Today's Availability</Text>
+          <View style={styles.timeSlotsContainer}>
+            {['5:30 PM', '6:00 PM', '7:30 PM'].map((time) => (
+              <View key={time} style={styles.timeSlot}>
+                <Text style={styles.timeText}>{time}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
       </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Time</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Select Time"
-          value={time}
-          onChangeText={setTime}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.button} onPress={handleReservation}>
-        <Text style={styles.buttonText}>Book Reservation</Text>
-        {/* <Icon name="check" type="font-awesome" color="#fff" size={20} /> */}
-      </TouchableOpacity>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#F9FAFB',
   },
-  header: {
+  mapViewContainer:{
+    height:300
+  },
+  content: {
+    padding: 16,
+  },
+  featuredContainer: {
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    padding: 16,
+    marginBottom: 16,
+  },
+  sectionTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 20,
+    fontWeight: '700',
+    marginBottom: 8,
   },
-  formGroup: {
-    marginBottom: 15,
+  restaurantCard: {
+    marginRight: 16,
   },
-  label: {
-    fontSize: 16,
-    color: '#444',
-    marginBottom: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
+  restaurantBox: {
+    width: 256,
+    backgroundColor: '#F3F4F6',
     borderRadius: 8,
-    fontSize: 16,
+    padding: 12,
   },
-  picker: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ccc',
+  imagePlaceholder: {
+    height: 128,
+    backgroundColor: '#E5E7EB',
     borderRadius: 8,
-    backgroundColor: '#fff',
+    marginBottom: 8,
   },
-  button: {
+  restaurantName: {
+    fontWeight: '600',
+  },
+  restaurantDetails: {
+    color: '#4B5563',
+  },
+  availabilityContainer: {
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    padding: 16,
+  },
+  timeSlotsContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#008CBA',
-    paddingVertical: 15,
-    borderRadius: 8,
-    marginTop: 20,
+    flexWrap: 'wrap',
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 10,
+  timeSlot: {
+    backgroundColor: '#BFDBFE',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  timeText: {
+    color: '#1D4ED8',
   },
 });
-
-export default ReservationScreen;
