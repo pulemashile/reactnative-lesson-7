@@ -24,14 +24,22 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Search color={color} size={24} />,
         }}
       />
-
+      
       <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <User color={color} size={24} />,
+        }}
+      />
+
+      {/* <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }) => <Map color={color} size={24} />,
         }}
-      />
+      /> */}
       {/* <Tabs.Screen
         name="Reservations"
         options={{
@@ -39,13 +47,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Calendar color={color} size={24} />,
         }}
       /> */}
-      {/* <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <User color={color} size={24} />,
-        }}
-      /> */}
+      
     </Tabs>
   );
 }

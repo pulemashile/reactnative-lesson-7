@@ -11,7 +11,7 @@ export default function Home() {
 
       <View style={styles.content}>
         {/* Featured Restaurants */}
-        <View style={styles.featuredContainer}>
+        {/* <View style={styles.featuredContainer}>
           <Text style={styles.sectionTitle}>Popular Restaurants</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {[1, 2, 3].map((i) => (
@@ -26,7 +26,7 @@ export default function Home() {
               </Link>
             ))}
           </ScrollView>
-        </View>
+        </View> */}
 
         {/* Available Time Slots */}
         <View style={styles.availabilityContainer}>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     height:300
   },
   content: {
-    padding: 16,
+    padding: 0,
   },
   featuredContainer: {
     backgroundColor: '#FFF',
