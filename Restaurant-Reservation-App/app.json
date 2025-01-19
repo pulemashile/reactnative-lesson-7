@@ -8,9 +8,9 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
-    "runtimeVersion": "1.0.1",  // You can set this to the version of your app or any custom version string
+    "runtimeVersion": "1.0.1",  
     "android": {
-      "runtimeVersion": "1.0.1",  // Match this version with the one in your AndroidManifest.xml
+      "runtimeVersion": "1.0.1", 
       "package": "com.matlakalakabelo1.RestaurantReservationApp",
       "versionCode": 5
     },

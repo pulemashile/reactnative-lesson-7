@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  Button,
-  StyleSheet,
-  Dimensions,
+  TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,21 +17,24 @@ export default function Onboarding() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const pages = [
-    { 
-      id: 1, 
-      title: "Welcome to ClimaVoyage", 
-      description: "Plan your trips based on real-time weather data. Find the best activities for any weather conditions!" 
+    {
+      id: 1,
+      title: "Welcome to DineElite",
+      description:
+        "Discover top restaurants and reserve your table with ease. DineElite brings the best dining experiences to your fingertips!",
     },
-    { 
-      id: 2, 
-      title: "Personalized Travel", 
-      description: "Get weather forecasts and suggestions for activities based on your preferences and destination." 
+    {
+      id: 2,
+      title: "Personalized Dining",
+      description:
+        "Enjoy tailored recommendations based on your cuisine preferences, location, and dining history.",
     },
-    { 
-      id: 3, 
-      title: "Start Your Journey", 
-      description: "Select your destination and let ClimaVoyage guide you to a perfect trip tailored to the weather!" 
-    }
+    {
+      id: 3,
+      title: "Book Instantly",
+      description:
+        "Reserve your table effortlessly and enjoy a seamless dining experience. Dine smarter with DineElite!",
+    },
   ];
 
   const handleScroll = (event) => {
@@ -42,11 +44,12 @@ export default function Onboarding() {
 
   const completeOnboarding = async () => {
     await AsyncStorage.setItem("onboardingComplete", "true");
-    router.replace("/(auth)/login"); // Navigate to login after completing onboarding
+    router.replace("/(auth)/login"); // Navigate to login after onboarding
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-white">
+      {/* Scrollable Pages */}
       <ScrollView
         horizontal
         pagingEnabled
@@ -54,56 +57,40 @@ export default function Onboarding() {
         showsHorizontalScrollIndicator={false}
       >
         {pages.map((page) => (
-          <View key={page.id} style={[styles.page, { width }]}>
-            <View style={styles.iconLogo }>
-              <Icons name="logo" color="black" size={86}/>
-              <Text style={styles.title}>ClimaVoyage</Text>
-            </View>           
-            
-            <Text style={styles.title}>{page.title}</Text>
-            <Text style={styles.description}>{page.description}</Text>
+          <View key={page.id} style={{ width }} className="flex-1 items-center justify-center px-6">
+            <View className="items-center justify-center mb-6">
+              <Icons name="logo" color="black" size={86} />
+              <Text className="text-3xl font-bold text-black mt-2">DineElite</Text>
+            </View>
+            <Text className="text-xl font-bold text-black mb-3">{page.title}</Text>
+            <Text className="text-base text-center text-black">{page.description}</Text>
           </View>
         ))}
       </ScrollView>
-      <Button
-        title={currentPage === pages.length - 1 ? "Get Started" : "Next"}
-        onPress={() =>
-          currentPage === pages.length - 1
-            ? completeOnboarding()
-            : setCurrentPage((prev) => prev + 1)
-        }
-      />
+
+      {/* Pagination Dots */}
+      <View className="flex-row justify-center my-4">
+        {pages.map((_, index) => (
+          <View
+            key={index}
+            className={`h-2 w-2 rounded-full mx-1 ${
+              currentPage === index ? "bg-black" : "bg-gray-300"
+            }`}
+          />
+        ))}
+      </View>
+
+      {/* Get Started Button */}
+      {currentPage === pages.length - 1 ? (
+        <TouchableOpacity
+          onPress={completeOnboarding}
+          className="bg-black py-3 mx-6 rounded-lg"
+        >
+          <Text className="text-white text-center text-lg font-semibold">
+            Get Started
+          </Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  page: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  iconLogo:
-  {
-    padding: 16,
-    justifyContent:"center",
-    alignItems:"center"
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    // color: "#6200ea",
-    color:"black",
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 16,
-    textAlign: "center",
-    paddingHorizontal: 20,
-    color:"black",
-    // color: "#333",
-  },
-});

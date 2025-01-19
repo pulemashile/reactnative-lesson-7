@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Text, TouchableOpacity, TextInput, Pressable, Image, Modal } from 'react-native';
+import { ScrollView, View, Text, TextInput, Pressable, Image, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import Icons from '@/utils/Icons'; 
 
 import useLocation from '@/hooks/useLocation';
-import useWeather from '@/hooks/useWeather';
 import useCurrentLocation from '@/hooks/useCurrentLocation';
-import useForecast from '@/hooks/useForecast';
-import { accommodations, activities, places, restaurants } from '@/utils/data';
-import { getSuggestedActivities } from '@/utils/getSuggestedActivities';
+
 import MapScreen from '../../component/MapLibreMap';
 
 const Index = () => {
@@ -34,9 +31,7 @@ const Index = () => {
     loading: searchedLocationLoading } = useLocation(searchQuery);
 
   const [useCoordinates, setUseCoordinates] = useState<boolean>(false);
-  const [curLocationWeather, setCurLocationWeather] = useState<any>(null);  
-  const { weatherData, weatherLoading } = useWeather(query, useCoordinates);
-  const { hourly, daily, forecastsLoading } = useForecast(query, useCoordinates);
+ 
   const [nearbyPlaces, setNearbyPlaces] = useState([]);
   const [suggestedActivities, setSuggestedActivities] = useState([]);
 
@@ -58,29 +53,7 @@ const Index = () => {
     if (searchedLat && searchedLon) {
       fetchNearbyPlaces(searchedLat, searchedLon); // Fetch places based on searched location
     }
-  }, [searchedLat, searchedLon]);
-
-  useEffect(() => {
-    if (weatherData && !searchQuery) 
-    {
-      setCurLocationWeather(weatherData);      
-    }  
-
-    if (weatherData) 
-    {
-      const activities = getSuggestedActivities(weatherData);
-      setSuggestedActivities(activities);
-    }
-    
-  }, [weatherData]);
-
-  useEffect(() => {
-    if (weatherData) 
-    {
-      const activities = getSuggestedActivities(weatherData);
-      setSuggestedActivities(activities);
-    }
-  }, [weatherData]);
+  }, [searchedLat, searchedLon]);  
 
 
   const handleSearch = () => {   
@@ -113,55 +86,19 @@ const Index = () => {
     catch (error) { console.error('Error fetching nearby places:', error); }
   };
 
-  const [selectedForecast, setSelectedForecast] = useState(null);
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const handleCardPress = (forecast) => {
-    setSelectedForecast(forecast);
-    setModalVisible(true);
-  };
-
-  const handleActivityClick = (id) => {
-    router.push(`/activities/${id}`);
-  };
-
-  const handleAccommodationClick = (id) => {
-    router.push(`/accommodations/${id}`);
-  };
-
-  const handleRestaurantClick = (id) => {
-    router.push(`/restaurants/${id}`);
-  };
-
-  const handlePlaceClick = (id) => {
-    router.push(`/places/${id}`);
-  };
-
-  const closeModal = () => setModalVisible(false);
-
   return (
-    <View style={styles.container}>
-      {/* <MapLibreMap 
-        currentLat={currentLat}
-        currentLon={currentLon}
-        searchedLat={searchedLat}
-        searchedLon={searchedLon}
-        curLocation={curLocation}
-        searchedLocation={searchedLocation}
-        curLocationWeather={curLocationWeather}
-        weatherData={weatherData}
-        nearbyPlaces={nearbyPlaces}    
-      /> */}
-
+    <View className="flex-1 bg-[#edf2fb]">
+      {/* Map Screen */}
       <MapScreen 
         currentLat={currentLat}
         currentLon={currentLon}            
       />
       
-      <View style={styles.searchContainer}>
-        <View style={styles.inputWrapper}>
+      {/* Search Container */}
+      <View className="px-4 my-2">
+        <View className="flex-row items-center border border-gray-400 rounded-lg h-12 px-2">
           <TextInput
-            style={styles.searchInput}
+            className="flex-1 text-base text-gray-800"
             placeholder="Enter Location"
             placeholderTextColor="#B0B0B0"
             value={searchQuery}
@@ -172,165 +109,16 @@ const Index = () => {
           </Pressable>
         </View>
       </View>
-
-      <View className='bg-red-500 h-[300px]'>
-        <Text className='text-red-500'>Hy</Text>
+  
+      {/* Example Red Section */}
+      <View className="bg-red-500 h-[300px] flex items-center justify-center">
+        <Text className="text-white text-lg">Hy</Text>
       </View>
     </View>
   );
+  
 };
 
 export default Index;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection:"column",
-    backgroundColor: '#edf2fb',
-    fontFamily: 'Poppins',
-  },
-  mapContainer: {
-    height: 300,
-    backgroundColor: '#E5E5E5',
-    justifyContent: 'flex-start',
-    fontFamily: 'serif',
-    padding: 0,
-  },
-  mapText: {
-    color: '#333',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  map: {
-    flex: 1,
-  },
-  searchContainer: {
-    paddingHorizontal: 15,
-    marginTop: 8,
-    marginBottom: 8,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#B0B0B0',
-    borderWidth: 1,
-    borderRadius: 8,
-    height: 50,
-    paddingHorizontal: 8,
-    paddingVertical: 0,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: '#333',
-    fontFamily: 'OpenSans',
-  },
-  card: {
-    backgroundColor: '#BCF2F6',
-    padding: 16,
-    marginRight: 12,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 112,
-    height: 64,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  cardText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  modalText: {
-    fontSize: 16,
-    marginTop: 10,
-    color: '#666',
-  },
-  closeButton: {
-    marginTop: 20,
-    backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  tabsContainer: {
-    flexDirection: 'row',
-    marginBottom: 2,
-    borderBottomWidth: 1,
-    borderBottomColor: 'red',
-    height:32,
-    backgroundColor: '#F4F4F4',
-    width:"100%",
-    height:32,
-    
-  },
-  tab: {
-    padding: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 20,
-  },
-  activeTab: {
-    alignSelf:"flex-start",
-    borderBottomWidth: 3,
-    borderBottomColor: '#333',
-    backgroundColor: '#edf2fb',
-  },
-  tabText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  activeTabText: {
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  tabContent: {
-    padding: 15,
-    backgroundColor: '#F4F4F4',
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  tabContentText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  activeCardContainer:{
-    height:"35%",
-    backgroundColor: '#F4F4F4',
-  },
-  activityCard: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-});
 

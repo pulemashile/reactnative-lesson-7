@@ -26,7 +26,7 @@ const useForecast = (query, useCoordinates = false) => {
 
     useEffect(() => {
         if (!query) return;
-        console.log("fcQuery: ", query, ".", useCoordinates);
+        // console.log("fcQuery: ", query, ".", useCoordinates);
 
         const getForecasts = async () => {
             setLoading(true);
@@ -46,7 +46,7 @@ const useForecast = (query, useCoordinates = false) => {
 
                     const _res = await axios.get(`${baseUrl}/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
                     response = _res.data.list;
-                    console.log(response);
+                    // console.log(response);
                 }
                 else
                 {   
@@ -88,9 +88,9 @@ const useForecast = (query, useCoordinates = false) => {
         }
     };
 
-    console.log(" city ", forecastData);
-    console.log(" hourlyFC ", hourly);
-    console.log(" dailyFC ", daily);
+    // console.log(" city ", forecastData);
+    // console.log(" hourlyFC ", hourly);
+    // console.log(" dailyFC ", daily);
     
     return ( { currentDate, hourly, daily, forecastsLoading, error } )
 }
