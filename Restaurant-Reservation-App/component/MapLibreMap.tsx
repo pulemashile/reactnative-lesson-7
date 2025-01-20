@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 const MapScreen = ({ currentLat, currentLon }) => {
-  const mapUrl = `https://map-server-anmu.onrender.com/map?lat=${currentLat}&lon=${currentLon}`;
+  const mapUrl = `https://map-server-1-l0ef.onrender.com/map?lat=${currentLat}&lon=${currentLon}`;
 
   return (
     <View style={styles.container}>
