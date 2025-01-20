@@ -181,12 +181,7 @@ const Index = () => {
             data={nearbyPlaces}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-              <View className="mb-2 p-4 bg-gray-100 rounded-lg shadow-md">
-                {console.log(`${item.categories}`)}
-                {/* <Image style={{width:32, height:32, backgroundColor:"grey", borderRadius: 8}}
-                  src={`${item.categories[1].icon.prefix}64${item.categories[1].icon.suffix}`}
-                  alt="Category Icon"
-                /> */}
+              <View className="mb-2 p-4 bg-gray-100 rounded-lg shadow-md">  
                 <Text className="text-lg font-medium">
                   {item ? item.name || "Unnamed Place" : "No Name"}
                 </Text>
