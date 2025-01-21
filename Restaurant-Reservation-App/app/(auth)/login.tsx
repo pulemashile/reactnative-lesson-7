@@ -38,7 +38,7 @@ export default function LoginScreen() {
         <View className="space-y-5">
           {/* Email Input */}
           {isEmailLogin && (
-            <View className="relative">
+            <View className="relative mb-8">
               <MaterialIcons
                 name="email"
                 size={24}

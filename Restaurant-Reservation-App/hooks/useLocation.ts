@@ -1,3 +1,4 @@
+//useLocation
 import * as Location from 'expo-location';
 import { useState, useEffect } from 'react';
 
@@ -10,7 +11,8 @@ const useLocation = (city: string) => {
 
   const getLocation = async (city: string) => {
     setLoading(true);
-    try {
+    try 
+    {
       // Use expo-location's geocoding to get coordinates from city name
       const geocodeResults = await Location.geocodeAsync(city);
       

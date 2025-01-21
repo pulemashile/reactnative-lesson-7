@@ -64,7 +64,7 @@ export default function Register() {
         {/* Input fields */}
         <View className="space-y-5">
           {/* Username Input */}
-          <View className="relative">
+          <View className="relative mb-4">
             <TextInput
               placeholder="Enter your username"
               value={username}
@@ -80,7 +80,7 @@ export default function Register() {
           </View>
 
           {/* Email Input */}
-          <View className="relative">
+          <View className="relative mb-4">
             <TextInput
               placeholder="Enter your email"
               value={email}
@@ -96,7 +96,7 @@ export default function Register() {
           </View>
 
           {/* Password Input */}
-          <View className="relative">
+          <View className="relative mb-4">
             <TextInput
               placeholder="Enter your password"
               value={password}
@@ -145,10 +145,11 @@ export default function Register() {
           </View>
 
           {/* Social Login Buttons (Facebook and Google) */}
-          <View className="flex-row justify-between space-x-4">
+          <View className="flex-row justify-between">
             <Pressable
               style={{
-                flex: 1,
+                width: 148,
+                paddingHorizontal:8,
                 backgroundColor: "white",
                 paddingVertical: 12,
                 borderRadius: 999,
@@ -156,7 +157,8 @@ export default function Register() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 10,
-                borderBlockColor: "#ccc",
+                borderWidth: 1,
+                borderColor: "#ccc",
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.25,
@@ -169,9 +171,10 @@ export default function Register() {
               />
               <Text className="text-gray-600 text-center">Facebook</Text>
             </Pressable>
+
             <Pressable
               style={{
-                flex: 1,
+                width:148,
                 backgroundColor: "white",
                 paddingVertical: 12,
                 borderRadius: 999,

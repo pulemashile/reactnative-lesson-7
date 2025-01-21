@@ -17,6 +17,7 @@ const Index = () => {
 
   const [query, setQuery] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
 
   const { 
     lat: currentLat, 
@@ -56,15 +57,34 @@ const Index = () => {
 
   useEffect(() => {
     if (searchedLat && searchedLon) {
-      fetchNearbyPlaces(searchedLat, searchedLon); // Fetch places based on searched location
+      fetchNearbyPlaces(searchedLat, searchedLon);
+      fetchRestaurants(searchedLat, searchedLon); 
     }
   }, [searchedLat, searchedLon]);  
 
-
-  const handleSearch = () => {   
-    if (searchQuery.trim()) 
+  // Debounce logic - delay the search until typing has stopped for 500ms
+  useEffect(() => {
+    const timer = setTimeout(() => 
     {
-      setQuery(searchQuery);
+      setDebouncedQuery(searchQuery);
+    }, 500); // Adjust debounce time as needed
+
+    // Cleanup timer on component unmount or query change
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (debouncedQuery.trim()) 
+    {
+      // Fetch results based on debouncedQuery
+      handleSearch(debouncedQuery);
+    }
+  }, [debouncedQuery]);
+
+  const handleSearch = (query) => {   
+    if (query.trim()) 
+    {
+      setQuery(query);
       setUseCoordinates(false);
     } 
     else if(searchedLat && searchedLon) 
@@ -84,7 +104,8 @@ const Index = () => {
     try {
       const response = await fetch(`https://map-server-1-l0ef.onrender.com/api/nearbyplaces?lat=${lat}&lon=${lon}`);
       const data = await response.json();
-      console.log("nearbyPlaces", data.results);
+
+      // console.log("nearbyPlaces", data.results);
       if (Array.isArray(data.results)) 
       {
         console.log("nearbyPlaces", data.results);        
@@ -126,17 +147,16 @@ const Index = () => {
     }
   };
 
-
-
-  console.log("Restaurents",restaurants);
-  
+  // console.log("Restaurents",restaurants);  
 
   return (
     <View className="flex-1 bg-[#edf2fb]">
       {/* Map Screen */}
       <MapScreen 
         currentLat={currentLat}
-        currentLon={currentLon}            
+        currentLon={currentLon}    
+        searchedLat={searchedLat}    
+        searchedLon={searchedLon}    
       />
       
       {/* Search Container */}
@@ -144,10 +164,11 @@ const Index = () => {
         <View className="flex-row items-center border border-gray-400 rounded-lg h-12 px-2">
           <TextInput
             className="flex-1 text-base text-gray-800"
-            placeholder="Enter Location"
+            placeholder="Enter Location or Restaurant Name"
             placeholderTextColor="#B0B0B0"
             value={searchQuery}
             onChangeText={setSearchQuery}
+            onSubmitEditing={()=> handleSearch(searchQuery)}
           />
           <Pressable onPress={handleSearch}>
             <Icons name="search" color="black" size={20} />
