@@ -35,6 +35,11 @@ export default function Register() {
     </svg>
   `;
 
+  const backArrow = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} color={"#000000"} fill={"none"}>
+    <path d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>`;
+
   // Form validation
   const validateForm = () => {
     if (!username || !email || !password || !passwordConfirm) {
@@ -59,7 +64,7 @@ export default function Register() {
       {/* Header with Back Button */}
       <View className="flex-row items-center mb-4">
         <Pressable onPress={() => router.replace("/(auth)/login")}>
-          <Text>◀</Text>
+          <SvgXml xml={personIcon} width={24} height={24} style={{ position: 'absolute', color:'#890620', left: 12, top: '49%', transform: [{ translateY: -12 }] }} />           
         </Pressable>
         <Text className="flex-1 text-3xl font-bold text-center text-black"style={styles.poppinsRegular}>Sign Up</Text>
       </View>

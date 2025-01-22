@@ -75,7 +75,8 @@ type IconProps = {
           break;     
        
       case "search":
-        return <Icon name="magnifying-glass-location" size={30} color="black" />
+        return <Icon name="magnifying-glass" size={30} color="black" />
+        // return <Icon name="magnifying-glass-location" size={30} color="black" />
         break;
 
       default:

@@ -19,7 +19,7 @@ const MapScreen = ({ currentLat, currentLon, searchedLat, searchedLon, restauran
   // Convert the restaurant data to a string and encode it in the URL (or use another method)
   const restaurantsData = encodeURIComponent(JSON.stringify(restaurants));
   
-  const mapUrl = `https://map-server-1-l0ef.onrender.com/map?currentLat=${currentLat}&currentLon=${currentLon}&lat=${searchedLat}&lon=${searchedLon}&restaurants=${restaurantsData}`;
+  const mapUrl = `https://map-server-1-l0ef.onrender.com/map?currentLat=${currentLat}&currentLon=${currentLon}&lat=${searchedLat}&lon=${searchedLon}`;
 
   // This function will be called when the map is loaded
   const onMapLoaded = () => {
@@ -43,7 +43,6 @@ const MapScreen = ({ currentLat, currentLon, searchedLat, searchedLon, restauran
       centerMap();
     }
   }, [mapLoaded, lat, lon]);
-
 
   return (
     <View style={[styles.container, {height: containerHeight}]}>

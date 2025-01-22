@@ -153,7 +153,7 @@ const Index = () => {
         <View className="flex-row mb-4">
           <TouchableOpacity
             onPress={() => setSelectedTab('restaurants')}
-            className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'restaurants' ? 'bg-[#890620] text-white' : 'bg-gray-200'}`}
+            className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'restaurants' ? 'bg-[#b6465f] text-white' : 'bg-gray-200'}`}
           >
             <Text className="text-lg font-bold" style={styles.poppinsRegular}>
               Restaurants

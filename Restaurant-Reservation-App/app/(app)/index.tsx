@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, View, Text, TextInput, Pressable, Image, Modal, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Pressable, Image, FlatList, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import Icons from '@/utils/Icons'; 
-
 import useLocation from '@/hooks/useLocation';
 import useCurrentLocation from '@/hooks/useCurrentLocation';
-
 import MapScreen from '../../component/MapLibreMap';
+import Booktable from './booktable';
 
-const Index = () => {
-  
+const Index = () => {    
   const router = useRouter();
-
-  const [selectedTab, setSelectedTab] = useState('restaurant');
+  const [selectedTab, setSelectedTab] = useState('restaurants');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null); // Track which restaurant is selected
 
   const [query, setQuery] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -33,12 +32,10 @@ const Index = () => {
     errMsg: searchedLocationError, 
     loading: searchedLocationLoading } = useLocation(searchQuery);
 
-  const [useCoordinates, setUseCoordinates] = useState<boolean>(false);
- 
+  const [useCoordinates, setUseCoordinates] = useState<boolean>(false); 
   const [nearbyPlaces, setNearbyPlaces] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
-  const [restaurantPhotos, setRestaurantPhotos] = useState([]);
-  
+  const [restaurantPhotos, setRestaurantPhotos] = useState([]);  
 
   const formatDate = (dt_txt) => {
     const date = new Date(dt_txt);
@@ -80,6 +77,16 @@ const Index = () => {
       handleSearch(debouncedQuery);
     }
   }, [debouncedQuery]);
+
+  const openModal = (restaurant) => {
+    setSelectedRestaurant(restaurant); // Set the restaurant data for the modal
+    setModalVisible(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setModalVisible(false); // Close the modal
+    setSelectedRestaurant(null); // Reset the selected restaurant
+  };
 
   const handleSearch = (query) => {   
     if (query.trim()) 
@@ -162,16 +169,19 @@ const Index = () => {
       
       {/* Search Container */}
       <View className="px-4 my-2">
-        <View className="flex-row items-center border border-gray-400 rounded-lg h-12 px-2">
-          <TextInput
-            className="flex-1 text-base text-gray-800"
+        <View className="flex-row items-center relative">
+        <TextInput
+            className="bg-white rounded-md w-full px-10 py-4 text-gray-400 bg-white border border-gray-400 shadow-md"
+            style={styles.poppinsRegular}
             placeholder="Enter Location or Restaurant Name"
             placeholderTextColor="#B0B0B0"
             value={searchQuery}
             onChangeText={setSearchQuery}
             onSubmitEditing={()=> handleSearch(searchQuery)}
           />
-          <Pressable onPress={handleSearch}>
+          <Pressable style={{ position: 'absolute', right: 10, padding: 10 }}
+            onPress={handleSearch}
+          >
             <Icons name="search" color="black" size={20} />
           </Pressable>
         </View>
@@ -185,60 +195,82 @@ const Index = () => {
       
 
       <View className="flex-1 p-4 bg-white">
-      {/* Tab Navigation */}
-      <View className="flex-row mb-4">        
-        <TouchableOpacity
-          onPress={() => setSelectedTab('restaurants')}
-          className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'restaurants' ? 'shadow-lg shadow-[#dda15e] m-1' : 'bg-gray-200'}`}
-        >
-          <Text className="text-lg font-bold">Restaurants</Text>
-        </TouchableOpacity>
+        {/* Tab Navigation */}
+        <View className="flex-row mb-4">        
+          <TouchableOpacity
+            onPress={() => setSelectedTab('restaurants')}
+            className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'restaurants' ? 'bg-[#b6465f] shadow-[#dda15e] m-1' : 'bg-gray-200'}`}
+          >
+            <Text className="text-lg font-bold">Restaurants</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => setSelectedTab('places')}
-          className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'places' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-        >
-          <Text className="text-lg font-bold">Nearby Places</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setSelectedTab('places')}
+            className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'places' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          >
+            <Text className="text-lg font-bold">Nearby Places</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Tab Content */}
+        {selectedTab === 'restaurants' ? 
+        (
+          <>
+            {/* <Text className="text-2xl font-bold mb-4">Restaurants</Text> */}
+            <FlatList
+              data={restaurants}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <Pressable
+                  className="mb-4 p-4 bg-gray-100 rounded-lg shadow-lg"
+                  onPress={() => openModal(item)}
+                >
+                  <Image style={{width:32, height:32, backgroundColor:"grey", borderRadius: 8}}
+                    src={`${item.categories[0].icon.prefix}64${item.categories[0].icon.suffix}`}
+                    alt="Category Icon"
+                  />
+                  <Text className="text-lg font-medium">
+                    {item ? item.name || "Unnamed Restaurant" : "No Name"}
+                  </Text>
+                </Pressable>
+              )}
+            />
+          </>
+        ):(
+          <>
+            <Text className="text-2xl font-bold mb-4">Nearby Places</Text>
+            <FlatList
+              data={nearbyPlaces}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View className="mb-2 p-4 bg-gray-100 rounded-lg shadow-md">  
+                  <Text className="text-lg font-medium">
+                    {item ? item.name || "Unnamed Place" : "No Name"}
+                  </Text>
+                </View>
+              )}
+            />
+          </>
+        ) }
       </View>
 
-      {/* Tab Content */}
-      {selectedTab === 'places' ? (
-        <>
-          <Text className="text-2xl font-bold mb-4">Nearby Places</Text>
-          <FlatList
-            data={nearbyPlaces}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View className="mb-2 p-4 bg-gray-100 rounded-lg shadow-md">  
-                <Text className="text-lg font-medium">
-                  {item ? item.name || "Unnamed Place" : "No Name"}
-                </Text>
-              </View>
-            )}
-          />
-        </>
-      ) : (
-        <>
-          <Text className="text-2xl font-bold mb-4">Restaurants</Text>
-          <FlatList
-            data={restaurants}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View className="mb-2 p-4 bg-yellow-100 rounded-lg shadow-md">
-                <Image style={{width:32, height:32, backgroundColor:"grey", borderRadius: 8}}
-                  src={`${item.categories[0].icon.prefix}64${item.categories[0].icon.suffix}`}
-                  alt="Category Icon"
-                />
-                <Text className="text-lg font-medium">
-                  {item ? item.name || "Unnamed Restaurant" : "No Name"}
-                </Text>
-              </View>
-            )}
-          />
-        </>
-      )}
-    </View>
+      {/* Modal for Book a Table */}
+      <Modal
+        // animationType="slide"
+
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+        className='slide-in-right'
+      >
+        <Pressable
+          onPress={closeModal}
+          className="absolute top-5 left-5 bg-white p-2 rounded-full shadow-lg z-20"
+        >
+          <Text>X</Text>
+        </Pressable>
+        <Booktable restaurant={selectedRestaurant} />
+      </Modal>
       
     </View>
   );
@@ -246,5 +278,29 @@ const Index = () => {
 };
 
 export default Index;
+
+const styles = StyleSheet.create({
+  poppinsRegular: {
+    fontFamily: 'poppinsRegular',
+  },
+  poppinsBold: {
+    fontFamily: 'poppinsBold',
+  },
+  poppinsMedium: {
+    fontFamily: 'poppinsMedium',
+  },
+  poppinsSemiBold: {
+    fontFamily: 'poppinsSemiBold',
+  },
+  poppinsExtraBold: {
+    fontFamily: 'poppinsExtraBold',
+  },
+  poppinsitalic: {
+    fontFamily: 'poppinsitalic',
+  },
+  poppinsBoldItalic: {
+    fontFamily: 'poppinsBoldItalic',
+  },
+});
 
 
