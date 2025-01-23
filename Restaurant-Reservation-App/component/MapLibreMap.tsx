@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-const MapScreen = ({ currentLat, currentLon, searchedLat, searchedLon, restaurants }) => {
+const MapScreen = ({ currentLat, currentLon, searchedLat, searchedLon }) => {
 
   const webviewRef = useRef(null);  // Reference to WebView
   const [mapLoaded, setMapLoaded] = useState(false);  // Track when the map is loaded
@@ -13,11 +13,6 @@ const MapScreen = ({ currentLat, currentLon, searchedLat, searchedLon, restauran
 
   const containerHeight = searchedLat && searchedLon ? 300 : 128;
 
-  console.log("restaurant | rm: " ,restaurants);
-  
-
-  // Convert the restaurant data to a string and encode it in the URL (or use another method)
-  const restaurantsData = encodeURIComponent(JSON.stringify(restaurants));
   
   const mapUrl = `https://map-server-1-l0ef.onrender.com/map?currentLat=${currentLat}&currentLon=${currentLon}&lat=${searchedLat}&lon=${searchedLon}`;
 

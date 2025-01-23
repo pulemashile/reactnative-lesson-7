@@ -157,7 +157,6 @@ const Index = () => {
         currentLon={currentLon}    
         searchedLat={searchedLat}    
         searchedLon={searchedLon}   
-        restaurants= {restaurants}
       />
       
       {/* Search Container */}

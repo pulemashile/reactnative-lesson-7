@@ -96,7 +96,7 @@ const Booktable = () => {
                                 <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Spaghetti Bolognese</Text>
                                 <Text className="text-gray-600"style={styles.poppinsRegular}>A rich and hearty pasta dish made with slow-cooked ground beef, tomatoes, and Italian spices. Served with garlic bread.</Text>
                                 <Pressable className="mt-4 bg-[#890620] text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    $15.99
+                                <Text>$18.99</Text>  
                                 </Pressable>
                             </View>
 
@@ -104,8 +104,8 @@ const Booktable = () => {
                                 <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Grilled Salmon</Text>
                                 <Text className="text-gray-600"style={styles.poppinsRegular}>Freshly grilled salmon fillet served with roasted vegetables and a side of lemon butter sauce.</Text>
                                 <Pressable className="mt-4 bg-[#890620] text-white text-lg font-semibold py-3 px-2 rounded-sm
-                                shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    $18.99
+                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+                                  <Text>$18.99</Text>  
                                 </Pressable>
                             </View>
 
@@ -113,7 +113,7 @@ const Booktable = () => {
                                 <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Vegetarian Pizza</Text>
                                 <Text className="text-gray-600">A delicious pizza topped with fresh vegetables, mozzarella, and a savory tomato sauce.</Text>
                                 <Pressable className="mt-4 bg-[#890620] text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    $12.99
+                                    <Text>$18.99</Text>  
                                 </Pressable>
                             </View>
 
@@ -121,7 +121,7 @@ const Booktable = () => {
                                 <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Caesar Salad</Text>
                                 <Text className="text-gray-600"style={styles.poppinsRegular}>Crisp romaine lettuce tossed in creamy Caesar dressing, topped with parmesan and croutons.</Text>
                                 <Pressable className="mt-4 bg-red-500 text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    $9.99
+                                    <Text>$18.99</Text>  
                                 </Pressable>
                             </View>
                         </View>
@@ -150,6 +150,7 @@ const Booktable = () => {
                                 Our team is passionate about delivering high-quality dining experiences and ensuring that every customer feels at home. We are committed to sustainability, sourcing locally, and creating a menu that delights all of our guests. Thank you for choosing us, and we hope you enjoy every bite!
                             </Text>
                         )}
+
                         <Pressable onPress={toggleText}>
                             <Text className="text-[#890620] font-semibold mt-3"style={styles.poppinsRegular}>
                                 {showFullText ? "Read Less" : "Read More"}
@@ -182,8 +183,12 @@ const Booktable = () => {
                             <Text className="text-2xl font-bold text-gray-700 mb-3"style={styles.poppinsRegular}>Opening Hours</Text>
                             <View className="text-lg text-gray-700">
                                 <Text className='mb-2 text-gray-700 font-thin ' style={styles.poppinsRegular}> Monday - Friday: 9:00 AM - 10:00 PM</Text>
-                                <Text style={styles.poppinsRegular}>Saturday: 10:00 AM - 11:00 PM</Text>
-                                <Text style={styles.poppinsRegular}>Sunday: Closed</Text>
+                                <Text style={styles.poppinsRegular}>
+                                    Saturday: 10:00 AM - 11:00 PM
+                                </Text>
+                                <Text style={styles.poppinsRegular}>
+                                    Sunday: Closed
+                                </Text>
                             </View>
                         </View>
                     </View>
@@ -235,15 +240,29 @@ const Booktable = () => {
                         <Text className="text-2xl font-bold text-gray-700 mb-3"style={styles.poppinsRegular}>Customer Reviews</Text>
                         <View className="space-y-5">
                             <View>
-                                <Text className="font-semibold text-gray-800"style={styles.poppinsRegular}>John Doe</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>"An amazing experience! The food was outstanding, and the service was top-notch. Definitely coming back."</Text>
-                                <Text className="text-yellow-500 mt-2"style={styles.poppinsRegular}>⭐⭐⭐⭐⭐</Text>
+                                <Text className="font-semibold text-gray-800"style={styles.poppinsRegular}>
+                                    John Doe
+                                </Text>
+                                <Text className="text-gray-600"style={styles.poppinsRegular}>
+                                    "An amazing experience! The food was outstanding, 
+                                    and the service was top-notch. Definitely coming back."
+                                </Text>
+                                <Text className="text-yellow-500 mt-2"style={styles.poppinsRegular}>
+                                    ⭐⭐⭐⭐⭐
+                                </Text>
                             </View>
 
                             <View>
-                                <Text className="font-semibold text-gray-800"style={styles.poppinsRegular}>Jane Smith</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>"I loved the vegetarian pizza! A must-try dish. The atmosphere is very cozy and inviting."</Text>
-                                <Text className="text-yellow-500 mt-2"style={styles.poppinsRegular}>⭐⭐⭐⭐⭐</Text>
+                                <Text className="font-semibold text-gray-800"style={styles.poppinsRegular}>
+                                    Jane Smith
+                                </Text>
+                                <Text className="text-gray-600"style={styles.poppinsRegular}>
+                                    "I loved the vegetarian pizza! A must-try dish. 
+                                    The atmosphere is very cozy and inviting."
+                                </Text>
+                                <Text className="text-yellow-500 mt-2"style={styles.poppinsRegular}>
+                                    ⭐⭐⭐⭐⭐
+                                </Text>
                             </View>
 
                             <View>

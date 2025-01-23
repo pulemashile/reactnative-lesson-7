@@ -12,22 +12,31 @@ const useCurrentLocation = () => {
 
   useEffect(() => {
     const getCurrentLocation = async () => {
+      console.log("getcurrent");
+      
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== 'granted') 
+      {
         setErrMsg('Permission to access location was denied');
         setLoading(false);
         return;
       }
 
       const location = await Location.getCurrentPositionAsync({});
+      console.log("location",location);
+      
       const { latitude, longitude } = location.coords;
+      console.log(latitude, longitude);
+
+      setLat(latitude);
+      setLon(longitude);      
+
       const reverseGeocode = await Location.reverseGeocodeAsync({
         latitude,
         longitude,
       });
 
-      setLat(latitude);
-      setLon(longitude);
+      console.log("reverseGeocode", reverseGeocode);      
       setLocation(reverseGeocode[0]);
       setLoading(false);
     };

@@ -1,128 +1,195 @@
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, TextInput, Pressable } from 'react-native';
+import Slider from '@react-native-community/slider';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 
 const Booking = () => {
-  const [guestCount, setGuestCount] = useState(1); // Guest count state
-  const [date, setDate] = useState(''); // Date state
-  const [time, setTime] = useState('2:00 PM'); // Preferred time state
-  const [mealType, setMealType] = useState('lunch'); // Meal type state
+  const [guestCount, setGuestCount] = useState(1); 
+  const [name, setName] = useState(''); // User name
+  const [date, setDate] = useState(new Date()); // Date state
+  const [time, setTime] = useState(new Date()); // Preferred time
+  const [mealType, setMealType] = useState('lunch'); // Meal type
+  const [notes, setNotes] = useState(''); // Notes
+  const [specialRequest, setSpecialRequest] = useState(''); // Special requirements
+
+  const [showDatePicker, setShowDatePicker] = useState(false); // Show date picker
+  const [showTimePicker, setShowTimePicker] = useState(false); // Show time picker
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+  };
+
+  const handleTimeChange = (event, selectedTime) => {
+    setShowTimePicker(false);
+    const currentTime = selectedTime || time;
+    setTime(currentTime);
+  };
+
+   // Handle value change smoothly
+   const handleValueChange = (value) => {
+    setGuestCount(Math.floor(value)); // Round to the nearest integer (if needed)
+  };
+
+  // Handle the completion of the sliding action
+  const handleSlidingComplete = (value) => {
+    setGuestCount(Math.floor(value)); // Finalize value after sliding
+  };
+
+  const handleSubmit = () => {
+    console.log({
+      name,
+      guestCount,
+      date: date.toLocaleDateString(),
+      time: time.toLocaleTimeString(),
+      mealType,
+      notes,
+      specialRequest,
+    });
+    // Handle submission (navigate or make API call)
+  };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 p-5">
+      {/* Name input */}
+      <View className="mb-5">
+        <Text className="font-semibold text-[#14213d] mb-2">Your Name</Text>
+        <TextInput
+          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+          placeholder="Enter your name"
+          value={name}
+          onChangeText={setName}
+        />
+      </View>
+
       {/* Guest count input */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.poppinsSemiBold}className='text-[#14213d]'>Guest Count</Text>
-        <TextInput className='bg-white rounded-md w-full px-10 py-4 text-gray-400 bg-white border border-gray-400 shadow-md'
-          style={styles.poppinsRegular}
+      <View className="mb-5">
+        <Text className="font-semibold text-[#14213d] mb-2">Guest Count</Text>
+        <View className='flex-row align-center gap-2'>
+          <TextInput 
+            className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+            placeholder="Enter guest count"
+            value={guestCount.toString()} // Convert to string for display
+            onChangeText={handleValueChange}
+          />
+          <Text className="text-lg mt-3 text-[#14213d]">Guests</Text>
+
+          <Slider
+            style={{ width: '75%', height: 40 }}
+            minimumValue={1}
+            maximumValue={50}
+            step={1}
+            value={guestCount} // Sync slider value with state
+            onValueChange={handleValueChange} // Continuous value change
+            onSlidingComplete={handleSlidingComplete} // Final value on slide complete
+            minimumTrackTintColor="#FF6347" // You can customize these colors
+            maximumTrackTintColor="#ddd"
+            thumbTintColor="#FF6347" // Customize thumb color
+          /> 
+        </View>
+             
+        
+        {/* <TextInput
+          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
           placeholder="Enter guest count"
           value={String(guestCount)}
           keyboardType="numeric"
           onChangeText={(text) => setGuestCount(Number(text))}
-        />
+        /> */}
       </View>
 
       {/* Date input */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.poppinsSemiBold}className='text-[#14213d]'>Date</Text>
-        <TextInput className='bg-white rounded-md w-full px-10 py-4 text-gray-400 bg-white border border-gray-400 shadow-md'
-          style={styles.poppinsRegular}
-          placeholder="Enter date (MM/DD/YYYY)"
-          value={date}
-          onChangeText={setDate}
+      <View className="mb-5">
+        <Text className="font-semibold text-[#14213d] mb-2">Date</Text>
+        <Pressable
+          onPress={() => setShowDatePicker(true)}
+          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+        >
+          <Text className="text-gray-600">{date.toLocaleDateString()}</Text>
+        </Pressable>
+        {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
+      </View>
+
+      {/* Time input */}
+      <View className="mb-5">
+        <Text className="font-semibold text-[#14213d] mb-2">Preferred Time</Text>
+        <Pressable
+          onPress={() => setShowTimePicker(true)}
+          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+        >
+          <Text className="text-gray-600">{time.toLocaleTimeString()}</Text>
+        </Pressable>
+        {showTimePicker && (
+          <DateTimePicker
+            value={time}
+            mode="time"
+            display="default"
+            onChange={handleTimeChange}
+          />
+        )}
+      </View>
+
+      {/* Meal Type input (Dropdown) */}
+      <View className="mb-5">
+        <Text className="font-semibold text-[#14213d] mb-2">Meal Type</Text>
+        <Picker
+          selectedValue={mealType}
+          onValueChange={(itemValue) => setMealType(itemValue)}
+          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+        >
+          <Picker.Item label="Lunch" value="lunch" />
+          <Picker.Item label="Dinner" value="dinner" />
+          <Picker.Item label="Breakfast" value="breakfast" />
+        </Picker>
+      </View>
+
+      {/* Notes input (Textarea) */}
+      <View className="mb-5">
+        <Text className="font-semibold text-[#14213d] mb-2">Additional Notes</Text>
+        <TextInput
+          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm h-24 text-gray-600"
+          placeholder="Enter any additional notes"
+          value={notes}
+          onChangeText={setNotes}
+          multiline
         />
       </View>
 
-      {/* Preferred Time input */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.poppinsSemiBold}className='text-[#14213d]'>Preferred Time</Text>
-        <TextInput className='bg-white rounded-md w-full px-10 py-4 text-gray-400 bg-white border border-gray-400 shadow-md'
-          style={styles.poppinsRegular}
-          placeholder="Enter time (e.g., 2:00 PM)"
-          value={time}
-          onChangeText={setTime}
-        />
-      </View>
-
-      {/* Meal Type input */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.poppinsSemiBold} className='text-[#14213d]'>Meal Type</Text>
-        <TextInput className='bg-white rounded-md w-full px-10 py-4 text-gray-400 bg-white border border-gray-400 shadow-md'
-          style={styles.poppinsRegular}
-          placeholder="Enter meal type (e.g., lunch, dinner)"
-          value={mealType}
-          onChangeText={setMealType}
-        />
+      {/* Special Request input (Dropdown) */}
+      <View className="mb-5">
+        <Text className="font-semibold text-[#14213d] mb-2">Special Request</Text>
+        <Picker
+          selectedValue={specialRequest}
+          onValueChange={(itemValue) => setSpecialRequest(itemValue)}
+          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+        >
+          <Picker.Item label="None" value="" />
+          <Picker.Item label="Birthday" value="birthday" />
+          <Picker.Item label="Anniversary" value="anniversary" />
+          <Picker.Item label="Other" value="other" />
+        </Picker>
       </View>
 
       {/* Proceed Button */}
-      <View style={styles.buttonContainer}>
-        <Pressable style={styles.proceedButton} onPress={() => {}}>
-          <Text style={styles.poppinsRegular} className='text-white'>Proceed</Text>
+      <View className="mt-8 flex items-center">
+        <Pressable
+          onPress={handleSubmit}
+          style={{ backgroundColor: '#890620', paddingVertical: 12, paddingHorizontal: 48, borderRadius: 8, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 5 }}
+        >
+          <Text className="text-white text-lg font-semibold">Proceed</Text>
         </Pressable>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  input: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 12,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-  buttonContainer: {
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  proceedButton: {
-    backgroundColor: '#890620',
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  poppinsRegular: {
-    fontFamily: 'poppinsRegular',
-
-},
-poppinsBold: {
-    fontFamily: 'poppinsBold',
-},
-poppinsMedium: {
-    fontFamily: 'poppinsMedium',
-},
-poppinsSemiBold: {
-    fontFamily: ' poppinsSemiBold',
-},
-poppinsExtraBold: {
-    fontFamily: 'poppinsExtraBold',
-},
-});
 
 export default Booking;
