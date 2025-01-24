@@ -13,122 +13,133 @@ const Index = () => {
   const [selectedTab, setSelectedTab] = useState('restaurants');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null); // Track which restaurant is selected
-
-  const [query, setQuery] = useState<string>('');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [query, setQuery] = useState<string>('');  // Search query (location or restaurant)
+  const [searchQuery, setSearchQuery] = useState<string>('');  // User input query
   const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+  const [useCoordinates, setUseCoordinates] = useState<boolean>(false);  // Flag to use coordinates or query
+  const [nearbyPlaces, setNearbyPlaces] = useState([]);  // Nearby places results
+  const [restaurants, setRestaurants] = useState([]);  // Restaurant search results
 
-  const { 
-    lat: currentLat, 
-    lon: currentLon, 
-    curLocation,
-    errMsg: currentLocationError, 
-    loading: currentLocationLoading } = useCurrentLocation();
-
-  const { 
-    searchedLat, 
-    searchedLon, 
-    searchedLocation, 
-    errMsg: searchedLocationError, 
-    loading: searchedLocationLoading } = useLocation(searchQuery);
-
-  const [useCoordinates, setUseCoordinates] = useState<boolean>(false); 
-  const [nearbyPlaces, setNearbyPlaces] = useState([]);
-  const [restaurants, setRestaurants] = useState([]);
-  const [restaurantPhotos, setRestaurantPhotos] = useState([]);  
+  const { lat: currentLat, lon: currentLon, curLocation, errMsg, loading } = useCurrentLocation();  
+  const { searchedLat, searchedLon, searchedLocation, errMsg: locationErrMsg, loading: locationLoading } = useLocation(debouncedQuery);  // Location hook for city search
 
   const formatDate = (dt_txt) => {
     const date = new Date(dt_txt);
     return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   };
 
+  // Debounced query change handler
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 500); // Adjust debounce time as needed
+    return () => clearTimeout(timer);  // Cleanup timer
+  }, [searchQuery]);
+
+  // Handle search query when debounced query is updated
+  useEffect(() => {
+    if (debouncedQuery.trim()) 
+    {
+      handleSearch(debouncedQuery);
+    }
+  }, [debouncedQuery]);
+
+  // When current location changes, fetch nearby places and restaurants
   useEffect(() => {
     if (currentLat && currentLon) 
     {
       setQuery(`${currentLat},${currentLon}`);
       setUseCoordinates(true);
-      fetchNearbyPlaces(currentLat, currentLon); 
-      fetchRestaurants(currentLat, currentLon);
+      fetchNearbyPlaces(currentLat, currentLon);
+      fetchRestaurants({ currentLat, currentLon });
     }
   }, [currentLat, currentLon]);
 
+  // When searched city (latitude, longitude) changes, fetch results for that location
   useEffect(() => {
-    if (searchedLat && searchedLon) {
+    if (searchedLat && searchedLon) 
+    {
       fetchNearbyPlaces(searchedLat, searchedLon);
       fetchRestaurants(searchedLat, searchedLon); 
     }
-  }, [searchedLat, searchedLon]);  
-
-  // Debounce logic - delay the search until typing has stopped for 500ms
-  useEffect(() => {
-    const timer = setTimeout(() => 
-    {
-      setDebouncedQuery(searchQuery);
-    }, 500); // Adjust debounce time as needed
-
-    // Cleanup timer on component unmount or query change
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (debouncedQuery.trim()) 
-    {
-      // Fetch results based on debouncedQuery
-      handleSearch(debouncedQuery);
-    }
-  }, [debouncedQuery]);
+  }, [searchedLat, searchedLon]);
 
   const openModal = (restaurant) => {
-    setSelectedRestaurant(restaurant); // Set the restaurant data for the modal
-    setModalVisible(true); // Open the modal
+    setSelectedRestaurant(restaurant);  // Set the restaurant data for the modal
+    setModalVisible(true);  // Open the modal
   };
 
   const closeModal = () => {
-    setModalVisible(false); // Close the modal
-    setSelectedRestaurant(null); // Reset the selected restaurant
+    setModalVisible(false);  // Close the modal
+    setSelectedRestaurant(null);  // Reset the selected restaurant
   };
 
-  const handleSearch = (query) => {   
-    if (query.trim()) 
+  // Determine whether the query is a location or restaurant search
+  const handleSearch = async (query) => {
+    if (!query.trim()) return;
+
+    // Check if the query resolved to a valid location
+    if (searchedLat && searchedLon) 
     {
+      // It's a location search (city, town, etc.)
       setQuery(query);
-      setUseCoordinates(false);
-    } 
-    else if(searchedLat && searchedLon) 
-    {
-      setQuery(`${searchedLat},${searchedLon}`);
-      setUseCoordinates(true);
-    } 
+      setUseCoordinates(false);  // Set to use location (city) based search
+      fetchNearbyPlaces(searchedLat, searchedLon);  // Fetch places around the searched location
+      fetchRestaurants({ lat: searchedLat, lon: searchedLon });  // Fetch restaurants near the searched location
+    }
     else 
     {
-      setQuery(`${currentLat},${currentLon}`);
-      setUseCoordinates(true);
+      // If no valid location found, treat it as a restaurant search query
+      setQuery(query);
+      setUseCoordinates(false);  // Set to use search query (for restaurants)
+      fetchRestaurants({ query: query });  // Fetch restaurants based on the search query (restaurant name, etc.)
     }
   };
 
-  // Function to fetch nearby places
+  // Function to fetch nearby places based on latitude and longitude
   const fetchNearbyPlaces = async (lat, lon) => {
     try {
       const response = await fetch(`https://map-server-1-l0ef.onrender.com/api/nearbyplaces?lat=${lat}&lon=${lon}`);
       const data = await response.json();
-
-      // console.log("nearbyPlaces", data.results);
-      if (Array.isArray(data.results)) 
-      {
-        // console.log("nearbyPlaces", data.results);        
+      if (Array.isArray(data.results)) {
         setNearbyPlaces(data.results);
-      } 
-      else { console.error('No nearby places found');  }
-    } 
-    catch (error) { console.error('Error fetching nearby places:', error); }
+      } else {
+        console.error('No nearby places found');
+      }
+    } catch (error) {
+      console.error('Error fetching nearby places:', error);
+    }
   };
 
-  // Function to fetch restaurants
-  const fetchRestaurants = async (lat, lon) => {
-    try {
-      const response = await fetch(`https://map-server-1-l0ef.onrender.com/api/restaurants?lat=${lat}&lon=${lon}`);
+  // Function to fetch restaurants based on latitude and longitude or query
+  const fetchRestaurants = async (searchQuery) => {
+    console.log(searchQuery);
+    
+    try 
+    {
+      const { lat, lon, query } = searchQuery;
+  
+      let url = `https://map-server-1-l0ef.onrender.com/api/restaurants?currentLat=${currentLat}&currentLon=${currentLon}`;
+  
+      // If lat and lon are available, use them for the request
+      if (lat && lon) 
+      {
+        url += `&lat=${lat}&lon=${lon}`;
+      }
+      
+      // If it's a restaurant name or type, append it to the request
+      if (query) 
+      {
+        url += `&query=${encodeURIComponent(query)}`;
+      }
+
+      console.log(url);
+      
+  
+      const response = await fetch(url);
       const data = await response.json();
-      // console.log("restaurants: ", data.results);
+      console.log("restaurants: ", data.results);
+      
       
       if (Array.isArray(data.results)) 
       {
@@ -138,23 +149,6 @@ const Index = () => {
     } 
     catch (error) { console.error('Error fetching restaurants:', error); }
   };
-
-  // Function to fetch photos for a specific restaurant
-  const fetchRestaurantPhotos = async (fsq_id) => {
-    try {
-      const response = await fetch(`http://10.196.0.124:3000/api/restaurant-photos?fsq_id=${fsq_id}`);
-      const data = await response.json();
-      if (data.photos && data.photos.length > 0) {
-        setRestaurantPhotos(data.photos);
-      } else {
-        console.error('No photos found for this restaurant');
-      }
-    } catch (error) {
-      console.error('Error fetching restaurant photos:', error);
-    }
-  };
-
-  // console.log("Restaurents",restaurants);  
 
   return (
     <View className="flex-1 bg-[#edf2fb]">
@@ -198,14 +192,14 @@ const Index = () => {
         <View className="flex-row mb-4">        
           <TouchableOpacity
             onPress={() => setSelectedTab('restaurants')}
-            className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'restaurants' ? 'bg-[#b6465f] shadow-[#dda15e] m-1' : 'bg-gray-200'}`}
+            className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'restaurants' ? 'bg-gray-200' : 'bg-[#b6465f] mr-1'}`}
           >
             <Text className="text-lg font-bold">Restaurants</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => setSelectedTab('places')}
-            className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'places' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            className={`flex-1 p-2 text-center rounded-tl-lg rounded-tr-lg ${selectedTab === 'places' ? 'bg-gray-200' : 'bg-[#b6465f] mr-1'}`}
           >
             <Text className="text-lg font-bold">Nearby Places</Text>
           </TouchableOpacity>

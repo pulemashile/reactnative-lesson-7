@@ -57,7 +57,7 @@ const Booking = () => {
       <View className="mb-5">
         <Text className="font-semibold text-[#14213d] mb-2">Your Name</Text>
         <TextInput
-          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+          className="bg-white border border-gray-300 p-3 rounded-md"
           placeholder="Enter your name"
           value={name}
           onChangeText={setName}
@@ -69,7 +69,7 @@ const Booking = () => {
         <Text className="font-semibold text-[#14213d] mb-2">Guest Count</Text>
         <View className='flex-row align-center gap-2'>
           <TextInput 
-            className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+            className="bg-white border border-gray-300 p-3 rounded-md"
             placeholder="Enter guest count"
             value={guestCount.toString()} // Convert to string for display
             onChangeText={handleValueChange}
@@ -105,7 +105,7 @@ const Booking = () => {
         <Text className="font-semibold text-[#14213d] mb-2">Date</Text>
         <Pressable
           onPress={() => setShowDatePicker(true)}
-          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+          className="bg-white border border-gray-300 p-3 rounded-md"
         >
           <Text className="text-gray-600">{date.toLocaleDateString()}</Text>
         </Pressable>
@@ -124,7 +124,7 @@ const Booking = () => {
         <Text className="font-semibold text-[#14213d] mb-2">Preferred Time</Text>
         <Pressable
           onPress={() => setShowTimePicker(true)}
-          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+          className="bg-white border border-gray-300 p-3 rounded-md"
         >
           <Text className="text-gray-600">{time.toLocaleTimeString()}</Text>
         </Pressable>
@@ -144,7 +144,7 @@ const Booking = () => {
         <Picker
           selectedValue={mealType}
           onValueChange={(itemValue) => setMealType(itemValue)}
-          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+          className="bg-white border border-gray-300 p-3 rounded-md"
         >
           <Picker.Item label="Lunch" value="lunch" />
           <Picker.Item label="Dinner" value="dinner" />
@@ -170,7 +170,7 @@ const Booking = () => {
         <Picker
           selectedValue={specialRequest}
           onValueChange={(itemValue) => setSpecialRequest(itemValue)}
-          className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+          className="bg-white border border-gray-300 p-3 rounded-md"
         >
           <Picker.Item label="None" value="" />
           <Picker.Item label="Birthday" value="birthday" />
