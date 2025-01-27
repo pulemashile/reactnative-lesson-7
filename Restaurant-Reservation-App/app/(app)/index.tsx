@@ -10,6 +10,7 @@ import Booktable from './booktable';
 
 const Index = () => {    
   const router = useRouter();
+
   const [selectedTab, setSelectedTab] = useState('restaurants');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null); // Track which restaurant is selected
@@ -23,6 +24,7 @@ const Index = () => {
   const { lat: currentLat, lon: currentLon, curLocation, errMsg, loading } = useCurrentLocation();  
   const { searchedLat, searchedLon, searchedLocation, errMsg: locationErrMsg, loading: locationLoading } = useLocation(debouncedQuery);  // Location hook for city search
 
+  const [loadingRestaurants, setLoadingRestaurants] = useState('');
   const formatDate = (dt_txt) => {
     const date = new Date(dt_txt);
     return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
@@ -59,6 +61,7 @@ const Index = () => {
   useEffect(() => {
     if (searchedLat && searchedLon) 
     {
+      setQuery(`${searchedLat},${searchedLon}`);
       fetchNearbyPlaces(searchedLat, searchedLon);
       fetchRestaurants(searchedLat, searchedLon); 
     }
@@ -82,7 +85,7 @@ const Index = () => {
     if (searchedLat && searchedLon) 
     {
       // It's a location search (city, town, etc.)
-      setQuery(query);
+      // setQuery({`${searchedLat} ,${searchedLon}`});
       setUseCoordinates(false);  // Set to use location (city) based search
       fetchNearbyPlaces(searchedLat, searchedLon);  // Fetch places around the searched location
       fetchRestaurants({ lat: searchedLat, lon: searchedLon });  // Fetch restaurants near the searched location
@@ -125,6 +128,7 @@ const Index = () => {
       if (lat && lon) 
       {
         url += `&lat=${lat}&lon=${lon}`;
+        // setQuery{}
       }
       
       // If it's a restaurant name or type, append it to the request
@@ -138,14 +142,20 @@ const Index = () => {
   
       const response = await fetch(url);
       const data = await response.json();
-      console.log("restaurants: ", data.results);
+      console.log("restaurants: query", query ,data.results);
       
       
       if (Array.isArray(data.results)) 
       {
         setRestaurants(data.results);
+        setLoadingRestaurants(false);
+        // setSearchQuery("")
       } 
-      else { console.error('No restaurants found'); }
+      else 
+      { 
+        setLoadingRestaurants(true);
+        // console.error('No restaurants found'); 
+      }
     } 
     catch (error) { console.error('Error fetching restaurants:', error); }
   };
@@ -173,7 +183,7 @@ const Index = () => {
             onSubmitEditing={()=> handleSearch(searchQuery)}
           />
           <Pressable style={{ position: 'absolute', right: 10, padding: 10 }}
-            onPress={handleSearch}
+            onPress={() => handleSearch(searchQuery)}
           >
             <Icons name="search" color="black" size={20} />
           </Pressable>
@@ -182,7 +192,9 @@ const Index = () => {
 
       { searchedLocation &&
         <View>
-          <Text className="text-sm text-gray-800">{`${searchedLocation.country}, ${searchedLocation.city}, ${searchedLocation.district} `}</Text>
+          <Text className="text-sm text-gray-800">
+            {`${searchedLocation.country}, ${searchedLocation.city}, ${searchedLocation.district} `}
+          </Text>
         </View>
       }
       
@@ -209,25 +221,35 @@ const Index = () => {
         {selectedTab === 'restaurants' ? 
         (
           <>
-            {/* <Text className="text-2xl font-bold mb-4">Restaurants</Text> */}
-            <FlatList
-              data={restaurants}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <Pressable
-                  className="mb-4 p-4 bg-gray-100 rounded-lg shadow-lg"
-                  onPress={() => openModal(item)}
-                >
-                  <Image style={{width:32, height:32, backgroundColor:"grey", borderRadius: 8}}
-                    src={`${item.categories[0].icon.prefix}64${item.categories[0].icon.suffix}`}
-                    alt="Category Icon"
-                  />
-                  <Text className="text-lg font-medium">
-                    {item ? item.name || "Unnamed Restaurant" : "No Name"}
-                  </Text>
-                </Pressable>
-              )}
-            />
+            {
+              (loadingRestaurants && restaurants.length < 0) ? 
+              ( <View> <Text> Loading Restaurants </Text></View>): (
+                <FlatList
+                  data={restaurants}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item }) => (
+                    <Pressable
+                      className="mb-4 p-4 bg-gray-100 rounded-lg shadow-lg"
+                      onPress={() => openModal(item)}
+                    >
+                      <View className="flex-row mb-2 gap-2">
+                        <Image style={{width:32, height:32, backgroundColor:"grey", borderRadius: 8}}
+                          src={`${item.categories[0].icon.prefix}64${item.categories[0].icon.suffix || "🍽"}`}
+                          alt="Category Icon"
+                        />
+                        <Text className="text-lg font-medium">
+                          {item ? item.name || "Unnamed Restaurant" : "No Name"}
+                        </Text>
+                      </View>
+                      
+
+                      <Text className="text-sm ">
+                        {item ? `${item.location.formatted_address || "◼"}, ${item.location.region ||  "◼"},  ${item.location.country ||  "◼"}` || "Unnamed Restaurant" : "No Name"}                          
+                      </Text>
+                    </Pressable>
+                )}
+              />)
+            }              
           </>
         ):(
           <>
@@ -250,7 +272,6 @@ const Index = () => {
       {/* Modal for Book a Table */}
       <Modal
         // animationType="slide"
-
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}

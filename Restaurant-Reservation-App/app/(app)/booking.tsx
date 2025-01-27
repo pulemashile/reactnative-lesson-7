@@ -7,8 +7,10 @@ import { Picker } from '@react-native-picker/picker';
 const Booking = () => {
   const [guestCount, setGuestCount] = useState(1); 
   const [name, setName] = useState(''); // User name
+
   const [date, setDate] = useState(new Date()); // Date state
   const [time, setTime] = useState(new Date()); // Preferred time
+
   const [mealType, setMealType] = useState('lunch'); // Meal type
   const [notes, setNotes] = useState(''); // Notes
   const [specialRequest, setSpecialRequest] = useState(''); // Special requirements
@@ -88,8 +90,7 @@ const Booking = () => {
             maximumTrackTintColor="#ddd"
             thumbTintColor="#FF6347" // Customize thumb color
           /> 
-        </View>
-             
+        </View>             
         
         {/* <TextInput
           className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"

@@ -3,10 +3,46 @@ import { View, Text, Pressable, Image, Modal, TouchableOpacity, ScrollView,Style
 import { Ionicons } from '@expo/vector-icons';  // For the icons
 import { useNavigation } from '@react-navigation/native';  // For navigation
 import { router } from 'expo-router';
+import rsaRestaurants from '@/utils/data';
 
-const Booktable = () => {
-    const navigation = useNavigation();
 
+const Booktable = ({restaurant}) => {
+    
+    const selectedRestaurant = rsaRestaurants.filter(_restaurant => {
+        // Get the keyword for comparison (e.g., "Spur" from "Amarillo Spur")
+        const keyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
+        
+        // Check if any part of the restaurant name includes the keyword
+        return _restaurant.name.toLowerCase().includes(keyword);
+      });
+      
+      // Parse the selectedRestaurant data before use
+      const parseRestaurantData = (restaurant) => {
+        // Ensure gallery exists and is an array
+        if (!restaurant || !Array.isArray(restaurant.gallery) || restaurant.gallery.length === 0) {
+          // Provide a default image or handle the case when gallery is empty
+          restaurant.gallery = ['https://example.com/default-image.jpg'];
+        }
+      
+        // Ensure other properties like menu and reviews are correctly formatted
+        if (!restaurant.menu || !Array.isArray(restaurant.menu)) {
+          restaurant.menu = [];
+        }
+      
+        if (!restaurant.reviews || !Array.isArray(restaurant.reviews)) {
+          restaurant.reviews = [];
+        }
+      
+        return restaurant;
+      };
+      
+      // Now parse the first restaurant in the filtered list
+      const parsedRestaurant = selectedRestaurant.map(parseRestaurantData);
+      
+      console.log("Parsed Selected Restaurant: ", parsedRestaurant[0]);
+      
+    
+    
     // State to track the selected tab
     const [selectedTab, setSelectedTab] = useState('Menu'); // Default to 'Menu'
 
@@ -36,7 +72,8 @@ const Booktable = () => {
             {/* Image on top */}
             <View className="relative">
                 <Image
-                    source={require('../../assets/images/set.jpeg')}
+                    // source={require('../../assets/images/set.jpeg')}
+                    source={{uri: parsedRestaurant[0].gallery[0] }}
                     style={{ width: '100%', height: 300, borderRadius: 10 }}
                 />
 
@@ -95,25 +132,27 @@ const Booktable = () => {
                             <View className="bg-white p-5 rounded-xl shadow-lg">
                                 <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Spaghetti Bolognese</Text>
                                 <Text className="text-gray-600"style={styles.poppinsRegular}>A rich and hearty pasta dish made with slow-cooked ground beef, tomatoes, and Italian spices. Served with garlic bread.</Text>
-                                <Pressable className="mt-4 bg-[#890620] text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                <Text>$18.99</Text>  
+                                <Pressable className="mt-4 bg-[#890620] py-3 px-6 rounded-full 
+                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+                                <Text className="text-white text-lg font-semibold">$18.99</Text>  
                                 </Pressable>
                             </View>
 
                             <View className="bg-white p-5 rounded-xl shadow-lg">
                                 <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Grilled Salmon</Text>
                                 <Text className="text-gray-600"style={styles.poppinsRegular}>Freshly grilled salmon fillet served with roasted vegetables and a side of lemon butter sauce.</Text>
-                                <Pressable className="mt-4 bg-[#890620] text-white text-lg font-semibold py-3 px-2 rounded-sm
+                                <Pressable className="mt-4 bg-[#890620] py-3 px-2 rounded-sm
                                     shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                  <Text>$18.99</Text>  
+                                    <Text className="text-white text-lg font-semibold">$18.99</Text>    
                                 </Pressable>
                             </View>
 
                             <View className="bg-white p-5 rounded-xl shadow-lg">
                                 <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Vegetarian Pizza</Text>
                                 <Text className="text-gray-600">A delicious pizza topped with fresh vegetables, mozzarella, and a savory tomato sauce.</Text>
-                                <Pressable className="mt-4 bg-[#890620] text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    <Text>$18.99</Text>  
+                                <Pressable className="mt-4 bg-[#890620] py-3 px-6 rounded-full 
+                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+                                    <Text className="text-white text-lg font-semibold">$18.99</Text> 
                                 </Pressable>
                             </View>
 
@@ -133,8 +172,9 @@ const Booktable = () => {
                     <View className="mt-5 px-5">
                         <Text className="text-2xl font-bold text-gray-700 mb-3"style={styles.poppinsRegular}>About Us</Text>
                         <Text className="text-lg text-gray-700"style={styles.poppinsRegular}>
-                            Welcome to our restaurant! We are a family-owned business dedicated to
-                             providing a memorable dining experience with the finest ingredients and a variety of mouth-watering dishes.
+                            {/* Welcome to our restaurant! We are a family-owned business dedicated to
+                             providing a memorable dining experience with the finest ingredients and a variety of mouth-watering dishes. */}
+                             { `${parsedRestaurant[0].description}` }
                         </Text>
                         {/* <Text className="text-lg text-gray-700 mt-3">
                             Our chefs specialize in creating authentic flavors from around the world, 
