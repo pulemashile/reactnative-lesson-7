@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 
 const Booking = () => {
   const [guestCount, setGuestCount] = useState(1); 
-  const [name, setName] = useState(''); // User name
+  const guestUserData = {
+    fullName: 'Guest User',
+    email: 'guest@example.com',
+    phoneNumber: '+27 987 654 321',
+  };
 
   const [date, setDate] = useState(new Date()); // Date state
   const [time, setTime] = useState(new Date()); // Preferred time
@@ -54,16 +58,28 @@ const Booking = () => {
   };
 
   return (
-    <View className="flex-1 p-5">
+    <ScrollView className="flex-1 p-5 mb-4">
       {/* Name input */}
       <View className="mb-5">
-        <Text className="font-semibold text-[#14213d] mb-2">Your Name</Text>
-        <TextInput
-          className="bg-white border border-gray-300 p-3 rounded-md"
-          placeholder="Enter your name"
-          value={name}
-          onChangeText={setName}
-        />
+        <View className="bg-white shadow-lg rounded-lg p-5">
+          {/* Card Title */}
+          <Text className="font-bold text-xl text-center mb-4 border">Guest Information</Text>
+
+          {/* Full Name Display */}
+          <View className="mb-3">
+            <Text className="font-semibold text-[#14213d] mb-2">Full Name: {guestUserData.fullName}</Text>
+          </View>
+
+          {/* Email Address Display */}
+          <View className="mb-3">
+            <Text className="font-semibold text-[#14213d] mb-2">Email Address: {guestUserData.email}</Text>
+          </View>
+
+          {/* Phone Number Display */}
+          <View className="mb-1">
+            <Text className="font-semibold text-[#14213d] mb-1">Phone Number: {guestUserData.phoneNumber}</Text>
+          </View>
+        </View>
       </View>
 
       {/* Guest count input */}
@@ -181,7 +197,7 @@ const Booking = () => {
       </View>
 
       {/* Proceed Button */}
-      <View className="mt-8 flex items-center">
+      <View className="mt-4 flex items-center translate-y-[10px]">
         <Pressable
           onPress={handleSubmit}
           style={{ backgroundColor: '#890620', paddingVertical: 12, paddingHorizontal: 48, borderRadius: 8, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 5 }}
@@ -189,7 +205,7 @@ const Booking = () => {
           <Text className="text-white text-lg font-semibold">Proceed</Text>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

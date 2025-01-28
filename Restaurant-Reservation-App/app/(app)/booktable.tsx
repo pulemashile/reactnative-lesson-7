@@ -181,13 +181,13 @@ const Booktable = ({restaurant}) => {
                             bringing you the best of both local and international cuisine. We pride ourselves on exceptional service and a welcoming atmosphere.
                         </Text> */}
                         <Text className="text-lg text-gray-700 mt-3"style={styles.poppinsRegular}>
-                            To contact us, feel free to reach us at (123) 456-7890 or email us at contact@restaurant.com. We look forward to welcoming you soon!
+                            { `${parsedRestaurant[0].contactUs}` }
                         </Text>
 
                         {/* Read More/Read Less */}
                         {showFullText && (
                             <Text className="text-lg text-gray-700 mt-3"style={styles.poppinsRegular}>
-                                Our team is passionate about delivering high-quality dining experiences and ensuring that every customer feels at home. We are committed to sustainability, sourcing locally, and creating a menu that delights all of our guests. Thank you for choosing us, and we hope you enjoy every bite!
+                                { `${parsedRestaurant[0].readMore}` }                               
                             </Text>
                         )}
 
@@ -200,12 +200,12 @@ const Booktable = ({restaurant}) => {
                         {/* Contact Card */}
                         <View className="mt-7 bg-white rounded-lg shadow-md p-5 flex-row items-center">
                             <Image
-                                source={require('../../assets/images/red.jpg')}  // Replace with actual image
+                                source={{ uri:  parsedRestaurant[0].owner.profileImg }}  
                                 style={{ width: 60, height: 60, borderRadius: 30 }}
                             />
                             <View className="ml-4 flex-1">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>John Doe</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>Owner & Chef</Text>
+                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>{ `${parsedRestaurant[0].owner.name}` }</Text>
+                                <Text className="text-gray-600"style={styles.poppinsRegular}>{ `${parsedRestaurant[0].owner.position}` }</Text>
 
                                 <View className="flex-row justify-between mt-2">
                                     <Pressable className="p-2 bg-gray-200 rounded-full">
@@ -222,12 +222,12 @@ const Booktable = ({restaurant}) => {
                         <View className="mt-7">
                             <Text className="text-2xl font-bold text-gray-700 mb-3"style={styles.poppinsRegular}>Opening Hours</Text>
                             <View className="text-lg text-gray-700">
-                                <Text className='mb-2 text-gray-700 font-thin ' style={styles.poppinsRegular}> Monday - Friday: 9:00 AM - 10:00 PM</Text>
+                                <Text className='mb-2 text-gray-700 font-thin ' style={styles.poppinsRegular}> Monday - Friday: {`${parsedRestaurant[0].openingHours.mondayToFriday}`}</Text>
                                 <Text style={styles.poppinsRegular}>
-                                    Saturday: 10:00 AM - 11:00 PM
+                                    Saturday: {`${parsedRestaurant[0].openingHours.saturday}`}
                                 </Text>
                                 <Text style={styles.poppinsRegular}>
-                                    Sunday: Closed
+                                    Sunday: {`${parsedRestaurant[0].openingHours.sunday}`}
                                 </Text>
                             </View>
                         </View>

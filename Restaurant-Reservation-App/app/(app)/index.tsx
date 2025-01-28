@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Pressable, Image, FlatList, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Text, TextInput, Pressable, Image, FlatList, TouchableOpacity, StyleSheet, Modal, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import Icons from '@/utils/Icons'; 
@@ -160,15 +160,27 @@ const Index = () => {
     catch (error) { console.error('Error fetching restaurants:', error); }
   };
 
+  if(loading)
+  {
+
+  }
+
   return (
     <View className="flex-1 bg-[#edf2fb]">
-      {/* Map Screen */}
-      <MapScreen 
-        currentLat={currentLat}
-        currentLon={currentLon}    
-        searchedLat={searchedLat}    
-        searchedLon={searchedLon}   
-      />
+      {
+        loading ? (        
+          <ActivityIndicator />
+        ):(
+          <MapScreen 
+            currentLat={currentLat}
+            currentLon={currentLon}    
+            searchedLat={searchedLat}    
+            searchedLon={searchedLon}   
+          />
+        )
+      }
+     
+      
       
       {/* Search Container */}
       <View className="px-4 my-2">

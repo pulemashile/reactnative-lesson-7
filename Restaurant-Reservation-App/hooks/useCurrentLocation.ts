@@ -11,14 +11,20 @@ const useCurrentLocation = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    console.log("Attemping to get current location");
+    
     const getCurrentLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== 'granted') 
+      {
         setErrMsg('Permission to access location was denied');
         setLoading(false);
         return;
       }
 
+      console.log("Seems like we got location permission.");
+      console.log("Please wait while trying to get your current locationData.");
+      
       const location = await Location.getCurrentPositionAsync({});
       
       const { latitude, longitude } = location.coords;
