@@ -8,6 +8,7 @@ import useLocation from '@/hooks/useLocation';
 import useCurrentLocation from '@/hooks/useCurrentLocation';
 
 import MapScreen from '../../component/MapLibreMap';
+import SimpleMap from '@/component/map';
 
 const Index = () => {
   
@@ -152,12 +153,13 @@ const Index = () => {
   return (
     <View className="flex-1 bg-[#edf2fb]">
       {/* Map Screen */}
-      <MapScreen 
+      {/* <MapScreen 
         currentLat={currentLat}
         currentLon={currentLon}    
         searchedLat={searchedLat}    
         searchedLon={searchedLon}   
-      />
+      /> */}
+      <SimpleMap />
       
       {/* Search Container */}
       <View className="px-4 my-2">
@@ -183,7 +185,7 @@ const Index = () => {
       }
       
 
-      <View className="flex-1 p-4 bg-white">
+      <View className="flex-1 p-4 bg-white h-[10px]">
       {/* Tab Navigation */}
       <View className="flex-row mb-4">        
         <TouchableOpacity
@@ -237,7 +239,7 @@ const Index = () => {
           />
         </>
       )}
-    </View>
+      </View>
       
     </View>
   );

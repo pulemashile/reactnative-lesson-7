@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Restaurant-Reservation-App",
-    "slug": "Restaurant-Reservation-App",
+    "name": "Restaurant-Reservation-Admin",
+    "slug": "Restaurant-Reservation-Admin",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -11,7 +11,7 @@
     "runtimeVersion": "1.0.1",  
     "android": {
       "runtimeVersion": "1.0.1", 
-      "package": "com.matlakalakabelo1.RestaurantReservationApp",
+      "package": "com.matlakalakabelo1.RestaurantReservationAdminApp",
       "versionCode": 5
     },
         
@@ -34,7 +34,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow ClimaVoyage App to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow Restaurant Reservation Admin App to use your location."
         }
       ]
     ],
@@ -44,15 +44,7 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "7708b881-ad43-4976-b817-05e66a379e03"
-      }
-    },
-    "updates": {
-      "url": "https://u.expo.dev/7708b881-ad43-4976-b817-05e66a379e03"
+      }     
     }
-
-
   }
 }

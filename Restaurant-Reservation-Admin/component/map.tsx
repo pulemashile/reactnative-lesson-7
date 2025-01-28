@@ -1,120 +1,72 @@
-// import MapView, { Marker } from 'react-native-maps';
-// import { useEffect, useRef, useState } from 'react';
-// import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-// import Icons from '@/utils/Icons';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';  // To access location data
 
-// const Map = ({
-//   currentLat, currentLon,
-//   searchedLat, searchedLon,
-//   curLocation, searchedLocation,
-//   curLocationWeather, weatherData,
-//   nearbyPlaces
-// }) => {
+const SimpleMap = () => {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-//   const mapRef = useRef(null);
+  useEffect(() => {
+    (async () => {
+        console.log("Attempt to get location");
+        
+      // Request for location permissions
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') 
+        {
+            setErrorMsg('Permission to access location was denied');
+            return;
+        }
 
-//   const centerLat = searchedLat || currentLat;
-//   const centerLon = searchedLon || currentLon;
+        // Get current location
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        console.log(currentLocation);
+        
+        setLocation(currentLocation.coords);
+    })();
+  }, []);
 
-//   // Use useEffect to animate the map to searched location when the coordinates change
-//   useEffect(() => {
-//     if (searchedLat && searchedLon && mapRef.current) {
-//       mapRef.current.animateToRegion(
-//         {
-//           latitude: Number(searchedLat),
-//           longitude: Number(searchedLon),
-//           latitudeDelta: 0.0922,
-//           longitudeDelta: 0.0421,
-//         },
-//         1000 // Animate to the searched location with a duration of 1000ms
-//       );
-//     }
-//   }, [searchedLat, searchedLon]);
+  if (errorMsg) {
+    return (
+      <View style={styles.container}>
+        <Text>{errorMsg}</Text>
+      </View>
+    );
+  }
 
-// //   console.log(nearbyPlaces);
-  
+  return (
+    <View style={styles.container}>
+      {!location ? (
+        <MapView
+          style={styles.map}
+          region={{
+            latitude: -23.9168298,
+            longitude: 29.4578348,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          {/* Marker for current location */}
+          <Marker coordinate={{ latitude: -23.9168298, longitude: 29.4578348 }} />
+        </MapView>
+      ) : (
+        <Text>Loading...</Text>
+      )}
+    </View>
+  );
+};
 
-//   return (
-//     <View style={styles.mapContainer}>
-//       {(centerLat && centerLon) ? (
-//         <MapView
-//           ref={mapRef}
-//           style={styles.map}
-//           region={{
-//             latitude: Number(centerLat),
-//             longitude: Number(centerLon),
-//             latitudeDelta: 0.0922,
-//             longitudeDelta: 0.0421,
-//           }} // Use region instead of initialRegion
-//           onRegionChangeComplete={(region) => {
-//             // Optionally, track changes in region if needed
-//             console.log('Region changed to', region);
-//           }}
-//         >
-//           {/* Display current location marker */}
-//           {currentLat && currentLon && curLocation && curLocationWeather && (
-//             <Marker
-//               coordinate={{
-//                 latitude: Number(currentLat),
-//                 longitude: Number(currentLon),
-//               }}
-//               title={`${curLocation.city} 🌡${curLocationWeather.main.temp}°C`}
-//             />
-//           )}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+});
 
-//           {/* Display searched location marker */}
-//           {searchedLat && searchedLon && searchedLocation && (
-//             <Marker
-//               coordinate={{
-//                 latitude: Number(searchedLat),
-//                 longitude: Number(searchedLon),
-//               }}
-//               title={`${searchedLocation.city}`}
-//             />
-//           )}
-
-//           {/* Display nearby places markers */}
-//           {nearbyPlaces.map((place, index) => (
-//             <Marker
-//               key={index}
-//               coordinate={{
-//                 latitude: place.lat,
-//                 longitude: place.lon,
-//               }}
-//               title={place.tags.name || 'Unnamed Place'}
-//               description={place.tags['amenity'] || place.tags['tourism'] || place.tags['leisure']}
-//             />
-//           ))}
-
-//         </MapView>
-//       ) : (
-//         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//           <ActivityIndicator size="large" color="#0000ff" style={{ position: 'absolute' }} />
-//           <Icons name="loc-dot" color="black" />
-//           <Text style={styles.mapText}>Loading your location...</Text>
-//         </View>
-//       )}
-//     </View>
-//   );
-// }
-
-// export default Map;
-
-// const styles = StyleSheet.create({
-//   mapContainer: {
-//     height: 300,
-//     backgroundColor: '#E5E5E5',
-//     justifyContent: 'flex-start',
-//     fontFamily: 'serif',
-//     padding: 0,
-//   },
-//   mapText: {
-//     color: '#333',
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     marginBottom: 10,
-//   },
-//   map: {
-//     flex: 1,
-//   },
-// });
+export default SimpleMap;
