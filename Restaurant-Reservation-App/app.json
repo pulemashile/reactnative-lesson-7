@@ -8,11 +8,18 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
-    "runtimeVersion": "1.0.1",  
+    "runtimeVersion": "1.0.1", 
+    "ios": {
+      "bundleIdentifier": "com.matlakalakabelo1.RestaurantReservationApp",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need access to your location."
+      }
+    }, 
     "android": {
       "runtimeVersion": "1.0.1", 
       "package": "com.matlakalakabelo1.RestaurantReservationApp",
-      "versionCode": 5
+      "versionCode": 5,
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
     },
         
     "web": {
@@ -34,7 +41,9 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow ClimaVoyage App to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow ClimaVoyage App to use your location.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ]
     ],
