@@ -160,24 +160,19 @@ const Index = () => {
     catch (error) { console.error('Error fetching restaurants:', error); }
   };
 
-  if(loading)
-  {
-
-  }
+  
 
   return (
     <View className="flex-1 bg-[#edf2fb]">
       {
-        loading ? (        
-          <ActivityIndicator />
-        ):(
+        (currentLat && currentLon) ? (        
           <MapScreen 
             currentLat={currentLat}
             currentLon={currentLon}    
             searchedLat={searchedLat}    
             searchedLon={searchedLon}   
           />
-        )
+        ):( <ActivityIndicator /> )
       }
      
       

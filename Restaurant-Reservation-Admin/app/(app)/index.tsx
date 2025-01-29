@@ -8,7 +8,7 @@ import useLocation from '@/hooks/useLocation';
 import useCurrentLocation from '@/hooks/useCurrentLocation';
 
 import MapScreen from '../../component/MapLibreMap';
-import SimpleMap from '@/component/map';
+// import SimpleMap from '@/component/map';
 
 const Index = () => {
   
@@ -159,7 +159,7 @@ const Index = () => {
         searchedLat={searchedLat}    
         searchedLon={searchedLon}   
       /> */}
-      <SimpleMap />
+      {/* <SimpleMap /> */}
       
       {/* Search Container */}
       <View className="px-4 my-2">

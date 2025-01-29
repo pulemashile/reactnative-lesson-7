@@ -81,9 +81,11 @@ const Booktable = ({restaurant}) => {
                 <View className="absolute top-5 right-5 flex-row gap-3">
                     <Pressable className="bg-white p-2 rounded-full shadow-lg">
                         <Ionicons name="share-social-outline" size={24} color="black" />
+                        <Text>🤝</Text>
                     </Pressable>
                     <Pressable className="bg-white p-2 rounded-full shadow-lg">
-                        <Ionicons name="heart-outline" size={24} color="black" />
+                        {/* <Ionicons name="heart-outline" size={24} color="black" />  */}
+                        <Text>❤</Text>
                     </Pressable>
                 </View>
             </View>
@@ -129,40 +131,19 @@ const Booktable = ({restaurant}) => {
 
                         <View className="mt-5 space-y-3">
                             {/* Menu Items as Cards */}
-                            <View className="bg-white p-5 rounded-xl shadow-lg">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Spaghetti Bolognese</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>A rich and hearty pasta dish made with slow-cooked ground beef, tomatoes, and Italian spices. Served with garlic bread.</Text>
-                                <Pressable className="mt-4 bg-[#890620] py-3 px-6 rounded-full 
-                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                <Text className="text-white text-lg font-semibold">$18.99</Text>  
-                                </Pressable>
-                            </View>
-
-                            <View className="bg-white p-5 rounded-xl shadow-lg">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Grilled Salmon</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>Freshly grilled salmon fillet served with roasted vegetables and a side of lemon butter sauce.</Text>
-                                <Pressable className="mt-4 bg-[#890620] py-3 px-2 rounded-sm
-                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    <Text className="text-white text-lg font-semibold">$18.99</Text>    
-                                </Pressable>
-                            </View>
-
-                            <View className="bg-white p-5 rounded-xl shadow-lg">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Vegetarian Pizza</Text>
-                                <Text className="text-gray-600">A delicious pizza topped with fresh vegetables, mozzarella, and a savory tomato sauce.</Text>
-                                <Pressable className="mt-4 bg-[#890620] py-3 px-6 rounded-full 
-                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    <Text className="text-white text-lg font-semibold">$18.99</Text> 
-                                </Pressable>
-                            </View>
-
-                            <View className="bg-white p-5 rounded-xl shadow-lg">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Caesar Salad</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>Crisp romaine lettuce tossed in creamy Caesar dressing, topped with parmesan and croutons.</Text>
-                                <Pressable className="mt-4 bg-red-500 text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    <Text>$18.99</Text>  
-                                </Pressable>
-                            </View>
+                            {parsedRestaurant.map((restaurant) =>
+                                restaurant.menu.map((item, index) => (
+                                //   <MenuItemCard key={index} item={item} />
+                                <View className="bg-white p-5 rounded-xl shadow-lg">
+                                    <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>{item.name}</Text>
+                                    <Text className="text-gray-600"style={styles.poppinsRegular}>{item.description}</Text>
+                                    <Pressable className="mt-4 bg-[#890620] py-3 px-6 rounded-full 
+                                        shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+                                        <Text className="text-white text-lg font-semibold">R{item.price}</Text>  
+                                    </Pressable>
+                                </View>
+                                ))
+                            )}   
                         </View>
                     </View>
                 )}
