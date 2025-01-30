@@ -131,7 +131,7 @@ const Booktable = ({restaurant}) => {
 
                         <View className="mt-5 space-y-3">
                             {/* Menu Items as Cards */}
-                            {parsedRestaurant.map((restaurant) =>
+                            { parsedRestaurant.map((restaurant) =>
                                 restaurant.menu.map((item, index) => (
                                 //   <MenuItemCard key={index} item={item} />
                                 <View className="bg-white p-5 rounded-xl shadow-lg">
@@ -304,13 +304,15 @@ const Booktable = ({restaurant}) => {
             {/* Modal for larger image */}
             <Modal visible={isModalVisible} transparent={true} animationType="fade">
                 <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
-                    <Pressable onPress={() => setIsModalVisible(false)} className="absolute top-0 right-0 p-5">
+                    <Pressable onPress={() => setIsModalVisible(false)} 
+                        className="absolute top-0 right-0 p-5"
+                    >
                         <Text className="text-white text-2xl" style={styles.poppinsRegular}>X</Text>
                     </Pressable>
-                    <Image
+                    {/* <Image
                         source={modalImage}
                         style={{ width: 300, height: 300, borderRadius: 15 }}
-                    />
+                    /> */}
                 </View>
             </Modal>
         </View>

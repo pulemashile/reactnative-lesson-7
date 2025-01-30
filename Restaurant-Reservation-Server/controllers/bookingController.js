@@ -1,47 +1,57 @@
-const { createPaypalOrder, capturePaypalPayment } = require('../utils/paypal');
-const Booking = require('../models/booking');
-const Payment = require('../models/payment');
+const Booking = require('../models/bookingModel');
 
-exports.createOrder = async (req, res) => {
-  const { bookingId, amount } = req.body;
-  
+// Handle booking creation
+exports.createBooking = async (req, res) => {
+  const { guestName, email, phone, guestCount, mealType, date, time, notes, specialRequest, totalPrice } = req.body;
+
+  console.log("Attempt to create booking!!");
+
   try {
-    // Create PayPal order
-    const order = await createPaypalOrder(amount);
-    
-    // Save booking with "Pending" status
-    const booking = await Booking.findByIdAndUpdate(bookingId, { status: 'Pending' });
+    // Create a new booking with the status set as "Pending"
+    const newBooking = new Booking({
+      guestName,
+      email,
+      phone,
+      guestCount,
+      mealType,
+      date,
+      time,
+      notes,
+      specialRequest,
+      totalPrice,
+      status: 'Pending',  // Set status to "Pending" initially
+    });
 
-    res.json({ orderId: order.id });
+    // Save the booking to the database
+    await newBooking.save();
+
+    // Respond with success
+    res.status(201).json({ message: 'Booking created successfully', booking: newBooking });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error creating PayPal order');
+    res.status(500).json({ message: 'Error creating booking', error: error.message });
   }
 };
 
-exports.capturePayment = async (req, res) => {
-  const { orderId, payerId, bookingId } = req.body;
-  
+// Handle updating booking status and paymentId (called after successful payment)
+exports.updateBookingStatus = async (req, res) => {
+  const { bookingId, paymentId, status } = req.body;
+
   try {
-    // Capture payment
-    const paymentData = await capturePaypalPayment(orderId, payerId);
-    
-    // Save payment data to MongoDB
-    const payment = new Payment({
+    // Find and update the booking with the paymentId and status
+    const updatedBooking = await Booking.findByIdAndUpdate(
       bookingId,
-      paymentAmount: paymentData.purchase_units[0].amount.value,
-      paymentStatus: 'Completed',
-      paypalPaymentId: paymentData.id,
-    });
-    
-    await payment.save();
-    
-    // Update booking status to "Paid"
-    await Booking.findByIdAndUpdate(bookingId, { status: 'Paid' });
-    
-    res.json({ status: 'Payment successful', payment });
+      { paymentId, status },  // Update the paymentId and status (e.g., "Paid")
+      { new: true }  // Return the updated booking document
+    );
+
+    if (!updatedBooking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    res.status(200).json({ message: 'Booking updated successfully', booking: updatedBooking });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error capturing PayPal payment');
+    res.status(500).json({ message: 'Error updating booking', error: error.message });
   }
 };
