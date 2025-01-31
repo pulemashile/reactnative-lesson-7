@@ -2,7 +2,7 @@ const Booking = require('../models/bookingModel');
 
 // Handle booking creation
 exports.createBooking = async (req, res) => {
-  const { guestName, email, phone, guestCount, mealType, date, time, notes, specialRequest, totalPrice } = req.body;
+  const { guestName, email, phone, restaurantName, guestCount, mealType, date, time, notes, specialRequest, totalPrice } = req.body;
 
   console.log("Attempt to create booking!!");
 
@@ -12,6 +12,7 @@ exports.createBooking = async (req, res) => {
       guestName,
       email,
       phone,
+      restaurantName,
       guestCount,
       mealType,
       date,
@@ -37,7 +38,11 @@ exports.createBooking = async (req, res) => {
 exports.updateBookingStatus = async (req, res) => {
   const { bookingId, paymentId, status } = req.body;
 
-  try {
+  console.log(req.body);
+  
+
+  try 
+  {
     // Find and update the booking with the paymentId and status
     const updatedBooking = await Booking.findByIdAndUpdate(
       bookingId,
@@ -45,12 +50,15 @@ exports.updateBookingStatus = async (req, res) => {
       { new: true }  // Return the updated booking document
     );
 
-    if (!updatedBooking) {
+    if (!updatedBooking) 
+    {
       return res.status(404).json({ message: 'Booking not found' });
     }
 
     res.status(200).json({ message: 'Booking updated successfully', booking: updatedBooking });
-  } catch (error) {
+  } 
+  catch (error) 
+  {
     console.error(error);
     res.status(500).json({ message: 'Error updating booking', error: error.message });
   }

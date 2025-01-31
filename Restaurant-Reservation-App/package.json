@@ -17,6 +17,7 @@
   "dependencies": {
     "@expo/config-plugins": "~9.0.0",
     "@expo/vector-icons": "^14.0.2",
+    "@paypal/checkout-server-sdk": "^1.0.3",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "8.2.0",
     "@react-native-community/slider": "^4.5.5",

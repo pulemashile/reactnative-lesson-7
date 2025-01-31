@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, Image, Modal, TouchableOpacity, ScrollView,StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';  // For the icons
 import { useNavigation } from '@react-navigation/native';  // For navigation
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import rsaRestaurants from '@/utils/data';
 
 
 const Booktable = ({restaurant}) => {
-    
+
     const selectedRestaurant = rsaRestaurants.filter(_restaurant => {
         // Get the keyword for comparison (e.g., "Spur" from "Amarillo Spur")
         const keyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
@@ -66,6 +66,9 @@ const Booktable = ({restaurant}) => {
     const toggleText = () => {
         setShowFullText(!showFullText);
     };
+
+    console.log("selectedRestaurant: ", restaurant.name);
+    
 
     return (
         <View className="flex-1 bg-white fixed inset-0 z-10">
@@ -297,9 +300,16 @@ const Booktable = ({restaurant}) => {
             </ScrollView>
 
             {/* Book a Table Button */}
-            <Pressable className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30" onPress={() => { router.push('/(app)/booking'); }}>
+            <Link href ={{pathname:"/(app)/reservation/[restaurantName]", params: {restaurantName: restaurant.name}}}
+                className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30"
+            >
                 <Text className="text-white text-lg font-bold"style={styles.poppinsRegular}>Book a Table</Text>
-            </Pressable>
+                {/* <Pressable className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30" 
+                    // onPress={() => { router.push(`/(app)/reservation/${restaurant.name}`); }}
+                >                    
+                </Pressable> */}
+            </Link>
+            
 
             {/* Modal for larger image */}
             <Modal visible={isModalVisible} transparent={true} animationType="fade">

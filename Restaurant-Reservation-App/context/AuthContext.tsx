@@ -1,114 +1,132 @@
-// /context/AuthContext.tsx
 import React, { createContext, useContext, useState, PropsWithChildren, useEffect } from 'react';
-
-// import { auth } from '@/firebase/config';
-// import { 
-//     createUserWithEmailAndPassword, 
-//     signInWithEmailAndPassword, 
-//     updateProfile,
-//     signOut } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 
-// Define the auth context type
 type AuthContextType = {
-    SignIn: (email?: string, password?: string) => Promise<void>;
-    Register: (username: string, email: string, password: string) => Promise<void>;
-    SignOut: () => Promise<void>;
-    session: { user: string | null; isGuest: boolean; username: string | null };
-    isLoading: boolean;
+  SignIn: (email?: string, password?: string) => Promise<void>;
+  Register: (username: string, email: string, password: string) => Promise<void>;
+  SignOut: () => Promise<void>;
+  session: { user: string | null; isGuest: boolean; username: string | null };
+  isLoading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function useSession() 
-{
-    const context = useContext(AuthContext);
-    if (!context) 
-    {
-        throw new Error('useSession must be used within a SessionProvider');
-    }
-    return context;
+export function useSession() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useSession must be used within a SessionProvider');
+  }
+  return context;
 }
 
-export function SessionProvider({ children }: PropsWithChildren) 
-{
-    const [session, setSession] = useState<{ username: string | null, user: string | null; isGuest: boolean;  }>({
-        username: null,
-        user: null,
-        isGuest: false,        
+export function SessionProvider({ children }: PropsWithChildren) {
+  const [session, setSession] = useState<{ username: string | null; user: string | null; isGuest: boolean }>({
+    username: null,
+    user: null,
+    isGuest: false,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
+
+  // Restore session on app startup
+  useEffect(() => {
+    const restoreSession = async () => {
+        const guestSession = await AsyncStorage.getItem('guest-session');
+        if (guestSession) 
+        {
+            setSession({ user: guestSession, isGuest: true, username: 'Guest' });
+        }
+        setIsLoading(false);
+    };
+    restoreSession();
+  }, []);
+
+  const Register = async (username: string, email: string, password: string) => {
+    setIsLoading(true);
+    try 
+    { 
+        console.log("Attempt Reg: ", username, email)
+      // Send POST request to your backend to register the user
+      const response = await fetch('http://10.196.0.124:5000/api/auth/signup', { // Replace with your server URL
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
       });
-    const [isLoading, setIsLoading] = useState(true);
+      const data = await response.json();
 
-    // Restore session on app startup
-    useEffect(() => {
-        const restoreSession = async () => {
-            const guestSession = await AsyncStorage.getItem("guest-session");
-            if (guestSession) 
+      if (data.token) {
+        // Store JWT token and set session state
+        await AsyncStorage.setItem('auth-token', data.token);
+        setSession({ user: email, isGuest: false, username });
+        router.push('/(auth)/login'); // Navigate to home or desired screen after successful signup
+      } 
+      else { alert('Signup failed: ' + data.message); }
+    } 
+    catch (error: any) 
+    {
+      console.error('Registration failed:', error.message);
+      alert('Registration failed: ' + error.message);
+    } 
+    finally { setIsLoading(false); }
+  };
+
+  const SignIn = async (email?: string, password?: string, isGuest: boolean = false) => {
+    setIsLoading(true);
+    try {
+        if (email && password) 
+        {
+            // Send POST request to your backend to sign in the user
+            const response = await fetch('http://10.196.0.124:5000/api/auth/signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await response.json();
+
+            if (data.token) 
             {
-                setSession({ user: guestSession, isGuest: true, username:"Guest" });
-            }
-
-            setIsLoading(false);
-        };
-        restoreSession();
-    }, []);
-    
-    const Register = async (username: string, email: string, password: string ) => {
-        setIsLoading(true);
-        try 
-        {
-            // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-            // await updateProfile(userCredential.user, { displayName: username }); // Save username in Firebase profile
-            // setSession({ username, user: email, isGuest: false,  });
-        } 
-        catch (error: any) 
-        {
-            console.error("Registration failed:", error.message);
-            alert(error.message);
-        } 
-        finally { setIsLoading(false); }
-    };
-
-    const SignIn = async (email?: string, password?: string, isGuest: boolean=false) => {
-        setIsLoading(true);
-        try 
-        {
-            if (email && password) 
-            {
-                // const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                // const username = userCredential.user.displayName || email.split("@")[0]; // Retrieve username or fallback to email prefix
-                // setSession({ user: email, isGuest: false, username });
+            // Store JWT token and set session state
+                await AsyncStorage.setItem('auth-token', data.token);
+                setSession({ user: email, isGuest: false, username: data.username });
+                router.push('/(app)/profile'); // Navigate to home or desired screen after successful signin
             } 
-            else if(isGuest)
-            {                
-                const guestName = email || "Guest";
-                await AsyncStorage.setItem("guest-session", guestName);
-                setSession({ user: guestName, isGuest: true, username: "Guest" });
+            else 
+            {
+                alert('Signin failed: ' + data.message);
             }
         } 
-        catch (error: any) 
+        else if (isGuest) 
         {
-            console.error('Login failed:', error.message);
-            alert(error.message);
-        } 
-        finally { setIsLoading(false); }
-    };    
+            const guestName = email || 'Guest';
+            await AsyncStorage.setItem('guest-session', guestName);
+            setSession({ user: guestName, isGuest: true, username: 'Guest' });
+        }
+    } 
+    catch (error: any) 
+    {
+      console.error('Login failed:', error.message);
+      alert('Login failed: ' + error.message);
+    } 
+    finally { setIsLoading(false); }
+  };
 
-    const SignOut = async () => {
-        setIsLoading(true);
-        try 
-        {
-        //   await signOut(auth);
-          await AsyncStorage.removeItem("guest-session");
-          setSession({ user: null, isGuest: false, username: null });
-        } 
-        finally { setIsLoading(false); }
-    };
+  const SignOut = async () => {
+    setIsLoading(true);
+    try 
+    {
+      await AsyncStorage.removeItem('auth-token');
+      await AsyncStorage.removeItem('guest-session');
+      setSession({ user: null, isGuest: false, username: null });
+      router.push('/(auth)/login'); // Navigate to login page after signout
+    } 
+    finally { setIsLoading(false); }
+  };
 
-    return (
-        <AuthContext.Provider value={{ Register, SignIn, SignOut, session, isLoading }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={{ Register, SignIn, SignOut, session, isLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

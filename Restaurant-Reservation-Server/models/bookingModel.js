@@ -1,20 +1,36 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const bookingSchema = new mongoose.Schema({
-  guestName: String,
-  email: String,
-  phone: String,
-
-  guestCount: Number,
-  mealType: String,
-  date: Date,
-  time: Date,
-  notes: String,
-  specialRequest: String,
-  totalPrice: { type: Number, required: true },
-  
-  status: { type: String, default: 'Pending' },
-  paymentId: String, // PayPal Payment ID
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
 });
 
-module.exports = mongoose.model('Booking', bookingSchema);
+// Hash password before saving to the database
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+// Method to compare passwords
+userSchema.methods.matchPassword = async function(enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

@@ -24,9 +24,11 @@ export default function RootLayout()
           <Stack.Screen name="(auth)/login" />
           <Stack.Screen name="(auth)/register" />
 
-          <Stack.Screen name="(app)" />          
+          <Stack.Screen name="(app)" />    
+          <Stack.Screen name="(app)/booktable" />      
+          <Stack.Screen name="(app)/reservation/:restaurantName" />
           <Stack.Screen name="(app)/booking" />
-          <Stack.Screen name="(app)/booktable" />
+          
 
           {/* <Stack.Screen name="(app)/" /> */}
         </Stack>  

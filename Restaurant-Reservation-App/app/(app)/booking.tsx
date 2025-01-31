@@ -4,10 +4,15 @@ import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import BookingSummaryModal from './bookingSummaryModal';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import WebView from 'react-native-webview';
 
 const Booking = () => {
+  const { query } = useRouter();
+  console.log("query",query);
+  
+  // const { restaurantName } = query;
+
   // Guest and booking details
   const [guestCount, setGuestCount] = useState(1);
   const [date, setDate] = useState(new Date());
@@ -28,6 +33,7 @@ const Booking = () => {
   const [paymentError, setPaymentError] = useState(null);
 
   const [bookingData, setBookingData] = useState({
+    // restaurantName: "",
     guestCount: 1,
     date: new Date(),
     time: new Date(),
@@ -115,6 +121,7 @@ const Booking = () => {
   const handleSubmit = () => {
      // Create the object that will be passed to the modal
     const bookingData = {
+      // restaurantName: restaurantName,
       guestCount: guestCount,
       date: date,
       time: time,
@@ -134,8 +141,8 @@ const Booking = () => {
     setPaymentSuccess(true);
     console.log("handlePSuccess:", data);
     
-    const updateResponse = await fetch('http://10.196.0.124:5000/api/booking/update-status', {
-      method: 'POST',
+    const updateResponse = await fetch('http://10.196.0.124:5000/api/booking/update', {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -146,6 +153,8 @@ const Booking = () => {
         status: "Paid", 
       }),
     });
+
+    console.log("updateResponse", updateResponse)
 
     if (!updateResponse.ok) 
     {
@@ -249,6 +258,7 @@ const Booking = () => {
 
   return (
     <ScrollView className="flex-1 p-5">
+      {/* <Text>Booking at {`${restaurantName}`}</Text> */}
       {/* Guest Information */}
       <View className="mb-5">
         <View className="bg-white shadow-lg rounded-lg p-5">

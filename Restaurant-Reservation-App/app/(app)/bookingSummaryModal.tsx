@@ -7,7 +7,9 @@ const BookingSummaryModal = ({
     showSummaryModal, 
     setShowSummaryModal, 
     bookingData,
-    handleConfirmBooking }) => {    
+    handleConfirmBooking }) => {  
+      
+      const [paymentMethod, setPaymentMethod] = useState("payment")
 
     if (!bookingData) return null;
    
@@ -21,6 +23,7 @@ const BookingSummaryModal = ({
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
             <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' }}>
               <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Booking Summary</Text>
+              {/* <Text> {bookingData.restaurantName} </Text> */}
               <Text>Guest Count: {bookingData.guestCount}</Text>
               <Text>Date: {bookingData.date.toLocaleDateString()}</Text>
               <Text>Time: {bookingData.time.toLocaleTimeString()}</Text>
@@ -32,10 +35,10 @@ const BookingSummaryModal = ({
               </Text>
 
             <View className="mb-5">
-                <Text className="font-semibold text-[#14213d] mb-2">Payment Method</Text>
-                {/* <Picker selectedValue={paymentMethod} onValueChange={setPaymentMethod} className="bg-white border border-gray-300 p-3 rounded-md">
+                <Text className="font-semibold text-[#14213d] mb-2">Payment Method :</Text>
+                <Picker selectedValue={paymentMethod} onValueChange={setPaymentMethod} className="bg-white border border-gray-300 p-3 rounded-md">
                     <Picker.Item label="PayPal Account" value="paypal" />
-                </Picker> */}
+                </Picker>
             </View>
   
               {/* Confirm Button */}
