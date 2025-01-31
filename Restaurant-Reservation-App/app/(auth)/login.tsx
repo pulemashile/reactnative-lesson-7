@@ -32,8 +32,12 @@ export default function LoginScreen() {
     SignIn("Guest", undefined, true).then(() => router.push("/(app)"))
   };
 
-  const handleLogin = () => {
-    SignIn(email, password).then(() => router.push("/(app)"));
+  const handleLogin = async () => {
+    // SignIn(email, password).then(() => router.push("/(app)"));
+    if (email && password) 
+    {  await SignIn(email, password); } 
+    else { alert('Please fill out both fields');  }
+    
   };
 
   return (
