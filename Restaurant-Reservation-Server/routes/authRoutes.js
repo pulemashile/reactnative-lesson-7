@@ -10,15 +10,18 @@ const JWT_SECRET = 'restaurants_reservation_2025'; // Store this securely in env
 
 // Signup Route
 router.post('/signup', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
+  console.log(req.body);
+  
 
   try {
     const userExists = await User.findOne({ email });
-    if (userExists) {
+    if (userExists) 
+    {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    const user = new User({ name, email, password });
+    const user = new User({ username, email, password });
     await user.save();
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '30d' });
@@ -27,7 +30,9 @@ router.post('/signup', async (req, res) => {
       message: 'User created successfully',
       token,
     });
-  } catch (err) {
+  } 
+  catch (err) 
+  {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
@@ -44,7 +49,8 @@ router.post('/signin', async (req, res) => {
     }
 
     const isPasswordCorrect = await user.matchPassword(password);
-    if (!isPasswordCorrect) {
+    if (!isPasswordCorrect) 
+    {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 

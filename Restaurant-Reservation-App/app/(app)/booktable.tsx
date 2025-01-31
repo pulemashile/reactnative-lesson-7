@@ -124,7 +124,6 @@ const Booktable = ({restaurant}) => {
                 </Pressable>
             </View>
 
-
             {/* Tab Content */}
             <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
                 {selectedTab === 'Menu' && (
@@ -308,8 +307,7 @@ const Booktable = ({restaurant}) => {
                     // onPress={() => { router.push(`/(app)/reservation/${restaurant.name}`); }}
                 >                    
                 </Pressable> */}
-            </Link>
-            
+            </Link>           
 
             {/* Modal for larger image */}
             <Modal visible={isModalVisible} transparent={true} animationType="fade">

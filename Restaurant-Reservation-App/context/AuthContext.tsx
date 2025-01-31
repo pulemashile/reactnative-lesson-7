@@ -48,21 +48,22 @@ export function SessionProvider({ children }: PropsWithChildren) {
     try 
     { 
         console.log("Attempt Reg: ", username, email)
-      // Send POST request to your backend to register the user
-      const response = await fetch('http://10.196.0.124:5000/api/auth/signup', { // Replace with your server URL
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
-      });
-      const data = await response.json();
+        // Send POST request to your backend to register the user
+        const response = await fetch('http://10.196.0.124:5000/api/auth/signup', { // Replace with your server URL
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password }),
+        });
+        const data = await response.json();
 
-      if (data.token) {
-        // Store JWT token and set session state
-        await AsyncStorage.setItem('auth-token', data.token);
-        setSession({ user: email, isGuest: false, username });
-        router.push('/(auth)/login'); // Navigate to home or desired screen after successful signup
-      } 
-      else { alert('Signup failed: ' + data.message); }
+        if (data.token)
+        {
+            // Store JWT token and set session state
+            await AsyncStorage.setItem('auth-token', data.token);
+            setSession({ user: email, isGuest: false, username });
+            router.push('/(auth)/login'); // Navigate to home or desired screen after successful signup
+        } 
+        else { alert('Signup failed: ' + data.message); }
     } 
     catch (error: any) 
     {

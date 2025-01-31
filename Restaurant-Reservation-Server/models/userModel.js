@@ -1,37 +1,37 @@
-const paypal = require('@paypal/checkout-server-sdk');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-// PayPal client setup
-const clientId = process.env.PAYPAL_CLIENT_ID;
-const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
+});
 
-const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
-const client = new paypal.core.PayPalHttpClient(environment);
+// Hash password before saving to the database
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
 
-// Create PayPal order
-async function createPaypalOrder(amount) {
-  const request = new paypal.orders.OrdersCreateRequest();
-  request.requestBody({
-    intent: 'CAPTURE',
-    purchase_units: [
-      {
-        amount: {
-          currency_code: 'USD',
-          value: amount,
-        },
-      },
-    ],
-  });
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
 
-  const response = await client.execute(request);
-  return response.result;
-}
+// Method to compare passwords
+userSchema.methods.matchPassword = async function(enteredPassword) 
+{
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
-// Capture PayPal payment
-async function capturePaypalPayment(orderId, payerId) {
-  const request = new paypal.orders.OrdersCaptureRequest(orderId);
-  request.requestBody({});
-  const response = await client.execute(request);
-  return response.result;
-}
+const User = mongoose.model('User', userSchema);
 
-module.exports = { createPaypalOrder, capturePaypalPayment };
+module.exports = User;
