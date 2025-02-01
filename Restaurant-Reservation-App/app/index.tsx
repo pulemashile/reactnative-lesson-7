@@ -8,18 +8,35 @@ const Splash = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const checkOnboardingStatus = async () => {
-      // await AsyncStorage.removeItem("onboardingComplete"); // Debug: Remove onboardingComplete for testing
+    const checkSessionAndOnboardingStatus = async () => {
+      // First, check if a valid session exists
+      const savedSession = await AsyncStorage.getItem("session");
+      if (savedSession) {
+        const { timestamp } = JSON.parse(savedSession);
+        const currentTime = new Date().getTime();
 
+        // Check if session is still valid (not expired)
+        if (currentTime - timestamp < 2 * 24 * 60 * 60 * 1000) {
+          // Session is valid, navigate to profile
+          router.replace("/(tabs)/profile");
+          return;
+        } else {
+          // Session expired, clear it from AsyncStorage
+          await AsyncStorage.removeItem("session");
+        }
+      }
+
+      // If session is invalid or doesn't exist, check onboarding status
       const hasCompletedOnboarding = await AsyncStorage.getItem("onboardingComplete");
       if (hasCompletedOnboarding) {
-        router.replace("/(auth)/login"); // Skip to login if onboarding is complete
+        router.replace("/(auth)/login"); // Navigate to login if onboarding complete
       } else {
-        router.replace("/(onboarding)/onboarding"); // Show onboarding
+        router.replace("/(onboarding)/onboarding"); // Show onboarding if not complete
       }
     };
 
-    setTimeout(checkOnboardingStatus, 3000); // Simulate splash screen duration
+    // Simulate splash screen duration
+    setTimeout(checkSessionAndOnboardingStatus, 3000);
   }, [router]);
 
   return (

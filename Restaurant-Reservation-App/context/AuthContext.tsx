@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, PropsWithChildren, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
+
+const SESSION_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000;
 
 type AuthContextType = {
   SignIn: (email?: string, password?: string) => Promise<void>;
@@ -15,20 +17,23 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function useSession() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (!context) 
+  {
     throw new Error('useSession must be used within a SessionProvider');
   }
   return context;
 }
 
-export function SessionProvider({ children }: PropsWithChildren) {
+export function SessionProvider({ children }: PropsWithChildren)
+{
   const [session, setSession] = useState<{ username: string | null; user: string | null; isGuest: boolean }>({
     username: null,
     user: null,
     isGuest: false,
   });
+
   const [isLoading, setIsLoading] = useState(true);
-  const navigation = useNavigation();
+  const router = useRouter();
 
   // Restore session on app startup
   useEffect(() => {
@@ -38,8 +43,32 @@ export function SessionProvider({ children }: PropsWithChildren) {
         {
             setSession({ user: guestSession, isGuest: true, username: 'Guest' });
         }
+
+        const savedSession = await AsyncStorage.getItem('session');
+        if (savedSession) 
+        {
+          const { username, user,  timestamp } = JSON.parse(savedSession);
+          const currentTime = new Date().getTime();
+  
+          // Check if the session is expired (more than 2 days old)
+          if (currentTime - timestamp < SESSION_EXPIRATION_TIME) {
+            setSession({ username, user });
+            router.replace('/(tabs)/profile'); // Navigate to profile if session is valid
+          } else {
+            // Session is expired
+            setSession({ username: null, user: null  });
+            router.replace('/(auth)/login'); // Redirect to login if session expired
+          }
+        } 
+        else 
+        {
+          setSession({ user: null, username: null });
+          router.replace('/(auth)/login'); // No session found, go to login
+        }
+
         setIsLoading(false);
     };
+
     restoreSession();
   }, []);
 
@@ -75,7 +104,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
   const SignIn = async (email?: string, password?: string, isGuest: boolean = false) => {
     setIsLoading(true);
-    try {
+    try 
+    {
         if (email && password) 
         {
             // Send POST request to your backend to sign in the user
@@ -88,21 +118,25 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
             if (data.token) 
             {
+              const currentTime = new Date().getTime();
             // Store JWT token and set session state
                 await AsyncStorage.setItem('auth-token', data.token);
-                setSession({ user: email, isGuest: false, username: data.username });
-                router.push('/(app)/profile'); // Navigate to home or desired screen after successful signin
+                const sessionData = { username: data.username, user: email,  isGuest: false, timestamp: currentTime }
+                
+                await AsyncStorage.setItem('session', JSON.stringify(sessionData))
+                setSession({ username: data.username, user: email,  isGuest: false});
+                router.push('/(tabs)/profile'); // Navigate to home or desired screen after successful signin
             } 
             else 
             {
-                alert('Signin failed: ' + data.message);
+              alert('Signin failed: ' + data.message);
             }
         } 
         else if (isGuest) 
         {
             const guestName = email || 'Guest';
             await AsyncStorage.setItem('guest-session', guestName);
-            setSession({ user: guestName, isGuest: true, username: 'Guest' });
+            setSession({  username: 'Guest', user: guestName, isGuest: true });
         }
     } 
     catch (error: any) 
@@ -117,9 +151,10 @@ export function SessionProvider({ children }: PropsWithChildren) {
     setIsLoading(true);
     try 
     {
+      await AsyncStorage.removeItem('session');
       await AsyncStorage.removeItem('auth-token');
       await AsyncStorage.removeItem('guest-session');
-      setSession({ user: null, isGuest: false, username: null });
+      setSession({ username: null, user: null, isGuest: false,  });
       router.push('/(auth)/login'); // Navigate to login page after signout
     } 
     finally { setIsLoading(false); }

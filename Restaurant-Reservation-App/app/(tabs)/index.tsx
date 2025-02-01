@@ -6,7 +6,7 @@ import Icons from '@/utils/Icons';
 import useLocation from '@/hooks/useLocation';
 import useCurrentLocation from '@/hooks/useCurrentLocation';
 import MapScreen from '../../component/MapLibreMap';
-import Booktable from './booktable';
+import Booktable from '../(app)/booktable';
 
 const Index = () => {    
   const router = useRouter();
@@ -173,8 +173,7 @@ const Index = () => {
             searchedLon={searchedLon}   
           />
         ):( <ActivityIndicator /> )
-      }
-     
+      }   
       
       
       {/* Search Container */}

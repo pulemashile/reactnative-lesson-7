@@ -29,7 +29,7 @@ export default function LoginScreen() {
   const router = useRouter();
 
   const handleGuestLogin = () => {
-    SignIn("Guest", undefined, true).then(() => router.push("/(app)"))
+    SignIn("Guest", undefined, true).then(() => router.push("/(tabs)"))
   };
 
   const handleLogin = async () => {
