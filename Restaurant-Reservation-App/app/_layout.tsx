@@ -9,6 +9,9 @@ import React from 'react'
 import { Stack } from 'expo-router/stack';
 import "@/global.css"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

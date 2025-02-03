@@ -1,6 +1,7 @@
 module.exports = function (api) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   api.cache(true);
   return {
     presets: [
@@ -12,6 +13,8 @@ module.exports = function (api) {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     api.cache(true);
     return {
       presets: [
@@ -20,6 +23,10 @@ module.exports = function (api) {
       ],
     };
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+  };
+>>>>>>> Stashed changes
+=======
   };
 >>>>>>> Stashed changes
 =======

@@ -54,9 +54,13 @@ const CalendarIcon = () => (
     <path d="M3 8H21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
   return (
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     <View className="flex-1 justify-center items-center bg-white">
       <View className="p-4">
@@ -65,6 +69,8 @@ const CalendarIcon = () => (
       <Text className="text-2xl font-bold text-black mb-4">DineElite</Text>
       <ActivityIndicator size="large" color="black" />
 =======
+=======
+>>>>>>> Stashed changes
     <View className="flex-1 justify-center items-center">
       {/* Skip Button */}
       <Pressable className="absolute top-5 right-5" onPress={() => router.push('/(tabs)')}>
@@ -94,6 +100,9 @@ const CalendarIcon = () => (
       >
         <Text className="text-white text-center text-lg">Get Started</Text>
       </Pressable>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     </View>
   );

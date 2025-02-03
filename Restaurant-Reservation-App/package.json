@@ -17,6 +17,7 @@
   "dependencies": {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "@expo/config-plugins": "~9.0.0",
     "@expo/vector-icons": "^14.0.2",
     "@paypal/checkout-server-sdk": "^1.0.3",
@@ -24,6 +25,9 @@
     "@react-native-community/datetimepicker": "8.2.0",
     "@react-native-community/slider": "^4.5.5",
     "@react-native-picker/picker": "2.9.0",
+=======
+    "@expo/vector-icons": "^14.0.4",
+>>>>>>> Stashed changes
 =======
     "@expo/vector-icons": "^14.0.4",
 >>>>>>> Stashed changes
@@ -52,6 +56,9 @@
 =======
     "lucide-react": "^0.471.1",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
