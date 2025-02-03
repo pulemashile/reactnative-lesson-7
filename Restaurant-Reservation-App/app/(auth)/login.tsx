@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, Image, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
@@ -54,6 +55,8 @@ export default function LoginScreen() {
       <View>       
         <Text className="text-sm text-center text-gray-600 mb-8">Sign in to your account to get access to various features</Text>
 =======
+=======
+>>>>>>> Stashed changes
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -73,11 +76,15 @@ const Login = () => {
         <Text className="text-3xl font-bold text-center text-black mb-4">Login</Text>
         <Text className="text-sm text-center text-gray-600 mb-8">Sign in to your account to get access to various features</Text>
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         {/* Input fields */}
         <View className="space-y-5">
           {/* Email Input */}
           {isEmailLogin && (
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
             <View className="relative mb-8">
               <TextInput
@@ -89,6 +96,8 @@ const Login = () => {
               />
               <SvgXml xml={emailIcon} width={24} height={24} fill="none" style={{ position: 'absolute', left: 12, color: '#890620',top: '49%', transform: [{ translateY: -12 }] }} />             
 =======
+=======
+>>>>>>> Stashed changes
             <View className="relative">
               <TextInput
                 placeholder="Enter your email"
@@ -103,6 +112,9 @@ const Login = () => {
                 color="gray"
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 "
               />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             </View>
           )}
@@ -111,13 +123,17 @@ const Login = () => {
           <View className="relative">
             <TextInput
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               style={styles.poppinsRegular}
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
               placeholder="Enter your password"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
               className="block rounded-full w-full shadow-sm px-12 py-4 text-gray-400 bg-white border border-gray-400"
             />
@@ -136,6 +152,8 @@ const Login = () => {
             <Text className="text-white text-center text-lg font-semibold" style={styles.poppinsRegular}>Login</Text>
           </Pressable>          
 =======
+=======
+>>>>>>> Stashed changes
               className="block rounded-full w-full shadow-sm px-10 py-4 text-gray-400 bg-white border border-gray-400"
             />
             <MaterialIcons
@@ -150,6 +168,9 @@ const Login = () => {
           <Pressable className="bg-[#FE0000] rounded-full h-[3rem] w-full pt-2 mt-10 align-self-center">
             <Text className="text-white text-center text-lg font-semibold">Login</Text>
           </Pressable>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
           {/* Line Break with Text */}
@@ -166,6 +187,7 @@ const Login = () => {
 
           {/* Social Login Buttons (Facebook and Google) */}
           <View className="flex-row justify-between space-x-4">
+<<<<<<< Updated upstream
           <Pressable style={{ width: 156, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderWidth: 1, borderColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
               <Image 
                 source={require('@/assets/images/paypal-logo.webp')} 
@@ -174,6 +196,16 @@ const Login = () => {
               <Text className="text-gray-600 text-center">PayPal</Text>  
             </Pressable>
             <Pressable style={{ width: 156, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderWidth: 1, borderColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
+=======
+            <Pressable style={{ flex: 1, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderBlockColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
+              <Image 
+                source={require('@/assets/images/facebook.png')} 
+                style={{ width: 22, height: 20 }} 
+              />
+              <Text className="text-gray-600 text-center">Facebook</Text>  
+            </Pressable>
+            <Pressable style={{ flex: 1, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderWidth: 1, borderColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
+>>>>>>> Stashed changes
               <Image 
                 source={require('@/assets/images/google.png')} 
                 style={{ width: 20, height: 20 }} 
@@ -189,8 +221,13 @@ const Login = () => {
         <Text className="text-sm text-gray-600 text-center ">
           Don't have an account?{' '}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <Pressable onPress={() => { router.push("/(auth)/register") }}>
             <Text className="font-medium text-blue-300 text-arial mt-0 translate-y-1">Sign up here</Text>
+=======
+          <Pressable>
+            <Text className="font-medium text-blue-300 text-arial">Sign up here</Text>
+>>>>>>> Stashed changes
 =======
           <Pressable>
             <Text className="font-medium text-blue-300 text-arial">Sign up here</Text>
@@ -202,6 +239,7 @@ const Login = () => {
   );
 };
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 const styles = StyleSheet.create({
   poppinsRegular: {
@@ -221,6 +259,9 @@ const styles = StyleSheet.create({
   },
 });
 
+=======
+export default Login;
+>>>>>>> Stashed changes
 =======
 export default Login;
 >>>>>>> Stashed changes

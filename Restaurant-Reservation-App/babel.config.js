@@ -1,5 +1,6 @@
 module.exports = function (api) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   api.cache(true);
   return {
     presets: [
@@ -9,6 +10,8 @@ module.exports = function (api) {
   };
 };
 =======
+=======
+>>>>>>> Stashed changes
     api.cache(true);
     return {
       presets: [
@@ -16,5 +19,9 @@ module.exports = function (api) {
         "nativewind/babel",
       ],
     };
+<<<<<<< Updated upstream
+  };
+>>>>>>> Stashed changes
+=======
   };
 >>>>>>> Stashed changes
