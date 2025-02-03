@@ -30,11 +30,15 @@ export default function LoginScreen() {
   const router = useRouter();
 
   const handleGuestLogin = () => {
-    SignIn("Guest", undefined, true).then(() => router.push("/(app)"))
+    SignIn("Guest", undefined, true).then(() => router.push("/(tabs)"))
   };
 
-  const handleLogin = () => {
-    SignIn(email, password).then(() => router.push("/(app)"));
+  const handleLogin = async () => {
+    // SignIn(email, password).then(() => router.push("/(app)"));
+    if (email && password) 
+    {  await SignIn(email, password); } 
+    else { alert('Please fill out both fields');  }
+    
   };
 
   return (
@@ -162,14 +166,14 @@ const Login = () => {
 
           {/* Social Login Buttons (Facebook and Google) */}
           <View className="flex-row justify-between space-x-4">
-            <Pressable style={{ flex: 1, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderBlockColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
+          <Pressable style={{ width: 156, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderWidth: 1, borderColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
               <Image 
-                source={require('@/assets/images/facebook.png')} 
+                source={require('@/assets/images/paypal-logo.webp')} 
                 style={{ width: 22, height: 20 }} 
               />
-              <Text className="text-gray-600 text-center">Facebook</Text>  
+              <Text className="text-gray-600 text-center">PayPal</Text>  
             </Pressable>
-            <Pressable style={{ flex: 1, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderWidth: 1, borderColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
+            <Pressable style={{ width: 156, backgroundColor: 'white', paddingVertical: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderWidth: 1, borderColor: '#ccc', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 }}>
               <Image 
                 source={require('@/assets/images/google.png')} 
                 style={{ width: 20, height: 20 }} 

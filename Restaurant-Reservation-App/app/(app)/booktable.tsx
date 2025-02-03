@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, Image, Modal, TouchableOpacity, ScrollView,StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';  // For the icons
 import { useNavigation } from '@react-navigation/native';  // For navigation
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import rsaRestaurants from '@/utils/data';
 
 
 const Booktable = ({restaurant}) => {
-    
+
     const selectedRestaurant = rsaRestaurants.filter(_restaurant => {
         // Get the keyword for comparison (e.g., "Spur" from "Amarillo Spur")
         const keyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
@@ -67,6 +67,9 @@ const Booktable = ({restaurant}) => {
         setShowFullText(!showFullText);
     };
 
+    console.log("selectedRestaurant: ", restaurant.name);
+    
+
     return (
         <View className="flex-1 bg-white fixed inset-0 z-10">
             {/* Image on top */}
@@ -81,9 +84,11 @@ const Booktable = ({restaurant}) => {
                 <View className="absolute top-5 right-5 flex-row gap-3">
                     <Pressable className="bg-white p-2 rounded-full shadow-lg">
                         <Ionicons name="share-social-outline" size={24} color="black" />
+                        <Text>🤝</Text>
                     </Pressable>
                     <Pressable className="bg-white p-2 rounded-full shadow-lg">
-                        <Ionicons name="heart-outline" size={24} color="black" />
+                        {/* <Ionicons name="heart-outline" size={24} color="black" />  */}
+                        <Text>❤</Text>
                     </Pressable>
                 </View>
             </View>
@@ -119,7 +124,6 @@ const Booktable = ({restaurant}) => {
                 </Pressable>
             </View>
 
-
             {/* Tab Content */}
             <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
                 {selectedTab === 'Menu' && (
@@ -129,40 +133,19 @@ const Booktable = ({restaurant}) => {
 
                         <View className="mt-5 space-y-3">
                             {/* Menu Items as Cards */}
-                            <View className="bg-white p-5 rounded-xl shadow-lg">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Spaghetti Bolognese</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>A rich and hearty pasta dish made with slow-cooked ground beef, tomatoes, and Italian spices. Served with garlic bread.</Text>
-                                <Pressable className="mt-4 bg-[#890620] py-3 px-6 rounded-full 
-                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                <Text className="text-white text-lg font-semibold">$18.99</Text>  
-                                </Pressable>
-                            </View>
-
-                            <View className="bg-white p-5 rounded-xl shadow-lg">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Grilled Salmon</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>Freshly grilled salmon fillet served with roasted vegetables and a side of lemon butter sauce.</Text>
-                                <Pressable className="mt-4 bg-[#890620] py-3 px-2 rounded-sm
-                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    <Text className="text-white text-lg font-semibold">$18.99</Text>    
-                                </Pressable>
-                            </View>
-
-                            <View className="bg-white p-5 rounded-xl shadow-lg">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Vegetarian Pizza</Text>
-                                <Text className="text-gray-600">A delicious pizza topped with fresh vegetables, mozzarella, and a savory tomato sauce.</Text>
-                                <Pressable className="mt-4 bg-[#890620] py-3 px-6 rounded-full 
-                                    shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    <Text className="text-white text-lg font-semibold">$18.99</Text> 
-                                </Pressable>
-                            </View>
-
-                            <View className="bg-white p-5 rounded-xl shadow-lg">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>Caesar Salad</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>Crisp romaine lettuce tossed in creamy Caesar dressing, topped with parmesan and croutons.</Text>
-                                <Pressable className="mt-4 bg-red-500 text-white text-lg font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                    <Text>$18.99</Text>  
-                                </Pressable>
-                            </View>
+                            { parsedRestaurant.map((restaurant) =>
+                                restaurant.menu.map((item, index) => (
+                                //   <MenuItemCard key={index} item={item} />
+                                <View className="bg-white p-5 rounded-xl shadow-lg">
+                                    <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>{item.name}</Text>
+                                    <Text className="text-gray-600"style={styles.poppinsRegular}>{item.description}</Text>
+                                    <Pressable className="mt-4 bg-[#890620] py-3 px-6 rounded-full 
+                                        shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+                                        <Text className="text-white text-lg font-semibold">R{item.price}</Text>  
+                                    </Pressable>
+                                </View>
+                                ))
+                            )}   
                         </View>
                     </View>
                 )}
@@ -316,20 +299,28 @@ const Booktable = ({restaurant}) => {
             </ScrollView>
 
             {/* Book a Table Button */}
-            <Pressable className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30" onPress={() => { router.push('/(app)/booking'); }}>
+            <Link href ={{pathname:"/(app)/reservation/[restaurantName]", params: {restaurantName: restaurant.name}}}
+                className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30"
+            >
                 <Text className="text-white text-lg font-bold"style={styles.poppinsRegular}>Book a Table</Text>
-            </Pressable>
+                {/* <Pressable className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30" 
+                    // onPress={() => { router.push(`/(app)/reservation/${restaurant.name}`); }}
+                >                    
+                </Pressable> */}
+            </Link>           
 
             {/* Modal for larger image */}
             <Modal visible={isModalVisible} transparent={true} animationType="fade">
                 <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
-                    <Pressable onPress={() => setIsModalVisible(false)} className="absolute top-0 right-0 p-5">
+                    <Pressable onPress={() => setIsModalVisible(false)} 
+                        className="absolute top-0 right-0 p-5"
+                    >
                         <Text className="text-white text-2xl" style={styles.poppinsRegular}>X</Text>
                     </Pressable>
-                    <Image
+                    {/* <Image
                         source={modalImage}
                         style={{ width: 300, height: 300, borderRadius: 15 }}
-                    />
+                    /> */}
                 </View>
             </Modal>
         </View>

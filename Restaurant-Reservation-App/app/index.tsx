@@ -1,24 +1,51 @@
-import { router } from 'expo-router';
-import React from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useEffect } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icons from "@/utils/Icons";
 
-const LandingPage = () => {
+const Splash = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkSessionAndOnboardingStatus = async () => {
+      // First, check if a valid session exists
+      const savedSession = await AsyncStorage.getItem("session");
+      if (savedSession) {
+        const { timestamp } = JSON.parse(savedSession);
+        const currentTime = new Date().getTime();
+
+        // Check if session is still valid (not expired)
+        if (currentTime - timestamp < 2 * 24 * 60 * 60 * 1000) {
+          // Session is valid, navigate to profile
+          router.replace("/(tabs)/profile");
+          return;
+        } else {
+          // Session expired, clear it from AsyncStorage
+          await AsyncStorage.removeItem("session");
+        }
+      }
+
+      // If session is invalid or doesn't exist, check onboarding status
+      const hasCompletedOnboarding = await AsyncStorage.getItem("onboardingComplete");
+      if (hasCompletedOnboarding) {
+        router.replace("/(auth)/login"); // Navigate to login if onboarding complete
+      } else {
+        router.replace("/(onboarding)/onboarding"); // Show onboarding if not complete
+      }
+    };
+
+    // Simulate splash screen duration
+    setTimeout(checkSessionAndOnboardingStatus, 3000);
+  }, [router]);
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24, marginBottom: 8 }}>Welcome to the ReserveIt</Text>
-      <Text style={{ fontSize: 18, marginBottom: 20 }}>Restaurant Reservation App</Text>
-      
-      {/* Button to navigate to Login Page */}
-      <Button
-        title="Go to Login"
-        onPress={() => router.push('/(auth)/login')}
-      />
-      
-      {/* Button to skip login and go to Home Page */}
-      <Button
-        title="Continue Without Login"
-        onPress={() => router.replace('/(tabs)')}        
-      />
+    <View className="flex-1 justify-center items-center bg-white">
+      <View className="p-4">
+        <Icons name="logo" color="black" size={86} />
+      </View>
+      <Text className="text-2xl font-bold text-black mb-4">DineElite</Text>
+      <ActivityIndicator size="large" color="black" />
     </View>
   );
 };
