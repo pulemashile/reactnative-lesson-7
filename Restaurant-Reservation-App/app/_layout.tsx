@@ -1,6 +1,14 @@
+<<<<<<< Updated upstream
 import "@/global.css"
 import { Stack } from "expo-router";
 import { Provider } from 'react-redux';
+=======
+import { View, Text } from 'react-native'
+import React from 'react'
+// import { Stack } from 'expo-router'
+import { Stack } from 'expo-router/stack';
+import "@/global.css"
+>>>>>>> Stashed changes
 
 import store from '@/redux/store';
 import { SessionProvider } from "@/context/AuthContext";

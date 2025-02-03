@@ -59,6 +59,7 @@ export default function Layout() {
           fontFamily: 'poppinsRegular', // Make sure the fonts are properly imported in your project
           marginLeft: 25, // Adjusting label position
           fontSize: 20,
+          
         },
         headerStyle: {
           backgroundColor: '#890620', // Replace with your desired color code
@@ -68,6 +69,8 @@ export default function Layout() {
           fontFamily: 'poppinsRegular', // Apply the same font family to the title
           fontSize: 20, // Adjust the font size to your liking
         },
+        drawerActiveBackgroundColor: '#ffffff', // Replace wir
+        drawerActiveTintColor: '#890620',
       }}
     >
       <Drawer.Screen 
