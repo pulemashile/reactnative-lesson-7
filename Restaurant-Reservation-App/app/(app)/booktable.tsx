@@ -19,7 +19,8 @@ const Booktable = ({restaurant}) => {
       // Parse the selectedRestaurant data before use
       const parseRestaurantData = (restaurant) => {
         // Ensure gallery exists and is an array
-        if (!restaurant || !Array.isArray(restaurant.gallery) || restaurant.gallery.length === 0) {
+        if (!restaurant || !Array.isArray(restaurant.gallery) || restaurant.gallery.length === 0) 
+        {
           // Provide a default image or handle the case when gallery is empty
           restaurant.gallery = ['https://example.com/default-image.jpg'];
         }

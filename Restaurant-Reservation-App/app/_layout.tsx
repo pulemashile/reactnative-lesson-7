@@ -1,29 +1,12 @@
-<<<<<<< Updated upstream
-import "@/global.css"
-import { Stack } from "expo-router";
-import { Provider } from 'react-redux';
-=======
-import { View, Text } from 'react-native'
-import React from 'react'
-// import { Stack } from 'expo-router'
-import { Stack } from 'expo-router/stack';
-import "@/global.css"
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+import { View, Text } from 'react-native';
+import React from 'react';
+import { Stack } from 'expo-router/stack'; 
+import "@/global.css"; // Global styles
+import { SessionProvider } from "@/context/AuthContext"; // Authentication context
 
-import store from '@/redux/store';
-import { SessionProvider } from "@/context/AuthContext";
-
-
-export default function RootLayout() 
-{
+export default function RootLayout() {
   return (
-    // <Provider store={store} children={undefined}>
+
       <SessionProvider>
         <Stack 
           screenOptions={{
@@ -38,21 +21,15 @@ export default function RootLayout()
           <Stack.Screen name="(auth)/login" />
           <Stack.Screen name="(auth)/register" />
 
-            
           <Stack.Screen name="(tabs)" />  
-          <Stack.Screen name="(tabs)/profile" /> 
+          <Stack.Screen name="(tabs)/profile" />
 
           <Stack.Screen name="(app)" />     
           <Stack.Screen name="(app)/booktable" /> 
           <Stack.Screen name="(app)/reservation/:restaurantName" />
           <Stack.Screen name="(app)/booking" />
-          
-
-          {/* <Stack.Screen name="(app)/" /> */}
-          
         </Stack>  
-      </SessionProvider>    
-    // </Provider>
-  
-  )
+      </SessionProvider>
+
+  );
 }

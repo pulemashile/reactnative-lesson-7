@@ -9,7 +9,7 @@ const BookingSummaryModal = ({
     bookingData,
     handleConfirmBooking }) => {  
       
-      const [paymentMethod, setPaymentMethod] = useState("payment")
+    const [paymentMethod, setPaymentMethod] = useState("payment")
 
     if (!bookingData) return null;
    
