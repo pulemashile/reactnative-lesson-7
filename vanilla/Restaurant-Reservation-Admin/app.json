@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Restaurant-Reservation-Admin",
+    "slug": "Restaurant-Reservation-Admin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "runtimeVersion": "1.0.1",  
+    "android": {
+      "runtimeVersion": "1.0.1", 
+      "package": "com.matlakalakabelo1.RestaurantReservationAdminApp",
+      "versionCode": 5
+    },
+        
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Restaurant Reservation Admin App to use your location."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      }     
+    }
+  }
+}
