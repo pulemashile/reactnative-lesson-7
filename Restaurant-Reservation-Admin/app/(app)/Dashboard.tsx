@@ -1,6 +1,7 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, Text, View, Image, Pressable, StyleSheet, Dimensions } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
+import { ScrollView, Text, View, Image, Pressable, StyleSheet, Dimensions, useWindowDimensions } from 'react-native';
+import { BarChart, LineChart,PieChart } from 'react-native-chart-kit';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const screenWidth = Dimensions.get('window').width;
@@ -13,6 +14,8 @@ const messages = [
 ];
 
 const AdminDashboard = () => {
+
+  const { height, width } = useWindowDimensions();
   const [activeMessageId, setActiveMessageId] = useState(null);
 
   const handleAccordionToggle = (id) => {
@@ -20,21 +23,29 @@ const AdminDashboard = () => {
   };
 
   const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
       {
-        data: [15, 40, 10, 30],
+        data: [15, 40, 10, 30, 20, 50, 25, 60, 15, 40, 10, 30],
         strokeWidth: 2,
       },
     ],
   };
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
+  const pieData = [
+    { name: 'Dine-in', population: 40, color: '#FF6384', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Takeaway', population: 25, color: '#36A2EB', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Delivery', population: 20, color: '#FFCE56', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Catering', population: 10, color: '#4BC0C0', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Others', population: 5, color: '#9966FF', legendFontColor: '#FFF', legendFontSize: 14 },
+  ];
 
+ 
+
+  return (
+    <View style={{flex:1}}>
       {/* Top Bar with Icons */}
       <View style={styles.topBar}>
-      
         <Pressable style={styles.iconContainer}>
           {/* Moon SVG */}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} color={"#000000"} fill={"none"}>
@@ -63,77 +74,215 @@ const AdminDashboard = () => {
         </Pressable>
       </View>
 
-      {/* Sales Report with Line Chart */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Sales Report</Text>
-        <LineChart
-          data={data}
-          width={350}
-          height={220}
-          withDots={false}
-          withInnerLines={false}
-          withOuterLines={false}
-          chartConfig={styles.chartConfig}
-          style={styles.chart}
-        />
-      </View>
+      <ScrollView contentContainerStyle={styles.container}>  
+        {/* Sales Report with Line Chart */}
+        <View style={ styles.card }> {/* use dimensions width */}
+          <View className='w-full flex-row justify-between items-center '>   
+            <Text style={styles.cardTitle}>Reservations Report</Text>
+            <Text style={{ }}> Monthly ▾ </Text>
+          </View>   
+{/* 
+          const { width } = useWindowDimensions(); */}
 
-      {/* Messages Section with Accordion Behavior */}
-      <View className="bg-white rounded-lg shadow-md p-4 mt-5">
-  <Text className="text-lg font-semibold text-gray-600 mb-4" style={styles.poppinsSemiBold}>Notifications</Text>
-  {messages.map((message) => (
-    <View key={message.id} className="border-b border-gray-300 py-4">
-      <View className="flex-row items-center justify-between">
-        <Image source={message.image} alt='1' className="w-12 h-12 rounded-full mr-4 bg-red-600" style={styles.imageIcon} />
-        <View className="flex-1">
-          <Text className="font-semibold text-gray-800" style={styles.poppinsRegular}>{message.name}</Text>
-          <Text className="text-sm text-gray-600" style={styles.poppinsRegular}>{message.position}</Text>
+<LineChart
+    data={{
+      labels: ["January", "February", "March", "April", "May", "June"],
+      datasets: [
+        {
+          data: [
+            Math.random() * 100,
+            Math.random() * 100,
+            Math.random() * 100,
+            Math.random() * 100,
+            Math.random() * 100,
+            Math.random() * 100
+          ]
+        }
+      ]
+    }}
+    width={width-40} // from react-native
+    height={220}
+    yAxisLabel="$"
+    yAxisSuffix="k"
+    yAxisInterval={1} // optional, defaults to 1
+    chartConfig={{
+      backgroundColor: "#e26a00",
+      backgroundGradientFrom: "black",
+      backgroundGradientTo: "gray",
+      decimalPlaces: 2, // optional, defaults to 2dp
+      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      style: {
+        borderRadius: 16
+      },
+      propsForDots: {
+        r: "6",
+        strokeWidth: "2",
+        stroke: "white"
+      }
+    }}
+    bezier
+    style={{
+      marginVertical: 8,
+      borderRadius: 16
+    }}
+  />
+
         </View>
-        <Pressable
-          className="ml-4"
-          onPress={() => handleAccordionToggle(message.id)}
-        >
-          <Ionicons name="chatbubble-outline" size={24} color="black" />
-        </Pressable>
-        <Pressable
-          className="ml-4"
-          onPress={() => alert('Calling...')}
-        >
-          <Ionicons name="call-outline" size={24} color="black" />
-        </Pressable>
-      </View>
 
-      {/* Accordion: Show message if it's the active message */}
-      {activeMessageId === message.id && (
-        <>
-          <View className="mt-3 px-4">
-            <Text className="text-gray-800" style={styles.poppinsRegular}>{message.message}</Text>
-          </View>
+        <View style={styles.hBar}>
+  <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>5</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>Available</Text>
+    </Pressable>
 
-          {/* This is the "dropdown" card with more info */}
-          <View className="bg-gray-200 p-3 mt-3 rounded-lg">
-            <Text className="text-gray-600" style={styles.poppinsRegular}>{message.additionalInfo}</Text>
-          </View>
-        </>
-      )}
-    </View>
-  ))}
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>6</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>Reserved</Text>
+    </Pressable>
+
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>8</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>Occupied</Text>
+    </Pressable>
+
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>2</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>Waiting</Text>
+    </Pressable>
+
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>12</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>Total Tables</Text>
+    </Pressable>
+
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>4</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>VIP Tables</Text>
+    </Pressable>
+
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>1</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>Cancelled</Text>
+    </Pressable>
+
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>3</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>Upcoming Reservations</Text>
+    </Pressable>
+
+    <Pressable style={styles.iconSummery}>
+      <Text className='text-lg font-bold' style={styles.poppinsRegular}>0</Text>
+      <Text className='text-[10px]' style={styles.poppinsRegular}>Overdue Reservations</Text>
+    </Pressable>
+  </ScrollView>
 </View>
 
 
-    </ScrollView>
+        {/* Messages Section with Accordion Behavior */}
+        <View className="bg-white rounded-lg shadow-md p-4 mt-4">
+          <Text className="text-lg font-semibold text-gray-600 mb-4  " 
+              style={styles.poppinsSemiBold}>
+              Notifications
+          </Text>
+          {messages.slice(1).map((message) => (
+            <View key={message.id} className="border-b border-gray-300 py-4">
+              <View className="flex-row items-center justify-between">
+                <Image source={message.image} alt='1' className="w-12 h-12 rounded-full mr-4 bg-red-600" style={styles.imageIcon} />
+                <View className="flex-1">
+                  <Text className="font-semibold text-gray-800" style={styles.poppinsRegular}>{message.name}</Text>
+                  <Text className="text-sm text-gray-600" style={styles.poppinsRegular}>{message.position}</Text>
+                </View>
+                <Pressable
+                  className="ml-4"
+                  onPress={() => handleAccordionToggle(message.id)}
+                >
+                  <Ionicons name="chatbubble-outline" size={24} color="black" />
+                </Pressable>
+                <Pressable
+                  className="ml-4"
+                  onPress={() => alert('Calling...')}
+                >
+                  <Ionicons name="call-outline" size={24} color="black" />
+                </Pressable>
+              </View>
+
+              {/* Accordion: Show message if it's the active message */}
+              {activeMessageId === message.id && (
+                <>
+                  <View className="mt-3 px-4">
+                    <Text className="text-gray-800" style={styles.poppinsRegular}>{message.message}</Text>
+                  </View>
+
+                  {/* This is the "dropdown" card with more info */}
+                  <View className="bg-gray-200 p-3 mt-3 rounded-lg">
+                    <Text className="text-gray-600" style={styles.poppinsRegular}>
+                      {message.additionalInfo}
+                    </Text>                   
+                  </View>
+                  <Pressable
+                    onPress={() => {
+                      alert("try manage user"); 
+                      router.push(`/(app)/user/${message.id}`)
+                    }}
+                  >
+                      <Text>Manage</Text>
+                  </Pressable>
+                </>
+              )}
+            </View>
+          ))}
+
+          <Text 
+            className="text-lg font-semibold text-gray-600 mt-2 text-center w-full" 
+            style={styles.poppinsSemiBold}>More
+          </Text>
+
+
+        </View>
+        <View style={styles.card} className='mt-4'>
+        <Text style={styles.cardTitle}>Customer Demographics</Text>
+        <PieChart
+          data={pieData}
+          width={width - 40}
+          height={220}
+          chartConfig={{
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            
+          }}
+          accessor="population"
+          backgroundColor="#808080"
+          paddingLeft="10"
+          style={{ borderRadius: 16 }} 
+          absolute
+
+        />
+      </View>
+
+      </ScrollView>
+    </View>
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 12,
   },
   topBar: {
     flexDirection: 'row',
-    left: 180,
-    padding: 10,
+    // right: "50%",
+    justifyContent:"flex-end",
+    padding: 8,
+    gap: 8
+  },
+  hBar: {
+    flexDirection: 'row',
+    justifyContent:"space-between",
+    padding: 8,
+    gap: 8
   },
   dropdownCard: {
     marginTop: 10,
@@ -146,7 +295,18 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   iconContainer: {
-    padding: 10,
+    
+    justifyContent:"center",
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: '#ddd',
+  },
+  iconSummery: {    
+    justifyContent:"center",
+    alignItems:"center",
+    width:86,
+    padding: 2,
     borderWidth: 1,
     borderRadius: 12,
     borderColor: '#ddd',
@@ -161,12 +321,12 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: 'white',
-    padding: 20,
+    padding: 8,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   cardTitle: {
     fontSize: 18,
@@ -218,10 +378,10 @@ const styles = StyleSheet.create({
   messageTextContainer: {
     marginLeft: 10,
     flex: 1,
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:"space-between",
-    gap:6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: "space-between",
+    gap: 6,
     fontFamily: 'poppinsRegular',
   },
   messageName: {
