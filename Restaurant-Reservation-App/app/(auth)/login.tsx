@@ -31,11 +31,9 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (email && password) {
-      await SignIn(email, password);
-      router.push("/(tabs)");
-    } else {
-      alert('Please fill out both fields');
-    }
+      await SignIn(email, password);      
+    } 
+    else { alert('Please fill out both fields'); }
   };
 
   const handleGuestLogin = () => {

@@ -169,7 +169,7 @@ const Booking = () => {
 
     // Optional: Show a success message or navigate to a success screen
     alert('Booking confirmed successfully!');
-    router.push("/(app)/profile");
+    router.push("/(tabs)/profile");
     // Alert.alert('Payment Successful!', `Transaction ID: ${data.transactionId}`);
   };
 
@@ -265,7 +265,7 @@ const Booking = () => {
           <Text className="font-bold text-xl text-center mb-4 border">Guest Information</Text>
           <Text className="font-semibold text-[#14213d] mb-2">Full Name: Guest User</Text>
           <Text className="font-semibold text-[#14213d] mb-2">Email: guest@example.com</Text>
-          <Text className="font-semibold text-[#14213d] mb-2">Phone: +27 987 654 321</Text>
+          <Text className="font-semibold text-[#14213d] mb-2">Phone: (+27) 987 654 321</Text>
         </View>
       </View>
 
@@ -292,38 +292,42 @@ const Booking = () => {
         />
       </View>
 
-      {/* Date Input */}
-      <View className="mb-5">
-        <Text className="font-semibold text-[#14213d] mb-2">Date</Text>
-        <Pressable onPress={() => setShowDatePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md">
-          <Text className="text-gray-600">{date.toLocaleDateString()}</Text>
-        </Pressable>
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-            minimumDate={minTime} // Restrict to current date or later
-          />
-        )}
-      </View>
+      <View style={{flexDirection:"row", backgroundColor:"red"}}>
+        {/* Date Input */}
+        <View className="mb-5">
+          <Text className="font-semibold text-[#14213d] mb-2">Date:</Text>
+          <Pressable className="bg-white border border-gray-300 p-3 rounded-md w-[200px]"
+            onPress={() => setShowDatePicker(true)}>
+            <Text className="text-gray-600">{date.toLocaleDateString()}</Text>
+          </Pressable>
 
-      {/* Time Input */}
-      <View className="mb-5">
-        <Text className="font-semibold text-[#14213d] mb-2">Preferred Time</Text>
-        <Pressable onPress={() => setShowTimePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md">
-          <Text className="text-gray-600">{time.toLocaleTimeString()}</Text>
-        </Pressable>
-        {showTimePicker && (
-          <DateTimePicker
-            value={time}
-            mode="time"
-            display="default"
-            onChange={handleTimeChange}
-            minimumDate={minTime} // Restrict time selection to be at least 1 hour in advance
-          />
-        )}
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+              minimumDate={minTime} // Restrict to current date or later
+            />
+          )}
+        </View>
+
+        {/* Time Input */}
+        <View className="mb-5">
+          <Text className="font-semibold text-[#14213d] mb-2">Preferred Time:</Text>
+          <Pressable onPress={() => setShowTimePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md">
+            <Text className="text-gray-600">{time.toLocaleTimeString()}</Text>
+          </Pressable>
+          {showTimePicker && (
+            <DateTimePicker
+              value={time}
+              mode="time"
+              display="default"
+              onChange={handleTimeChange}
+              minimumDate={minTime} // Restrict time selection to be at least 1 hour in advance
+            />
+          )}
+        </View>
       </View>
 
       {/* Meal Type Input */}

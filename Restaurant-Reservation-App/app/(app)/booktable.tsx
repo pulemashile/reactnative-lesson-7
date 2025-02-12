@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, Image, Modal, TouchableOpacity, ScrollView,StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';  // For the icons
 import { useNavigation } from '@react-navigation/native';  // For navigation
@@ -8,10 +8,23 @@ import rsaRestaurants from '@/utils/data';
 
 const Booktable = ({restaurant}) => {
 
+    const [keyword, setKeyWord] = useState('');
+
+    useEffect(() => {
+        if (restaurant && restaurant.name) {
+          const extractedKeyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
+        console.log(extractedKeyword);
+        setKeyWord(extractedKeyword); // Set the extracted keyword state
+        }
+      }, [restaurant]);
+
     const selectedRestaurant = rsaRestaurants.filter(_restaurant => {
         // Get the keyword for comparison (e.g., "Spur" from "Amarillo Spur")
         const keyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
+        console.log(keyword);
         
+    
+
         // Check if any part of the restaurant name includes the keyword
         return _restaurant.name.toLowerCase().includes(keyword);
       });
@@ -40,7 +53,10 @@ const Booktable = ({restaurant}) => {
       // Now parse the first restaurant in the filtered list
       const parsedRestaurant = selectedRestaurant.map(parseRestaurantData);
       
-      console.log("Parsed Selected Restaurant: ", parsedRestaurant[0]);
+    //   console.log("Parsed Selected Restaurant: ", parsedRestaurant[0]);
+
+    //   console.log(restaurant);
+      
       
     
     
@@ -300,15 +316,20 @@ const Booktable = ({restaurant}) => {
             </ScrollView>
 
             {/* Book a Table Button */}
-            <Link href ={{pathname:"/(app)/reservation/[restaurantName]", params: {restaurantName: restaurant.name}}}
-                className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30"
-            >
-                <Text className="text-white text-lg font-bold"style={styles.poppinsRegular}>Book a Table</Text>
-                {/* <Pressable className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30" 
-                    // onPress={() => { router.push(`/(app)/reservation/${restaurant.name}`); }}
-                >                    
-                </Pressable> */}
-            </Link>           
+            {
+                keyword ? (
+                    <Link href ={{pathname:"/(app)/reservation/[restaurantName]", params: {restaurantName: keyword}}}
+                        className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30"
+                    >
+                        <Text className="text-white text-lg font-bold"style={styles.poppinsRegular}>Book a Table</Text>
+                        {/* <Pressable className="bg-[#890620] mt-7 py-3 mx-5 rounded-md items-center z-30" 
+                            // onPress={() => { router.push(`/(app)/reservation/${restaurant.name}`); }}
+                        >                    
+                        </Pressable> */}
+                     </Link> 
+                ):(<></>)
+            }
+                      
 
             {/* Modal for larger image */}
             <Modal visible={isModalVisible} transparent={true} animationType="fade">

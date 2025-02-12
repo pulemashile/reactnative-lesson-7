@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Modal } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Modal, FlatList, Button, Alert } from 'react-native';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import BookingSummaryModal from '../bookingSummaryModal';
 import { router } from 'expo-router';
-import { useLocalSearchParams, useSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
 import WebView from 'react-native-webview';
-
+import BookingSummaryModal from '../bookingSummaryModal';
+import rsaRestaurants from '@/utils/data';
 
 const Booking = () => {    
     
-    const { restaurantName } = useLocalSearchParams(); 
-    console.log("param ", restaurantName);  
-  
+  const { restaurantName } = useLocalSearchParams(); 
+  console.log("param ", restaurantName);    
 
   // Guest and booking details
+  const [restaurant, setRestaurant] = useState(null);
   const [guestCount, setGuestCount] = useState(1);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -26,6 +26,10 @@ const Booking = () => {
   // Picker and modal states
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [checkoutTime, setCheckoutTime] = useState(null);
+  const [hoursIn, setHoursIn] = useState('2'); 
+  const [selectedSlot, setSelectedSlot] = useState(null);
+
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [showWebViewModal, setShowWebViewModal] = useState(false);
 
@@ -67,6 +71,63 @@ const Booking = () => {
   const currentDate = new Date();
   const minTime = new Date(currentDate.getTime() + 60 * 60 * 1000); // 1 hour from now
 
+  // Available time slots for the selected date
+  const [availableTables, setAvailableTables] = useState([]);
+  const [selectedTables, setSelectedTables] = useState([]);
+
+  useEffect(() => {
+    if (restaurantName) 
+    {
+      console.log("find res");
+    
+      let selectedRestaurant = null;
+      for (let i = 0; i < rsaRestaurants.length; i++) 
+      {
+        if (rsaRestaurants[i].name.toLowerCase() === restaurantName.toLowerCase()) 
+        {
+          console.log("rest... found!!");
+          
+          selectedRestaurant = rsaRestaurants[i];
+          break; // Exit loop once the match is found
+        }
+      }
+      setRestaurant(selectedRestaurant);
+    }
+
+
+  }, [restaurantName]);
+
+  useEffect(()=> {
+
+    if (restaurant && date && time) 
+    {
+        // Normalize the time and date format
+      const selectedDate = new Date(date); // Assuming `date` is in "YYYY-MM-DD" format
+      const selectedTime = new Date(`${selectedDate.toISOString().split("T")[0]}T${time}:00Z`); // Normalize to ISO string time
+
+      // Extract the formatted date and time to match against available slots
+      const formattedDate = date.toISOString().split("T")[0]; // "2025-02-12"
+      const formattedTime = time.toISOString().split("T")[1].split(":")[0] + ":" + time.toISOString().split("T")[1].split(":")[1]; // "10:00"
+
+      const availableSlot = restaurant.availableSlots[formattedDate] || [];
+
+      console.log("available slots", availableSlot, " -> ", formattedDate, " | ", formattedTime);
+      
+      if (availableSlot) 
+      {
+        const availableAtTime = availableSlot[formattedTime] || [];
+        console.log("Available tables:", availableAtTime);
+
+        setAvailableTables(availableAtTime);
+      }
+      else
+      {
+        console.log("No available slots for the given date:", formattedDate);
+        setAvailableTables([]); // If no slots for the date, set an empty array
+      }
+    }
+  }, [restaurant, date, time]);
+
   // Calculate total price
   const calculateTotalPrice = () => {
     const baseCost = guestCount * basePricePerGuest;
@@ -82,18 +143,17 @@ const Booking = () => {
     const currentDate = selectedDate || date;
 
     // Restrict users from selecting a past date
-    if (currentDate < minTime) {
+    if (currentDate < minTime) 
+    {
       setDate(minTime);
-    } else {
-      setDate(currentDate);
-    }
+    } else { setDate(currentDate);  }
   };
 
   // Handle time changes
   const handleTimeChange = (event, selectedTime) => {
     setShowTimePicker(false);
-    const currentTime = selectedTime || time;
-
+    let currentTime = selectedTime || time;
+  
     // Restrict time to be within restaurant open hours (9 AM to 9 PM)
     const selectedHour = currentTime.getHours();
     if (selectedHour < openHour) {
@@ -101,12 +161,55 @@ const Booking = () => {
     } else if (selectedHour >= closeHour) {
       currentTime.setHours(closeHour - 1, 0, 0); // Set to one hour before closing if user selects after close time
     }
-    
+  
+    // Calculate the latest possible time for booking (1 hour before close time)
+    const latestBookingTime = new Date();
+    latestBookingTime.setHours(closeHour - 1, 0, 0); // 1 hour before restaurant closes
+  
     // Make sure the selected time is at least 1 hour ahead from current time
-    if (currentTime < minTime) {
+    if (currentTime < minTime) 
+    {
       currentTime.setTime(minTime.getTime());
     }
+  
+    // Ensure the selected time is no later than 1 hour before closing
+    if (currentTime > latestBookingTime) {
+      Alert.alert(
+        'Time Selection Error',
+        `You can only book reservations up to 1 hour before closing time. Please select a time earlier than ${formatTime(latestBookingTime)}.`,
+        [{ text: 'OK' }],
+        { cancelable: false }
+      );
+      return; // Exit the function and prevent setting the invalid time
+    }
+  
+    // Round time to the nearest hour (round to next hour if 30 minutes or more)
+    const minutes = currentTime.getMinutes();
+    if (minutes >= 30) {
+      currentTime.setHours(currentTime.getHours() + 1, 0, 0); // Round up to the next hour
+    } else {
+      currentTime.setMinutes(0, 0, 0); // Round down to the current hour
+    }
+  
     setTime(currentTime);
+  
+    // Calculate checkout time by adding reservation duration (hours-in)
+    const checkout = new Date(currentTime);
+    checkout.setHours(checkout.getHours() + parseInt(hoursIn));
+    setCheckoutTime(checkout);
+  };  
+
+  // Format the time for display
+  const formatTime = (date) => {
+    const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+    return date.toLocaleTimeString([], options);
+  };
+
+  // Calculate the time range to display
+  const getTimeRange = () => {
+    const formattedStartTime = formatTime(time);
+    const formattedEndTime = formatTime(checkoutTime);
+    return `${formattedStartTime} - ${formattedEndTime}`;
   };
 
   // Handle value change smoothly for guest count
@@ -118,6 +221,13 @@ const Booking = () => {
   const handleSlidingComplete = (value) => {
     setGuestCount(Math.floor(value)); // Finalize value after sliding
   };
+
+  // Handle table selection
+  const handleTableSelection = (table) => {
+    // Handle table selection (you can allow up to 3 table selection here)
+    console.log(`Selected table: ${table}`);
+    setSelectedSlot(table);
+  }
 
   // Handle Submit - Show booking summary modal
   const handleSubmit = () => {
@@ -256,7 +366,9 @@ const Booking = () => {
     setShowWebViewModal(false);
   };
 
-{console.log("paymentURL", paymentUrl)}
+  console.log("paymentURL", paymentUrl)
+  // console.log("restaurant: ", restaurant)
+  console.log("Available: ", availableTables)
   
 
   return (
@@ -295,39 +407,78 @@ const Booking = () => {
         />
       </View>
 
-      {/* Date Input */}
-      <View className="mb-5">
-        <Text className="font-semibold text-[#14213d] mb-2">Date</Text>
-        <Pressable onPress={() => setShowDatePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md">
-          <Text className="text-gray-600">{date.toLocaleDateString()}</Text>
-        </Pressable>
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-            minimumDate={minTime} // Restrict to current date or later
-          />
-        )}
+      <View className='flex-row w-full justify-around'>
+        {/* Date Input */}
+        <View className="mb-5">
+          <Text className="font-semibold text-[#14213d] mb-2">Date</Text>
+          <Pressable onPress={() => setShowDatePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md w-[128px]">
+            <Text className="text-gray-600">{date.toLocaleDateString()}</Text>
+          </Pressable>
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+              minimumDate={minTime} // Restrict to current date or later
+            />
+          )}
+        </View>
+
+        {/* Time Input */}
+        <View className="mb-5">
+          <Text className="font-semibold text-[#14213d] mb-2">Preferred Time</Text>
+          <Pressable onPress={() => setShowTimePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md w-[128px]">
+            <Text className="text-gray-600">{time.toLocaleTimeString()}</Text>
+          </Pressable>
+          {showTimePicker && (
+            <DateTimePicker
+              value={time}
+              mode="time"
+              display="default"
+              onChange={handleTimeChange}
+              minimumDate={minTime} // Restrict time selection to be at least 1 hour in advance
+            />
+          )}
+        </View>
+
+        <View className="mb-5">   
+          {time && (
+            <>
+              <Text className="font-semibold text-[#14213d] mb-2">Hours-In</Text>
+              <TextInput
+                className="h-[42px] w-[86px] p-2 border border-gray-300 rounded-md"
+                placeholder="2 hours"
+                value={hoursIn}
+                onChangeText={(text) => setHoursIn(text)}
+                keyboardType="numeric"
+              />
+            </>
+          )}
+        </View>
       </View>
 
-      {/* Time Input */}
-      <View className="mb-5">
-        <Text className="font-semibold text-[#14213d] mb-2">Preferred Time</Text>
-        <Pressable onPress={() => setShowTimePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md">
-          <Text className="text-gray-600">{time.toLocaleTimeString()}</Text>
-        </Pressable>
-        {showTimePicker && (
-          <DateTimePicker
-            value={time}
-            mode="time"
-            display="default"
-            onChange={handleTimeChange}
-            minimumDate={minTime} // Restrict time selection to be at least 1 hour in advance
+      
+      {/* Show available tables based on the selected time */}
+      {time && date && checkoutTime && (
+        <>
+          <Text className="mb-3 font-semibold text-[#14213d]">
+            Available Tables for {date.toLocaleDateString()}, {getTimeRange()}
+          </Text>
+          <FlatList
+            data={availableTables}
+            renderItem={({ item }) => (
+              <Button
+                title={item}
+                onPress={() => handleTableSelection(item)}
+                color={selectedSlot === item ? 'green' : 'blue'}
+              />
+            )}
+            keyExtractor={(item) => item}
           />
-        )}
-      </View>
+        </>
+      )}
+      
 
       {/* Meal Type Input */}
       <View className="mb-5">
@@ -354,7 +505,8 @@ const Booking = () => {
       {/* Special Request Input */}
       <View className="mb-5">
         <Text className="font-semibold text-[#14213d] mb-2">Special Request</Text>
-        <Picker selectedValue={specialRequest} onValueChange={setSpecialRequest} className="bg-white border border-gray-300 p-3 rounded-md">
+        <Picker selectedValue={specialRequest} onValueChange={setSpecialRequest} 
+          className="bg-white border border-gray-300 p-3 rounded-md">
           <Picker.Item label="None" value="" />
           <Picker.Item label="Birthday" value="birthday" />
           <Picker.Item label="Anniversary" value="anniversary" />

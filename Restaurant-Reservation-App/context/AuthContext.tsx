@@ -111,6 +111,8 @@ export function SessionProvider({ children }: PropsWithChildren)
     {
         if (email && password) 
         {
+          console.log(email , " | contxt",);
+          
             // Send POST request to your backend to sign in the user
             const response = await fetch('http://10.196.0.124:5000/api/auth/signin', {
                 method: 'POST',
