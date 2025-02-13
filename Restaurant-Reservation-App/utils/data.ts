@@ -41,7 +41,7 @@ const rsaRestaurants = [
             sunday: '10:00 AM - 10:00 PM'
         },
         availableSlots: {
-            "2025-02-12": { 
+            "2025-02-13": { 
             "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
             "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
             "12:00": [ "Table-3", "Table-4", "Table-5" ],
@@ -55,7 +55,7 @@ const rsaRestaurants = [
             "20:00": ["Table-7"],
             "21:00": ["Table-2", "Table-3"],
             },
-            "2025-02-13": {
+            "2025-02-14": {
                 "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
                 "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
                 "12:00": [ "Table-3", "Table-4", "Table-5" ],
@@ -69,7 +69,7 @@ const rsaRestaurants = [
                 "20:00": [ "Table-7" ],
                 "21:00": [ "Table-2", "Table-3" ],
             },
-            "2025-02-14": {
+            "2025-02-15": {
                 "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
                 "11:00": [ "Table-1", "Table-3", "Table-8", "Table-9", "Table-10" ],
                 "12:00": [ "Table-3", "Table-4", "Table-5" ],

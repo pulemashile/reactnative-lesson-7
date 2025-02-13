@@ -8,8 +8,11 @@ import { useLocalSearchParams } from 'expo-router/build/hooks';
 import WebView from 'react-native-webview';
 import BookingSummaryModal from '../bookingSummaryModal';
 import rsaRestaurants from '@/utils/data';
+import { useSession } from '@/context/AuthContext';
 
-const Booking = () => {    
+const Booking = () => {   
+
+  const { session, SignOut } = useSession();    
     
   const { restaurantName } = useLocalSearchParams(); 
   console.log("param ", restaurantName);    
@@ -43,6 +46,8 @@ const Booking = () => {
     guestCount: 1,
     date: new Date(),
     time: new Date(),
+    hoursIn: 1,
+    slots: '',
     mealType: 'lunch',
     notes: '',
     specialRequest: '',
@@ -237,6 +242,8 @@ const Booking = () => {
       guestCount: guestCount,
       date: date,
       time: time,
+      hoursIn: hoursIn,
+      slots: selectedSlot,
       mealType: mealType,
       notes: notes,
       specialRequest: specialRequest,
@@ -281,7 +288,7 @@ const Booking = () => {
 
     // Optional: Show a success message or navigate to a success screen
     alert('Booking confirmed successfully!');
-    router.push("/(app)/profile");
+    router.push("/(tabs)/profile");
     // Alert.alert('Payment Successful!', `Transaction ID: ${data.transactionId}`);
   };
 
@@ -300,14 +307,16 @@ const Booking = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          guestName: 'Guest Name', // Use the actual guest name
-          email: 'guest@example.com', // Use the actual email
-          phone: '987654321', // Use the actual phone number
+          guestName: session.user, 
+          email: session.user, 
+          phone: 'N/A', 
           restaurantName: restaurantName,
           guestCount: bookingData.guestCount,
           mealType: bookingData.mealType,
           date: bookingData.date,
           time: bookingData.time,
+          hoursIn: bookingData.hoursIn,
+          slots: bookingData.slots,
           notes: bookingData.notes,
           specialRequest: bookingData.specialRequest,
           totalPrice: bookingData.totalPrice,
@@ -378,23 +387,33 @@ const Booking = () => {
       <View className="mb-5">
         <View className="bg-white shadow-lg rounded-lg p-5">
           <Text className="font-bold text-xl text-center mb-4 border">Guest Information</Text>
-          <Text className="font-semibold text-[#14213d] mb-2">Full Name: Guest User</Text>
-          <Text className="font-semibold text-[#14213d] mb-2">Email: guest@example.com</Text>
-          <Text className="font-semibold text-[#14213d] mb-2">Phone: +27 987 654 321</Text>
+          {
+            session.isGuest ? ( 
+              <Text className="font-semibold text-[#14213d] mb-2">Full Name: {`${session.username}`}</Text>
+            ) : (
+              <>
+                <Text className="font-semibold text-[#14213d] mb-2">Email: {`${session.user}`}</Text>
+                <Text className="font-semibold text-[#14213d] mb-2">Phone: +27 *** *** ***</Text>
+              </>
+            )
+          }         
         </View>
       </View>
 
       {/* Guest Count */}
-      <View className="mb-5">
-        <Text className="font-semibold text-[#14213d] mb-2">Guest Count</Text>
-        <TextInput 
-          className="bg-white border border-gray-300 p-4 rounded-md"
-          placeholder="Enter guest count"
-          value={guestCount.toString()} 
-          onChangeText={handleValueChange}
-        />
+      <View className="flex-row bg-white shadow-lg rounded-lg p-2 mb-5">
+        <View>
+          <Text className="font-semibold text-[#14213d] mb-2">Guest Count</Text>
+          <TextInput 
+            className="bg-white border border-gray-300 w-[86px] h-[45px] p-4 rounded-md"
+            placeholder="Enter guest count"
+            value={guestCount.toString()} 
+            onChangeText={handleValueChange}
+          />
+        </View>
+        
         <Slider
-          style={{ width: '75%', height: 40 }}
+          style={{ width: '75%', height: 40, alignSelf:"flex-end" }}
           minimumValue={1}
           maximumValue={50}
           step={1}
@@ -407,11 +426,12 @@ const Booking = () => {
         />
       </View>
 
-      <View className='flex-row w-full justify-around'>
+      <View className='flex-row w-full justify-around gap-2 bg-white shadow-lg rounded-lg p-2 pb-4 mb-4'>
         {/* Date Input */}
-        <View className="mb-5">
+        <View >
           <Text className="font-semibold text-[#14213d] mb-2">Date</Text>
-          <Pressable onPress={() => setShowDatePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md w-[128px]">
+          <Pressable onPress={() => setShowDatePicker(true)} 
+            className="bg-white border border-gray-300 p-3 rounded-md max-w-[120px]">
             <Text className="text-gray-600">{date.toLocaleDateString()}</Text>
           </Pressable>
           {showDatePicker && (
@@ -426,9 +446,10 @@ const Booking = () => {
         </View>
 
         {/* Time Input */}
-        <View className="mb-5">
+        <View >
           <Text className="font-semibold text-[#14213d] mb-2">Preferred Time</Text>
-          <Pressable onPress={() => setShowTimePicker(true)} className="bg-white border border-gray-300 p-3 rounded-md w-[128px]">
+          <Pressable onPress={() => setShowTimePicker(true)} 
+            className="bg-white border border-gray-300 p-3 rounded-md max-w-[120px]">
             <Text className="text-gray-600">{time.toLocaleTimeString()}</Text>
           </Pressable>
           {showTimePicker && (
@@ -442,12 +463,12 @@ const Booking = () => {
           )}
         </View>
 
-        <View className="mb-5">   
+        <View >   
           {time && (
             <>
               <Text className="font-semibold text-[#14213d] mb-2">Hours-In</Text>
               <TextInput
-                className="h-[42px] w-[86px] p-2 border border-gray-300 rounded-md"
+                className="h-[42px] w-[80px] p-2 border border-gray-300 rounded-md"
                 placeholder="2 hours"
                 value={hoursIn}
                 onChangeText={(text) => setHoursIn(text)}
@@ -465,25 +486,27 @@ const Booking = () => {
           <Text className="mb-3 font-semibold text-[#14213d]">
             Available Tables for {date.toLocaleDateString()}, {getTimeRange()}
           </Text>
-          <FlatList
-            data={availableTables}
-            renderItem={({ item }) => (
-              <Button
-                title={item}
-                onPress={() => handleTableSelection(item)}
-                color={selectedSlot === item ? 'green' : 'blue'}
-              />
-            )}
-            keyExtractor={(item) => item}
-          />
+          {availableTables.length > 0 ? (
+            <Picker
+              selectedValue={selectedSlot} // Value for the selected table
+              onValueChange={(itemValue) => handleTableSelection(itemValue)} // Handle the table selection
+            >
+              {/* Map the available tables into Picker items */}
+              {availableTables.map((table) => (
+                <Picker.Item key={table} label={table} value={table} />
+              ))}
+            </Picker>
+          ) : (
+            <Text>No available tables for the selected time and date.</Text>
+          )}
         </>
       )}
       
 
       {/* Meal Type Input */}
-      <View className="mb-5">
+      <View className="bg-white border border-gray-300 mb-5 p-3 rounded-md">
         <Text className="font-semibold text-[#14213d] mb-2">Meal Type</Text>
-        <Picker selectedValue={mealType} onValueChange={setMealType} className="bg-white border border-gray-300 p-3 rounded-md">
+        <Picker selectedValue={mealType} onValueChange={setMealType} >
           <Picker.Item label="Lunch" value="lunch" />
           <Picker.Item label="Dinner" value="dinner" />
           <Picker.Item label="Breakfast" value="breakfast" />
@@ -503,7 +526,7 @@ const Booking = () => {
       </View>
 
       {/* Special Request Input */}
-      <View className="mb-5">
+      <View className="bg-white border border-gray-300 mb-5 p-3 rounded-md">
         <Text className="font-semibold text-[#14213d] mb-2">Special Request</Text>
         <Picker selectedValue={specialRequest} onValueChange={setSpecialRequest} 
           className="bg-white border border-gray-300 p-3 rounded-md">

@@ -10,6 +10,8 @@ const bookingSchema = new mongoose.Schema({
   mealType: String,
   date: Date,
   time: Date,
+  hoursIn: Number,
+  slots: String,
   notes: String,
   specialRequest: String,
   totalPrice: { type: Number, required: true },

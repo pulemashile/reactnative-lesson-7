@@ -2,7 +2,7 @@ const Booking = require('../models/bookingModel');
 
 // Handle booking creation
 exports.createBooking = async (req, res) => {
-  const { guestName, email, phone, restaurantName, guestCount, mealType, date, time, notes, specialRequest, totalPrice } = req.body;
+  const { guestName, email, phone, restaurantName, guestCount, mealType, date, time, hoursIn, slots, notes, specialRequest, totalPrice } = req.body;
 
   console.log("Attempt to create booking!!");
 
@@ -17,6 +17,8 @@ exports.createBooking = async (req, res) => {
       mealType,
       date,
       time,
+      hoursIn,
+      slots,
       notes,
       specialRequest,
       totalPrice,
