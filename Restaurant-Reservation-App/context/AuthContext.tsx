@@ -51,13 +51,16 @@ export function SessionProvider({ children }: PropsWithChildren)
           const currentTime = new Date().getTime();
   
           // Check if the session is expired (more than 2 days old)
-          if (currentTime - timestamp < SESSION_EXPIRATION_TIME) {
+          if (currentTime - timestamp < SESSION_EXPIRATION_TIME) 
+          {
             setSession({ username, user });
-            router.replace('/(tabs)/profile'); // Navigate to profile if session is valid
-          } else {
+            router.replace('/(tabs)/profile');
+          }
+          else 
+          {
             // Session is expired
             setSession({ username: null, user: null  });
-            router.replace('/(auth)/login'); // Redirect to login if session expired
+            router.replace('/(auth)/login'); 
           }
         } 
         else 
@@ -108,6 +111,8 @@ export function SessionProvider({ children }: PropsWithChildren)
     {
         if (email && password) 
         {
+          console.log(email , " | contxt",);
+          
             // Send POST request to your backend to sign in the user
             const response = await fetch('http://10.196.0.124:5000/api/auth/signin', {
                 method: 'POST',

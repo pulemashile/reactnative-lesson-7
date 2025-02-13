@@ -9,7 +9,7 @@ const BookingSummaryModal = ({
     bookingData,
     handleConfirmBooking }) => {  
       
-      const [paymentMethod, setPaymentMethod] = useState("payment")
+    const [paymentMethod, setPaymentMethod] = useState("payment")
 
     if (!bookingData) return null;
    
@@ -27,6 +27,8 @@ const BookingSummaryModal = ({
               <Text>Guest Count: {bookingData.guestCount}</Text>
               <Text>Date: {bookingData.date.toLocaleDateString()}</Text>
               <Text>Time: {bookingData.time.toLocaleTimeString()}</Text>
+              <Text>HoursIn: {bookingData.hoursIn}</Text>
+              <Text>Table Number: {bookingData.slots}</Text>
               <Text>Meal Type: {bookingData.mealType}</Text>
               <Text>Notes: {bookingData.notes || 'N/A'}</Text>
               <Text>Special Request: {bookingData.specialRequest || 'None'}</Text>

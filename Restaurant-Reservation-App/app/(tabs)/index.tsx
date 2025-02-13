@@ -21,8 +21,18 @@ const Index = () => {
   const [nearbyPlaces, setNearbyPlaces] = useState([]);  // Nearby places results
   const [restaurants, setRestaurants] = useState([]);  // Restaurant search results
 
-  const { lat: currentLat, lon: currentLon, curLocation, errMsg, loading } = useCurrentLocation();  
-  const { searchedLat, searchedLon, searchedLocation, errMsg: locationErrMsg, loading: locationLoading } = useLocation(debouncedQuery);  // Location hook for city search
+  const { 
+    lat: currentLat, 
+    lon: currentLon, 
+    curLocation, 
+    errMsg, loading } = useCurrentLocation();  
+
+  const { 
+    searchedLat, 
+    searchedLon, 
+    searchedLocation, 
+    errMsg: locationErrMsg, 
+    loading: locationLoading } = useLocation(debouncedQuery);  // Location hook for city search
 
   const [loadingRestaurants, setLoadingRestaurants] = useState('');
   const formatDate = (dt_txt) => {
@@ -32,18 +42,13 @@ const Index = () => {
 
   // Debounced query change handler
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedQuery(searchQuery);
-    }, 500); // Adjust debounce time as needed
+    const timer = setTimeout(() => { setDebouncedQuery(searchQuery); }, 500); // Adjust debounce time as needed
     return () => clearTimeout(timer);  // Cleanup timer
   }, [searchQuery]);
 
   // Handle search query when debounced query is updated
   useEffect(() => {
-    if (debouncedQuery.trim()) 
-    {
-      handleSearch(debouncedQuery);
-    }
+    if (debouncedQuery.trim()) { handleSearch(debouncedQuery); }
   }, [debouncedQuery]);
 
   // When current location changes, fetch nearby places and restaurants
