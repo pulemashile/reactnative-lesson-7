@@ -96,9 +96,9 @@ export default function Layout() {
       />
       
       <Drawer.Screen 
-        name="Mail"
+        name="Notifications"
         options={{
-          drawerLabel: 'Mail',
+          drawerLabel: 'Notifications',
           drawerIcon: ({ color }) => (
             <SvgXml xml={MailIcon} width={24} height={24}  />
           ),

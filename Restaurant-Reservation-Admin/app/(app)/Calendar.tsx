@@ -1,138 +1,182 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, useWindowDimensions } from 'react-native';
 
-const Calendar = () => {
+const BookingTimeline = () => {
+  // Get screen dimensions and update on rotation/resize
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   
-  const tables = ['Table 1', 'Table 2', 'Table 3', 'Table 4', 'Table 5', 'Table 6', 'Table 7', 'Table 8', 'Table 9', 'Table 10'];
-  const times = [
-    '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', 
-    '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'
+  // Constants for layout calculations
+  const TABLE_COLUMN_WIDTH = 80;
+  const HOUR_COLUMN_WIDTH = screenWidth * 0.2; // 20% of screen width
+  const TIME_SLOTS_START = 12; // 12pm
+  const TIME_SLOTS_END = 18; // 6pm
+  
+  const tables = Array.from({ length: 20 }, (_, i) => ({
+    id: `T${i + 1}`,
+    capacity: '2-3'
+  }));
+
+  const timeSlots = Array.from(
+    { length: TIME_SLOTS_END - TIME_SLOTS_START + 1 }, 
+    (_, i) => {
+      const hour = i + TIME_SLOTS_START;
+      return hour === 12 ? '12pm' : `${hour % 12}pm`;
+    }
+  );
+
+  const bookings = [
+    {
+      id: 1,
+      table: 'T1',
+      name: 'Gloria Anieves',
+      guests: '2 Adults',
+      startTime: '12pm',
+      duration: 2,
+      type: 'walkin',
+      color: '#3B82F6'
+    },
+    {
+      id: 2,
+      table: 'T2',
+      name: 'Alberto',
+      guests: '2 Adults',
+      startTime: '1pm',
+      duration: 1,
+      type: 'reservation',
+      color: '#F97316'
+    },
+    {
+      id: 3,
+      table: 'T3',
+      name: 'Ben',
+      guests: '~2covers (group)',
+      startTime: '2pm',
+      duration: 2,
+      type: 'reservation',
+      color: '#A855F7'
+    },
+    {
+      id: 4,
+      table: 'T4',
+      name: 'Gloria Anieves',
+      guests: '~2covers (group)',
+      startTime: '5pm',
+      duration: 1,
+      type: 'walkin',
+      color: '#3B82F6'
+    }
   ];
 
-  const reservations = [
-    { table: 'Table 1', time: '8:00 AM', name: 'John Doe', meal: 'Breakfast' },
-    { table: 'Table 2', time: '9:00 AM', name: 'Mai Mai', meal: 'Breakfast' },
-    { table: 'Table 4', time: '9:00 AM', name: 'Sara G', meal: 'Lunch' },
-    { table: 'Table 1', time: '10:00 AM', name: 'Michael Lee', meal: 'Lunch' },
-  ];
+  const calculatePosition = (startTime) => {
+    const hour = parseInt(startTime.replace('pm', ''));
+    const position = (hour === 12 ? 0 : hour - TIME_SLOTS_START) * HOUR_COLUMN_WIDTH;
+    return position;
+  };
 
-  const getMealColor = (meal) => {
-    switch (meal) {
-      case 'Breakfast':
-        return '#B8001F'; 
-      case 'Lunch':
-        return '#0D92F4'; 
-      case 'Dinner':
-        return '#ffcc80'; 
+  const calculateWidth = (duration) => {
+    return duration * HOUR_COLUMN_WIDTH;
+  };
+
+  const getStatusColor = (type) => {
+    switch (type) {
+      case 'walkin':
+        return 'bg-blue-600';
+      case 'reservation':
+        return 'bg-purple-600';
       default:
-        return '#e0f7fa'; 
+        return 'bg-gray-600';
     }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header row with time slots */}
-      {/* <ScrollView horizontal={true} style={styles.headerRow}>
-        {times.map((time, index) => (
-          <View key={index} style={styles.timeHeader}>
-            <Text style={styles.timeHeaderText}>{time}</Text>
-          </View>
-        ))}
-      </ScrollView> */}
+    <SafeAreaView className="flex-1 bg-gray-50">
+      {/* Header */}
+      <View className="px-4 py-3 bg-white border-b border-gray-200">
+        <Text className="text-lg font-semibold">Monday, 14 August 2023</Text>
+        
+        {/* Action buttons */}
+        <View className="flex-row mt-3">
+          <TouchableOpacity className="px-3 py-1 bg-navy-600 rounded-md mr-2">
+            <Text className="text-white text-sm">Map</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="px-3 py-1 bg-navy-600 rounded-md mr-2">
+            <Text className="text-white text-sm">Day View</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="px-3 py-1 bg-navy-600 rounded-md mr-2">
+            <Text className="text-white text-sm">Legend</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
-      {/* Time slots and reserved tables */}
-      <ScrollView>
-        {times.map((time, rowIndex) => {
-          // Find all reservations for the current time slot
-          const reservedTables = reservations.filter(res => res.time === time);
-          
-          return (
-            <View key={rowIndex} style={styles.timeRow}>
-              <View style={styles.timeColumn}>
-                <Text style={styles.timeText}>{time}</Text>
+      <ScrollView horizontal bounces={false} showsHorizontalScrollIndicator={false}>
+        <View>
+          {/* Time header */}
+          <View className="flex-row border-b border-gray-200" 
+                style={{ paddingLeft: TABLE_COLUMN_WIDTH }}>
+            {timeSlots.map((time) => (
+              <View 
+                key={time} 
+                style={{ width: HOUR_COLUMN_WIDTH }}
+                className="px-2 py-3"
+              >
+                <Text className="text-sm text-gray-600">{time}</Text>
               </View>
-              <View style={styles.reservationColumn}>
-                {reservedTables.length > 0 ? (
-                  reservedTables.map((reservation, index) => (
-                    <Text key={index} style={[styles.reservationText, { backgroundColor: getMealColor(reservation.meal) }]}>
-                      {reservation.table} <br>
-                      </br>{reservation.name}
-                    </Text>
-                  ))
-                ) : (
-                  <Text style={styles.noReservationText}>No Reservations</Text>
-                )}
+            ))}
+          </View>
+
+          <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+            {/* Tables and bookings */}
+            {tables.map((table) => (
+              <View key={table.id} className="flex-row border-b border-gray-100">
+                {/* Table info */}
+                <View 
+                  style={{ width: TABLE_COLUMN_WIDTH }}
+                  className="px-2 py-3 border-r border-gray-200 bg-white"
+                >
+                  <Text className="text-sm font-semibold">{table.id}</Text>
+                  <Text className="text-xs text-gray-600">{table.capacity}</Text>
+                </View>
+
+                {/* Timeline */}
+                <View 
+                  className="h-16 relative bg-white"
+                  style={{ width: HOUR_COLUMN_WIDTH * timeSlots.length }}
+                >
+                  {/* Time grid lines */}
+                  {timeSlots.map((_, index) => (
+                    <View
+                      key={index}
+                      className="absolute h-full border-l border-gray-100"
+                      style={{ left: index * HOUR_COLUMN_WIDTH }}
+                    />
+                  ))}
+
+                  {/* Bookings */}
+                  {bookings
+                    .filter(booking => booking.table === table.id)
+                    .map((booking) => (
+                      <TouchableOpacity
+                        key={booking.id}
+                        activeOpacity={0.8}
+                        className="absolute top-2 rounded-md p-2"
+                        style={{
+                          left: calculatePosition(booking.startTime),
+                          width: calculateWidth(booking.duration),
+                          backgroundColor: booking.color
+                        }}
+                      >
+                        <Text className="text-white text-xs font-semibold">{booking.name}</Text>
+                        <Text className="text-white text-xs">{booking.guests}</Text>
+                      </TouchableOpacity>
+                    ))}
+                </View>
               </View>
-            </View>
-          );
-        })}
+            ))}
+          </ScrollView>
+        </View>
       </ScrollView>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    marginBottom: 10,
-  },
-  timeHeader: {
-    width: 150,
-    alignItems: 'center',
-    paddingVertical: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-    marginHorizontal: 5,
-  },
-  timeHeaderText: {
-    fontWeight: 'bold',
-    fontFamily: 'poppinsRegular',
-    fontSize: 14,
-  },
-  timeRow: {
-    flexDirection: 'row',
-    marginBottom: 10,
-    alignItems: 'flex-start',
-  },
-  timeColumn: {
-    width: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  timeText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontFamily: 'poppinsRegular',
-    fontSize: 12,
-    color: '#444',
-  },
-  reservationColumn: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    flexWrap: 'wrap',
-  },
-  reservationText: {
-    marginBottom: 5,
-    padding: 5,
-    fontSize: 12,
-    color: '#333',
-    borderRadius: 5,
-    textAlign: 'center',
-    width: 200,
-    height: 50, 
-    fontFamily: 'poppinsRegular', // Ensure the reserved table information fits
-  },
-  noReservationText: {
-    fontSize: 12,
-    color: 'gray',
-    fontFamily: 'poppinsRegular',
-    height: 50,
-
-  },
-});
-
-export default Calendar;
+export default BookingTimeline;

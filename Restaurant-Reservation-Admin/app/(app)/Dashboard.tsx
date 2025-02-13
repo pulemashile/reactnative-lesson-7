@@ -33,11 +33,11 @@ const AdminDashboard = () => {
   };
 
   const pieData = [
-    { name: 'Dine-in', population: 40, color: '#FF6384', legendFontColor: '#FFF', legendFontSize: 14 },
-    { name: 'Takeaway', population: 25, color: '#36A2EB', legendFontColor: '#FFF', legendFontSize: 14 },
-    { name: 'Delivery', population: 20, color: '#FFCE56', legendFontColor: '#FFF', legendFontSize: 14 },
-    { name: 'Catering', population: 10, color: '#4BC0C0', legendFontColor: '#FFF', legendFontSize: 14 },
-    { name: 'Others', population: 5, color: '#9966FF', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Dine-in', population: 40, color: '#56021F', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Desserts', population: 25, color: '#7D1C4A', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Dinner', population: 20, color: '#D17D98', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Lunch', population: 10, color: '#D91656', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'breakfast', population: 5, color: '#F4CCE9F', legendFontColor: '#FFF', legendFontSize: 14 },
   ];
 
  
@@ -78,8 +78,8 @@ const AdminDashboard = () => {
         {/* Sales Report with Line Chart */}
         <View style={ styles.card }> {/* use dimensions width */}
           <View className='w-full flex-row justify-between items-center '>   
-            <Text style={styles.cardTitle}>Reservations Report</Text>
-            <Text style={{ }}> Monthly ▾ </Text>
+            <Text style={styles.cardTitle} className='text-gray-600'>Reservations Report</Text>
+            <Text style={styles.poppinsRegular}> Monthly ▾ </Text>
           </View>   
 {/* 
           const { width } = useWindowDimensions(); */}
@@ -113,7 +113,8 @@ const AdminDashboard = () => {
       color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
       labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
       style: {
-        borderRadius: 16
+        borderRadius: 16,fontFamily:"poppinsBold"
+
       },
       propsForDots: {
         r: "6",
@@ -241,8 +242,8 @@ const AdminDashboard = () => {
 
 
         </View>
-        <View style={styles.card} className='mt-4'>
-        <Text style={styles.cardTitle}>Customer Demographics</Text>
+        <View style={styles.card} className='mt-4 text-gray-600'>
+        <Text style={styles.cardTitle} className=' font-bold text-gray-600 mb-3'>Customer Demographics</Text>
         <PieChart
           data={pieData}
           width={width - 40}
@@ -254,7 +255,7 @@ const AdminDashboard = () => {
           accessor="population"
           backgroundColor="#808080"
           paddingLeft="10"
-          style={{ borderRadius: 16 }} 
+          style={{ borderRadius: 16,fontFamily: 'poppinsRegular' }} 
           absolute
 
         />
@@ -333,6 +334,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     fontFamily: 'poppinsBold',
+    // color: '#A5BFCC',
   },
   chartConfig: {
     backgroundColor: 'black',
