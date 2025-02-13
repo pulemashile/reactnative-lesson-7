@@ -40,8 +40,7 @@ exports.createBooking = async (req, res) => {
 exports.updateBookingStatus = async (req, res) => {
   const { bookingId, paymentId, status } = req.body;
 
-  console.log(req.body);
-  
+  console.log(req.body); 
 
   try 
   {
@@ -81,6 +80,33 @@ exports.getBookingsByEmail = async (req, res) => {
 
     if (!bookings || bookings.length === 0) {
       return res.status(404).json({ message: "No bookings found for this email" });
+    }
+
+    // Send the bookings in the response
+    res.status(200).json(bookings);
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Controller function to get bookings by user's email or all bookings
+exports.getAllBookings = async (req, res) => {
+  try {
+    // Extract email from query parameter
+    const email = req.query.email; 
+    
+    // If email is provided, fetch bookings by email; else, fetch all bookings
+    let bookings;
+    if (email) {
+      bookings = await Booking.find({ email: email });  // Fetch bookings by email
+    } else {
+      bookings = await Booking.find();  // Fetch all bookings if no email is provided
+    }
+
+    // If no bookings are found, return an appropriate response
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ message: "No bookings found" });
     }
 
     // Send the bookings in the response

@@ -2,7 +2,7 @@ import { View, Text, Image, Pressable, Alert,StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
-const Mail = () => {
+const Notifications = () => {
   const [activeMessageId, setActiveMessageId] = useState(null);
 
   // Dummy data for 10 messages
@@ -91,4 +91,4 @@ poppinsExtraBold: {
   ,
 });
 
-export default Mail;
+export default Notifications;

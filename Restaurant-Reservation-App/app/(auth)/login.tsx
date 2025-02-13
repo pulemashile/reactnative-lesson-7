@@ -30,7 +30,8 @@ const Login = () => {
   const router = useRouter();
 
   const handleLogin = async () => {
-    if (email && password) {
+    if (email && password) 
+    {
       await SignIn(email, password);      
     } 
     else { alert('Please fill out both fields'); }

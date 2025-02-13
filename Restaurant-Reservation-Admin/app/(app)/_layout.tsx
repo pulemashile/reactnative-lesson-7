@@ -1,5 +1,5 @@
 import { Drawer } from 'expo-router/drawer';
-import { SvgXml } from 'react-native-svg';
+// import { SvgXml } from 'react-native-svg';
 
 // Example SVG Icon strings
 const MailIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
@@ -77,11 +77,10 @@ export default function Layout() {
         name="Dashboard"
         options={{          
           drawerLabel: 'Dashboard',
-          drawerIcon: ({ color }) => (
-            <SvgXml xml={DashboardIcon} width={24} height={24}
-              />
-
-          ),
+          // drawerIcon: ({ color }) => (
+          //   <SvgXml xml={DashboardIcon} width={24} height={24}
+          //     />
+          // ),
         }}
       />
       
@@ -89,9 +88,9 @@ export default function Layout() {
         name="Settings"
         options={{
           drawerLabel: 'Settings',
-          drawerIcon: ({ color }) => (
-            <SvgXml xml={SettingsIcon} width={24} height={24} />
-          ),
+          // drawerIcon: ({ color }) => (
+          //   <SvgXml xml={SettingsIcon} width={24} height={24} />
+          // ),
         }}
       />
       
@@ -99,9 +98,9 @@ export default function Layout() {
         name="Notifications"
         options={{
           drawerLabel: 'Notifications',
-          drawerIcon: ({ color }) => (
-            <SvgXml xml={MailIcon} width={24} height={24}  />
-          ),
+          // drawerIcon: ({ color }) => (
+          //   <SvgXml xml={MailIcon} width={24} height={24}  />
+          // ),
         }}
       />
       
@@ -109,26 +108,26 @@ export default function Layout() {
         name="Contacts"
         options={{
           drawerLabel: 'Contacts',
-          drawerIcon: ({ color }) => (
-            <SvgXml xml={contactsIcon} width={24} height={24}  />
-          ),
+          // drawerIcon: ({ color }) => (
+          //   <SvgXml xml={contactsIcon} width={24} height={24}  />
+          // ),
         }}
       /><Drawer.Screen 
       name="Calendar"
       options={{
         drawerLabel: 'calendar',
-        drawerIcon: ({ color }) => (
-          <SvgXml xml={calendarIcon} width={24} height={24}  />
-        ),
+        // drawerIcon: ({ color }) => (
+        //   <SvgXml xml={calendarIcon} width={24} height={24}  />
+        // ),
       }}
     />
     <Drawer.Screen 
         name="Logout"
         options={{
           drawerLabel: 'Logout',
-          drawerIcon: ({ color }) => (
-            <SvgXml xml={ArrowIcon} width={24} height={24}  />
-          ),
+          // drawerIcon: ({ color }) => (
+          //   <SvgXml xml={ArrowIcon} width={24} height={24}  />
+          // ),
         }}
       />
     </Drawer>

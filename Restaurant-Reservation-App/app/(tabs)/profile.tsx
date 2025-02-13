@@ -33,7 +33,31 @@ const UserProfileScreen = () => {
     Alert.alert('Notifications', 'Show recent notifications related to reservations.');
   };
 
-  console.log("Reservations: ", bookings);
+  // Get today's date and the next two days
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  const nextTwoDays = new Date(today);
+  nextTwoDays.setDate(today.getDate() + 2);
+
+  // Function to filter upcoming reservations
+  const getUpcomingReservations = () => {
+    return bookings.filter((res) => {
+      const reservationDate = new Date(res.date);
+      return reservationDate >= today && reservationDate <= nextTwoDays && res.status === 'Paid';
+    });
+  };
+
+  // Function to filter current reservations
+  const getCurrentReservation = () => {
+    return bookings.find((res) => res.status === 'Paid' && new Date(res.date) >= today);
+  };
+
+  // Function to filter past reservations
+  const getPastReservations = () => {
+    return bookings.filter((res) => res.status === 'Completed');
+  };
 
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">
@@ -48,36 +72,53 @@ const UserProfileScreen = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Current Reservation Section */}
       <View className="mt-6">
         <Text className="text-lg font-semibold mb-3">Current Reservation</Text>
-        {bookings.filter((res) => res.status === 'Paid').length > 0 ? (
+        {getCurrentReservation() ? (
           <View className="bg-white p-4 rounded-lg shadow-md mb-3">
-            <Text className="text-lg font-bold">Restaurant: {bookings[0].restaurantName}</Text>
-            <Text className="text-gray-600">Date: {new Date(bookings[0].date).toLocaleDateString()}</Text>
-            <Text className="text-gray-600">Status: {bookings[0].status}</Text>
+            <Text className="text-lg font-bold">Restaurant: {getCurrentReservation().restaurantName}</Text>
+            <Text className="text-gray-600">Date: {new Date(getCurrentReservation().date).toLocaleDateString()}</Text>
+            <Text className="text-gray-600">Status: {getCurrentReservation().status}</Text>
           </View>
         ) : (
           <Text>No upcoming reservations.</Text>
         )}
       </View>
 
+      {/* Upcoming Reservations Section */}
+      <View className="mt-6">
+        <Text className="text-lg font-semibold mb-3">Upcoming Reservations (Tomorrow or Next Two Days)</Text>
+        {getUpcomingReservations().length > 0 ? (
+          getUpcomingReservations().map((res) => (
+            <View key={res._id} className="bg-white p-4 rounded-lg shadow-md mb-3">
+              <Text className="text-lg font-bold">Restaurant: {res.restaurantName}</Text>
+              <Text className="text-gray-600">Date: {new Date(res.date).toLocaleDateString()}</Text>
+              <Text className="text-gray-600">Status: {res.status}</Text>
+            </View>
+          ))
+        ) : (
+          <Text>No upcoming reservations for the next two days.</Text>
+        )}
+      </View>
+
+      {/* Past Reservations Section */}
       <View className="mt-6">
         <Text className="text-lg font-semibold mb-3">Past Reservations</Text>
-        {bookings.filter((res) => res.status === 'Completed').length > 0 ? (
-          bookings
-            .filter((res) => res.status === 'Completed')
-            .map((res) => (
-              <View key={res._id} className="bg-white p-4 rounded-lg shadow-md mb-3">
-                <Text className="text-lg font-bold">Restaurant: {res.restaurantName}</Text>
-                <Text className="text-gray-600">Date: {new Date(res.date).toLocaleDateString()}</Text>
-                <Text className="text-gray-600">Status: {res.status}</Text>
-              </View>
-            ))
+        {getPastReservations().length > 0 ? (
+          getPastReservations().map((res) => (
+            <View key={res._id} className="bg-white p-4 rounded-lg shadow-md mb-3">
+              <Text className="text-lg font-bold">Restaurant: {res.restaurantName}</Text>
+              <Text className="text-gray-600">Date: {new Date(res.date).toLocaleDateString()}</Text>
+              <Text className="text-gray-600">Status: {res.status}</Text>
+            </View>
+          ))
         ) : (
           <Text>No past reservations.</Text>
         )}
       </View>
 
+      {/* Notifications Section */}
       <View className="mt-6">
         <Text className="text-lg font-semibold mb-3">Notifications</Text>
         <TouchableOpacity onPress={handleViewNotifications} className="bg-blue-500 py-2 px-6 rounded-full">
@@ -85,6 +126,7 @@ const UserProfileScreen = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Logout Section */}
       <View className="mt-6">
         <TouchableOpacity onPress={handleLogout} className="bg-red-500 py-2 px-6 rounded-full flex-row items-center justify-center">
           <Ionicons name="log-out-outline" size={20} color="white" />
@@ -92,6 +134,7 @@ const UserProfileScreen = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Suggestions Section */}
       <View className="mt-8 border-t border-gray-300 pt-6">
         <Text className="text-lg font-semibold">Suggestions:</Text>
         <Text className="text-gray-600 mt-2">- Rate your past reservations to help others!</Text>
