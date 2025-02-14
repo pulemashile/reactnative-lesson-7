@@ -1,4 +1,4 @@
-import { useBooking } from '@/context/BookingContext';
+
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View, Image, Pressable, StyleSheet, Dimensions, useWindowDimensions } from 'react-native';
@@ -6,6 +6,7 @@ import { BarChart, LineChart, PieChart } from 'react-native-chart-kit';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useBooking } from '@/context/BookingContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const screenWidth = Dimensions.get('window').width;
@@ -52,7 +53,7 @@ const AdminDashboard = () => {
   
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       {/* Top Bar with Icons */}
       <View style={styles.topBar}>
         <Pressable style={styles.iconContainer}>
@@ -83,7 +84,7 @@ const AdminDashboard = () => {
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} style={{ flex: 1 }}>
         {/* Sales Report with Line Chart */}
         <View style={styles.card}> {/* use dimensions width */}
           <View className='w-full flex-row justify-between items-center '>
@@ -191,7 +192,7 @@ const AdminDashboard = () => {
 
 
         {/* Messages Section with Accordion Behavior */}
-        <View className="bg-white rounded-lg shadow-md p-4 mt-4">
+        <View className="bg-white rounded-lg shadow-md p-4 mt-4 h-[350px]">
           <Text className="text-lg font-semibold text-gray-600 mb-4  "
             style={styles.poppinsSemiBold}>
             Notifications
@@ -251,7 +252,7 @@ const AdminDashboard = () => {
 
 
         </View>
-        <View style={styles.card} className='mt-4 text-gray-600'>
+        <View style={styles.card} className=' mt-4 text-gray-600'>
           <Text style={styles.cardTitle} className=' font-bold text-gray-600 mb-3'>Customer Demographics</Text>
           <PieChart
             data={pieData}
@@ -261,17 +262,16 @@ const AdminDashboard = () => {
               color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
 
             }}
-            accessor="population"
-            backgroundColor="#808080"
-            paddingLeft="10"
-            style={{ borderRadius: 16, fontFamily: 'poppinsRegular' }}
-            absolute
-
+              accessor="population"
+              backgroundColor="#808080"
+              paddingLeft="10"
+              style={{ borderRadius: 16, fontFamily: 'poppinsRegular' }}
+              absolute
           />
         </View>
 
       </ScrollView>
-    </View>
+    </SafeAreaView>
 
   );
 };
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   iconContainer: {
-
+    width:54,
     justifyContent: "center",
     padding: 8,
     borderWidth: 1,
@@ -345,6 +345,7 @@ const styles = StyleSheet.create({
     fontFamily: 'poppinsBold',
     // color: '#A5BFCC',
   },
+
   chartConfig: {
     backgroundColor: 'black',
     backgroundGradientFrom: 'black',
