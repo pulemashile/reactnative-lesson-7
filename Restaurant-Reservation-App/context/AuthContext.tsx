@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { router, useRouter } from 'expo-router';
 
 const SESSION_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000;
+const ServerURL = "https://reactnative-lesson-7.onrender.com";
 
 type AuthContextType = {
   SignIn: (email?: string, password?: string) => Promise<void>;
@@ -15,7 +16,8 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function useSession() {
+export function useSession() 
+{
   const context = useContext(AuthContext);
   if (!context) 
   {
@@ -81,7 +83,7 @@ export function SessionProvider({ children }: PropsWithChildren)
     { 
         console.log("Attempt Reg: ", username, email)
         // Send POST request to your backend to register the user
-        const response = await fetch('http://10.196.0.124:5000/api/auth/signup', { // Replace with your server URL
+        const response = await fetch(`${ServerURL}/api/auth/signup`, { // Replace with your server URL
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, email, password }),
@@ -113,35 +115,32 @@ export function SessionProvider({ children }: PropsWithChildren)
         {
           console.log(email , " | contxt",);
           
-            // Send POST request to your backend to sign in the user
-            const response = await fetch('http://10.196.0.124:5000/api/auth/signin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-            const data = await response.json();
+          // Send POST request to your backend to sign in the user
+          const response = await fetch(`${ServerURL}/api/auth/signin`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await response.json();
 
-            if (data.token) 
-            {
-              const currentTime = new Date().getTime();
-            // Store JWT token and set session state
-                await AsyncStorage.setItem('auth-token', data.token);
-                const sessionData = { username: data.username, user: email,  isGuest: false, timestamp: currentTime }
-                
-                await AsyncStorage.setItem('session', JSON.stringify(sessionData))
-                setSession({ username: data.username, user: email,  isGuest: false});
-                router.push('/(tabs)/profile'); // Navigate to home or desired screen after successful signin
-            } 
-            else 
-            {
-              alert('Signin failed: ' + data.message);
-            }
+          if (data.token) 
+          {
+            const currentTime = new Date().getTime();
+          // Store JWT token and set session state
+              await AsyncStorage.setItem('auth-token', data.token);
+              const sessionData = { username: data.username, user: email,  isGuest: false, timestamp: currentTime }
+              
+              await AsyncStorage.setItem('session', JSON.stringify(sessionData))
+              setSession({ username: data.username, user: email,  isGuest: false});
+              router.push('/(tabs)/profile'); // Navigate to home or desired screen after successful signin
+          } 
+          else { alert('Signin failed: ' + data.message); }
         } 
         else if (isGuest) 
         {
-            const guestName = email || 'Guest';
-            await AsyncStorage.setItem('guest-session', guestName);
-            setSession({  username: 'Guest', user: guestName, isGuest: true });
+          const guestName = email || 'Guest';
+          await AsyncStorage.setItem('guest-session', guestName);
+          setSession({  username: 'Guest', user: guestName, isGuest: true });
         }
     } 
     catch (error: any) 

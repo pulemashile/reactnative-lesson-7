@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axios from 'axios';
 
+const ServerURL = "https://reactnative-lesson-7.onrender.com";
+
 // Define the type for a Booking
 interface Booking {
   _id: string;
@@ -36,16 +38,15 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 // Custom hook to use BookingContext
 export const useBooking = (): BookingContextType => {
   const context = useContext(BookingContext);
-  if (!context) {
+  if (!context) 
+  {
     throw new Error('useBooking must be used within a BookingProvider');
   }
   return context;
 };
 
 // Provider component
-interface BookingProviderProps {
-  children: ReactNode;
-}
+interface BookingProviderProps {  children: ReactNode; }
 
 export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -57,11 +58,11 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     setLoading(true);
     try 
     {
-        console.log("----Email: ", email);        
-        const response = await axios.get(` http://10.196.0.124:5000/api/bookings?email=${email}`);
-        console.log("Context: ", response.data);
-        
-        setBookings(response.data);
+      console.log("----Email: ", email);        
+      const response = await axios.get(`${ServerURL}/api/bookings?email=${email}`);
+      console.log("Context: ", response.data);
+      
+      setBookings(response.data);
     } 
     catch (err) { setError('Failed to fetch bookings'); } 
     finally { setLoading(false); }

@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axios from 'axios';
 
+
+const ServerURL = "https://reactnative-lesson-7.onrender.com";
 // Define the type for a Booking
 interface Booking {
   _id: string;
