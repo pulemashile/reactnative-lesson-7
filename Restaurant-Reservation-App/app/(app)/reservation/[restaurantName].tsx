@@ -310,7 +310,7 @@ const Booking = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          guestName: session.user, 
+          guestName: session.username, 
           email: session.user, 
           phone: 'N/A', 
           restaurantName: restaurantName,
@@ -395,6 +395,7 @@ const Booking = () => {
               <Text className="font-semibold text-[#14213d] mb-2">Full Name: {`${session.username}`}</Text>
             ) : (
               <>
+                <Text className="font-semibold text-[#14213d] mb-2">Guest Name: {`${session.username}`}</Text>
                 <Text className="font-semibold text-[#14213d] mb-2">Email: {`${session.user}`}</Text>
                 <Text className="font-semibold text-[#14213d] mb-2">Phone: +27 *** *** ***</Text>
               </>

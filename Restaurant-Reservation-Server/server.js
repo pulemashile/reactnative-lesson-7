@@ -29,6 +29,11 @@ app.use('/api/auth', authRoutes);
 app.get('/api/profile', protect, (req, res) => {
   res.json({ message: 'This is a protected route' });
 });
+
+
+// restaurant API routes
+app.use("/api/restaurants", restaurantRoutes);
+
 // Payment API routes
 app.use('/api', bookingRoutes);
 app.use('/api', paymentRoutes);

@@ -10,9 +10,9 @@ const UserProfileScreen = () => {
   const { bookings, loading, error, fetchBookingsByEmail } = useBooking();
 
   useEffect(() => {
-    if (session?.user) {
-      console.log(session);
-      
+    if (session?.user) 
+    {
+      console.log(session);      
       fetchBookingsByEmail(session.user);  // Fetch bookings using the email directly
     }
   }, [session?.user]);  // Dependency array ensures fetch is called when user changes or the component mounts
@@ -27,6 +27,11 @@ const UserProfileScreen = () => {
 
   // Handle updating user details
   const handleUpdateDetails = () => {
+    if (session?.user) 
+    {
+      console.log(session);      
+      fetchBookingsByEmail(session.user);  // Fetch bookings using the email directly
+    }
     Alert.alert('Update Details', 'Implement functionality to update user details.');
   };
 
