@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable, Image, Modal, TouchableOpacity, ScrollView,StyleSheet } from 'react-native';
+import { View, Text, Pressable, Image, Modal, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';  // For the icons
 import { useNavigation } from '@react-navigation/native';  // For navigation
 import { Link, router } from 'expo-router';
@@ -21,45 +21,42 @@ const Booktable = ({restaurant}) => {
     const selectedRestaurant = rsaRestaurants.filter(_restaurant => {
         // Get the keyword for comparison (e.g., "Spur" from "Amarillo Spur")
         const keyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
-        console.log(keyword);
-        
-    
+        console.log(keyword);  
 
         // Check if any part of the restaurant name includes the keyword
         return _restaurant.name.toLowerCase().includes(keyword);
-      });
+    });
       
-      // Parse the selectedRestaurant data before use
-      const parseRestaurantData = (restaurant) => {
+    // Parse the selectedRestaurant data before use
+    const parseRestaurantData = (restaurant) => {
         // Ensure gallery exists and is an array
-        if (!restaurant || !Array.isArray(restaurant.gallery) || restaurant.gallery.length === 0) 
+        if (!restaurant || !Array.isArray(restaurant.gallery) 
+            || restaurant.gallery.length === 0) 
         {
-          // Provide a default image or handle the case when gallery is empty
-          restaurant.gallery = ['https://example.com/default-image.jpg'];
+            // Provide a default image or handle the case when gallery is empty
+            restaurant.gallery = ['https://example.com/default-image.jpg'];
         }
       
         // Ensure other properties like menu and reviews are correctly formatted
-        if (!restaurant.menu || !Array.isArray(restaurant.menu)) {
+        if (!restaurant.menu || !Array.isArray(restaurant.menu)) 
+        {
           restaurant.menu = [];
         }
       
-        if (!restaurant.reviews || !Array.isArray(restaurant.reviews)) {
+        if (!restaurant.reviews || !Array.isArray(restaurant.reviews)) 
+        {
           restaurant.reviews = [];
         }
       
         return restaurant;
-      };
+    };
       
       // Now parse the first restaurant in the filtered list
       const parsedRestaurant = selectedRestaurant.map(parseRestaurantData);
       
     //   console.log("Parsed Selected Restaurant: ", parsedRestaurant[0]);
-
     //   console.log(restaurant);
-      
-      
-    
-    
+
     // State to track the selected tab
     const [selectedTab, setSelectedTab] = useState('Menu'); // Default to 'Menu'
 
@@ -68,9 +65,7 @@ const Booktable = ({restaurant}) => {
     const [modalImage, setModalImage] = useState(null);
 
     // Function to handle tab navigation
-    const handleTabPress = (tab) => {
-        setSelectedTab(tab); // Update the selected tab
-    };
+    const handleTabPress = (tab) => { setSelectedTab(tab);  };
 
     // Function to open the modal with a specific image
     const openModal = (image) => {
@@ -80,9 +75,7 @@ const Booktable = ({restaurant}) => {
     
     const [showFullText, setShowFullText] = useState(false);
 
-    const toggleText = () => {
-        setShowFullText(!showFullText);
-    };
+    const toggleText = () => {   setShowFullText(!showFullText);  };
 
     console.log("selectedRestaurant: ", restaurant.name);
     

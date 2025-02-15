@@ -121,12 +121,10 @@ const Index = () => {
 
   // Function to fetch restaurants based on latitude and longitude or query
   const fetchRestaurants = async (searchQuery) => {
-    console.log(searchQuery);
-    
+    console.log(searchQuery);    
     try 
     {
-      const { lat, lon, query } = searchQuery;
-  
+      const { lat, lon, query } = searchQuery;  
       let url = `https://map-server-1-l0ef.onrender.com/api/restaurants?currentLat=${currentLat}&currentLon=${currentLon}`;
   
       // If lat and lon are available, use them for the request
@@ -178,8 +176,7 @@ const Index = () => {
             searchedLon={searchedLon}   
           />
         ):( <ActivityIndicator /> )
-      }   
-      
+      }         
       
       {/* Search Container */}
       <View className="px-4 my-2">

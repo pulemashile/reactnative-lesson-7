@@ -10,6 +10,9 @@ import BookingSummaryModal from '../bookingSummaryModal';
 import rsaRestaurants from '@/utils/data';
 import { useSession } from '@/context/AuthContext';
 
+const ServerURL = "https://reactnative-lesson-7.onrender.com";
+
+
 const Booking = () => {   
 
   const { session, SignOut } = useSession();    
@@ -260,7 +263,7 @@ const Booking = () => {
     setPaymentSuccess(true);
     console.log("handlePSuccess:", data);
     
-    const updateResponse = await fetch('http://10.196.0.124:5000/api/booking/update', {
+    const updateResponse = await fetch(`${ServerURL}/api/booking/update`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -301,7 +304,7 @@ const Booking = () => {
   const handleConfirmBooking = async () => {
     try {
       // Step 1: Create the booking with 'Pending' status
-      const bookingResponse = await fetch('http://10.196.0.124:5000/api/booking', {
+      const bookingResponse = await fetch(`${ServerURL}/api/booking`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -332,7 +335,7 @@ const Booking = () => {
       const bookingId = bookingDataFromBackend.booking._id; // Assuming the backend returns the created booking with the ID
   
       // Step 2: Call the backend to initiate payment (this could be PayPal or another service)
-      const paymentResponse = await fetch('http://10.196.0.124:5000/api/payment', {
+      const paymentResponse = await fetch(`${ServerURL}/api/payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -591,7 +594,7 @@ const Booking = () => {
                     const urlParts = event.url.split('?');
 
                     // Extract the path before "?" where bookingId is located
-                    const path = urlParts[0]; // This is http://10.196.0.124:5000/success/bookingId=679b7de71a8544a5f7caa5f6
+                    const path = urlParts[0]; // ${ServerURL}/success/bookingId=679b7de71a8544a5f7caa5f6
 
                     // Use regex or string manipulation to get the bookingId from the path
                     const bookingIdMatch = path.match(/bookingId=([^/]+)/);

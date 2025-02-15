@@ -13,4 +13,13 @@ VITE_OWM_APIKEY= 895284fb2d2c50a520ea537456963d9c
 VITE_OWM_BASEURL= https://api.openweathermap.org/data/2.5
 VITE_FOURSQUARE_APIKEY= fsq3kVt3x1OXxFUZxzcOk6SVEwQdbgFJJQK15Q6CIvMlOL8=
 
-google_map_api=AIzaSyD2bEZAck01UFkm4f5UgJ4Jm_2C1G2J2_Q
+google_map_api= AIzaSyD2bEZAck01UFkm4f5UgJ4Jm_2C1G2J2_Q
+
+
+AppServer: "https://reactnative-lesson-7.onrender.com"
+
+user_signup_api: `${AppServer}/api/auth/signup`
+user_signin_api: `${AppServer}/api/auth/signin`
+
+signup_api: 
+signup_api: 

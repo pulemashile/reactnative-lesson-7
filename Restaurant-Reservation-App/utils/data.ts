@@ -41,7 +41,7 @@ const rsaRestaurants = [
             sunday: '10:00 AM - 10:00 PM'
         },
         availableSlots: {
-            "2025-02-13": { 
+            "2025-02-15": { 
             "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
             "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
             "12:00": [ "Table-3", "Table-4", "Table-5" ],
@@ -55,7 +55,7 @@ const rsaRestaurants = [
             "20:00": ["Table-7"],
             "21:00": ["Table-2", "Table-3"],
             },
-            "2025-02-14": {
+            "2025-02-16": {
                 "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
                 "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
                 "12:00": [ "Table-3", "Table-4", "Table-5" ],
@@ -69,7 +69,7 @@ const rsaRestaurants = [
                 "20:00": [ "Table-7" ],
                 "21:00": [ "Table-2", "Table-3" ],
             },
-            "2025-02-15": {
+            "2025-02-17": {
                 "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
                 "11:00": [ "Table-1", "Table-3", "Table-8", "Table-9", "Table-10" ],
                 "12:00": [ "Table-3", "Table-4", "Table-5" ],
@@ -105,7 +105,8 @@ const rsaRestaurants = [
             name: "James Smith",
             position: "Founder & CEO"
         }
-    },    
+    }, 
+
     {
         id: 3,
         name: 'Spur',
@@ -144,7 +145,7 @@ const rsaRestaurants = [
             sunday: 'Closed'
         },
         availableSlots: {
-            "2025-02-12": { 
+            "2025-02-15": { 
             "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
             "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
             "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
@@ -160,7 +161,7 @@ const rsaRestaurants = [
             "21:00": ["Table-2", "Table-3"],
             "22:00": ["Table-2", "Table-3"],
             },
-            "2025-02-13": {
+            "2025-02-16": {
                 "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
                 "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
                 "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
@@ -176,7 +177,7 @@ const rsaRestaurants = [
                 "21:00": [ "Table-2", "Table-3" ],
                 "22:00": [ "Table-2", "Table-3" ],
             },
-            "2025-02-14": {
+            "2025-02-17": {
                 "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
                 "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
                 "11:00": [ "Table-1", "Table-3", "Table-8", "Table-9", "Table-10" ],
@@ -253,6 +254,56 @@ const rsaRestaurants = [
             saturday: '7:00 AM - 12:00 AM',
             sunday: '8:00 AM - 10:00 PM'
         },
+        availableSlots: {
+            "2025-02-15": { 
+            "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+            "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+            "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
+            "12:00": [ "Table-3", "Table-4", "Table-5" ],
+            "13:00": [ "Table-5", "Table8" ],
+            "14:00": [ "Table3","Table-4", "Table-7", ],
+            "15:00": ["Table-7", "Table-9"],
+            "16:00": ["Table-1", "Table-2", "Table-3", "Table-10"],
+            "17:00": ["Table-5", "Table-6", "Table-7"],
+            "18:00": ["Table-3", "Table-4"],
+            "19:00": ["Table-6"],
+            "20:00": ["Table-7"],
+            "21:00": ["Table-2", "Table-3"],
+            "22:00": ["Table-2", "Table-3"],
+            },
+            "2025-02-16": {
+                "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+                "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+                "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
+                "12:00": [ "Table-3", "Table-4", "Table-5" ],
+                "13:00": [ "Table-5", "Table-8" ],
+                "14:00": [ "Table-3","Table-4", "Table-7", "Table-8" ],
+                "15:00": [ "Table-7", "Table-9" ],
+                "16:00": [ "Table-1", "Table-2", "Table-3", "Table-10" ],
+                "17:00": [ "Table-5", "Table-6", "Table-7" ],
+                "18:00": [ "Table-3", "Table-4" ],
+                "19:00": [ "Table-6" ],
+                "20:00": [ "Table-7" ],
+                "21:00": [ "Table-2", "Table-3" ],
+                "22:00": [ "Table-2", "Table-3" ],
+            },
+            "2025-02-17": {
+                "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+                "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+                "11:00": [ "Table-1", "Table-3", "Table-8", "Table-9", "Table-10" ],
+                "12:00": [ "Table-3", "Table-4", "Table-5" ],
+                "13:00": [ "Table-5", "Table-8" ],
+                "14:00": [ "Table-3", "Table-4", "Table-7", ],
+                "15:00": [ "Table-1", "Table-7", "Table-9"],
+                "16:00": ["Table-1", "Table-2", "Table-3", "Table-10"],
+                "17:00": ["Table-5", "Table-6", "Table-7"],
+                "18:00": ["Table-3", "Table-4"],
+                "19:00": ["Table-6"],
+                "20:00": ["Table-7"],
+                "21:00": ["Table-2", "Table-3"],
+                "22:00": ["Table-2", "Table-3"],
+            }
+        },
         reviews: [
             {
                 user: 'Jabu N.',
@@ -317,6 +368,56 @@ const rsaRestaurants = [
             mondayToFriday: '9:00 AM - 10:00 PM',
             saturday: '9:00 AM - 11:00 PM',
             sunday: '10:00 AM - 9:00 PM'
+        },
+        availableSlots: {
+            "2025-02-15": { 
+            "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+            "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+            "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
+            "12:00": [ "Table-3", "Table-4", "Table-5" ],
+            "13:00": [ "Table-5", "Table8" ],
+            "14:00": [ "Table3","Table-4", "Table-7", ],
+            "15:00": ["Table-7", "Table-9"],
+            "16:00": ["Table-1", "Table-2", "Table-3", "Table-10"],
+            "17:00": ["Table-5", "Table-6", "Table-7"],
+            "18:00": ["Table-3", "Table-4"],
+            "19:00": ["Table-6"],
+            "20:00": ["Table-7"],
+            "21:00": ["Table-2", "Table-3"],
+            "22:00": ["Table-2", "Table-3"],
+            },
+            "2025-02-16": {
+                "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+                "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+                "11:00": [ "Table-3", "Table-8", "Table-9", "Table-10" ],
+                "12:00": [ "Table-3", "Table-4", "Table-5" ],
+                "13:00": [ "Table-5", "Table-8" ],
+                "14:00": [ "Table-3","Table-4", "Table-7", "Table-8" ],
+                "15:00": [ "Table-7", "Table-9" ],
+                "16:00": [ "Table-1", "Table-2", "Table-3", "Table-10" ],
+                "17:00": [ "Table-5", "Table-6", "Table-7" ],
+                "18:00": [ "Table-3", "Table-4" ],
+                "19:00": [ "Table-6" ],
+                "20:00": [ "Table-7" ],
+                "21:00": [ "Table-2", "Table-3" ],
+                "22:00": [ "Table-2", "Table-3" ],
+            },
+            "2025-02-17": {
+                "09:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+                "10:00": [ "Table-1", "Table-2",  "Table-4", "Table-5",  "Table-7", "Table-9" ],
+                "11:00": [ "Table-1", "Table-3", "Table-8", "Table-9", "Table-10" ],
+                "12:00": [ "Table-3", "Table-4", "Table-5" ],
+                "13:00": [ "Table-5", "Table-8" ],
+                "14:00": [ "Table-3", "Table-4", "Table-7", ],
+                "15:00": [ "Table-1", "Table-7", "Table-9"],
+                "16:00": ["Table-1", "Table-2", "Table-3", "Table-10"],
+                "17:00": ["Table-5", "Table-6", "Table-7"],
+                "18:00": ["Table-3", "Table-4"],
+                "19:00": ["Table-6"],
+                "20:00": ["Table-7"],
+                "21:00": ["Table-2", "Table-3"],
+                "22:00": ["Table-2", "Table-3"],
+            }
         },
         reviews: [
             {
