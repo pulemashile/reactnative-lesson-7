@@ -1,3 +1,16 @@
 -TableEase 
 -DineElite 
 -TimeToDine 
+
+
+PORT=5000
+MONGODB_URI=mongodb+srv://Kabelo:defaultpassword@cluster0.kazuf.mongodb.net/restaurant_database
+PAYPAL_CLIENT_ID=AV7y8Wt8kT9RmUlt6anrCxE_MyKe3TstWhOkF6yM_Izo7RwLPXxrJVXMkZPIcjVFH2hkBIt8HX-cgJK4
+PAYPAL_CLIENT_SECRET=EIpAZZFs3w14cR6sMmpU1CYA2GG3ScpskdNxvs8lCrJlxvatd2TawRRV17Vm4aM14KJO8-TqFvW6tzQ_
+
+
+VITE_OWM_APIKEY= 895284fb2d2c50a520ea537456963d9c
+VITE_OWM_BASEURL= https://api.openweathermap.org/data/2.5
+VITE_FOURSQUARE_APIKEY= fsq3kVt3x1OXxFUZxzcOk6SVEwQdbgFJJQK15Q6CIvMlOL8=
+
+google_map_api=AIzaSyD2bEZAck01UFkm4f5UgJ4Jm_2C1G2J2_Q
