@@ -126,6 +126,8 @@ export function SessionProvider({ children }: PropsWithChildren)
 
           if (data.token) 
           {
+            console.log("auth-token: ", data);
+            
             const currentTime = new Date().getTime();
           // Store JWT token and set session state
               await AsyncStorage.setItem('auth-token', data.token);
