@@ -4,6 +4,10 @@ const rsaRestaurants = [
         name: "Nando's",
         description: 'Famous for its flame-grilled peri-peri chicken, Nando\'s offers a bold and flavorful dining experience.',
         address: '1 Nando’s Way, Johannesburg, South Africa',
+        cuisine: "American",
+        rating: 4.5,
+        image: "https://logos-world.net/wp-content/uploads/2022/12/Nandos-Emblem.png",
+        isAvailable: true,
         gallery: [          
           'https://logos-world.net/wp-content/uploads/2022/12/Nandos-Emblem.png',
           'https://static.independent.co.uk/s3fs-public/thumbnails/image/2020/05/26/14/nandos.jpg',
@@ -112,6 +116,9 @@ const rsaRestaurants = [
         name: 'Spur',
         description: 'A South African classic, The Spur serves up delicious steaks, ribs, burgers, and a variety of other comfort food.',
         address: '456 Spur Road, Durban, South Africa',
+        cuisine: "American",
+        rating: 4.5,
+        image: "https://logos-world.net/wp-content/uploads/2022/12/Nandos-Emblem.png",
         gallery: [
             'https://images.myguide-cdn.com/mauritius/companies/spur-steak-ranches/large/spur-steak-ranches-496705.png',
             'https://images.jacobinmag.com/wp-content/uploads/sites/3/2015/02/27022249/IMG_4992.jpg',
@@ -330,10 +337,14 @@ const rsaRestaurants = [
     },
   
     {
-        id: 5,
+  
         name: "KFC",
         description: 'Known for its finger-licking good fried chicken, KFC serves a variety of chicken, sides, and delicious meals.',
         address: '789 KFC Lane, Pretoria, South Africa',
+        cuisine: "American",
+        rating: 4.5,
+        image: "https://th.bing.com/th/id/R.c33c924446008e2cf23c442a3a269c11?rik=mw%2fGhpQdQABqkw&riu=http%3a%2f%2fwallpapersdsc.net%2fwp-content%2fuploads%2f2016%2f09%2fKFC-Wallpaper.jpg&ehk=Btn9XdF1O0LRqCYIqaOtYP7Z4FjspxDJj2uvfPa42sc%3d&risl=&pid=ImgRaw&r=0",
+        isAvailable: true,
         gallery: [
           'https://th.bing.com/th/id/R.c33c924446008e2cf23c442a3a269c11?rik=mw%2fGhpQdQABqkw&riu=http%3a%2f%2fwallpapersdsc.net%2fwp-content%2fuploads%2f2016%2f09%2fKFC-Wallpaper.jpg&ehk=Btn9XdF1O0LRqCYIqaOtYP7Z4FjspxDJj2uvfPa42sc%3d&risl=&pid=ImgRaw&r=0',
           'https://www.kfc.co.za/wp-content/uploads/2021/01/kfc-store.jpg',

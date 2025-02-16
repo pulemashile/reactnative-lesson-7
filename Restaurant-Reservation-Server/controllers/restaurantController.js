@@ -131,3 +131,67 @@ exports.deleteRestaurant = async (req, res) => {
     res.status(500).json({ message: "Failed to delete restaurant", error });
   }
 };
+
+
+exports.removeSlot = async (req, res) => {
+  console.log("Attempting to remove slot...");
+
+  const restaurantId = req.params.id; // Using ID from params
+  const { date, time, tableId } = req.body;
+  
+
+  try {
+      // Convert date to "YYYY-MM-DD" format
+      const formattedDate = new Date(date).toISOString().split('T')[0];
+
+      // Find the restaurant by ID
+      const restaurant = await Restaurant.findById(restaurantId);
+
+      if (!restaurant) { return res.status(404).json({ message: "Restaurant not found" }); }
+      console.log("Restaurant found:", restaurant);
+
+      // Ensure availableSlots exists
+      if (!restaurant.availableSlots || 
+          !restaurant.availableSlots[formattedDate] || 
+          !restaurant.availableSlots[formattedDate][time]) {
+          return res.status(400).json({ message: "Time slot not available for the specified date" });
+      }
+      console.log("Available Slots for", formattedDate, time, ":", restaurant.availableSlots[formattedDate][time]);
+
+      // Find and remove the table from the slot
+      const slot = restaurant.availableSlots[formattedDate][time];
+      const tableIndex = slot.indexOf(tableId);
+
+      console.log("Table Index:", tableIndex);
+      console.log("Table to remove:", tableId);
+
+      if (tableIndex === -1) { return res.status(400).json({ message: "Table not available for booking" }); }
+
+      slot.splice(tableIndex, 1); // Remove the table
+      console.log("Updated Slots:", restaurant.availableSlots[formattedDate][time]);
+
+      // Clean up: If no tables left, remove the time slot
+      /*if (slot.length === 0) 
+      {
+          delete restaurant.availableSlots[formattedDate][time];
+
+          // If no more time slots exist for the date, remove the date
+          if (Object.keys(restaurant.availableSlots[formattedDate]).length === 0) {
+              delete restaurant.availableSlots[formattedDate];
+          }
+      }*/
+
+      // Force Mongoose to recognize the update
+      restaurant.markModified(`availableSlots.${formattedDate}.${time}`);
+
+      // Save updated restaurant document
+      await restaurant.save();
+      console.log("Restaurant saved successfully");
+
+      res.status(200).json({ message: "Table removed from available slots" });
+
+  } catch (error) {
+      console.error("Error removing slot:", error);
+      res.status(500).json({ message: "Server error" });
+  }
+};

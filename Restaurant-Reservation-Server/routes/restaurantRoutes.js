@@ -6,7 +6,8 @@ const {
     getAllRestaurants,
     getRestaurantById,
     updateRestaurant,
-    deleteRestaurant, 
+    deleteRestaurant,
+    removeSlot, 
 } = require("../controllers/restaurantController");
 
 router.post("/default", createDefaultRestaurant); // Fetch all restaurants
@@ -15,5 +16,9 @@ router.get("/:id", getRestaurantById); // Fetch a single restaurant by ID
 router.post("/", createRestaurant); // Add a new restaurant
 router.put("/:id", updateRestaurant); // Update a restaurant
 router.delete("/:id", deleteRestaurant); // Delete a restaurant
+
+
+// Endpoint to remove a table from the available slots for a specific date and time
+router.patch('/remove_slot/:id', removeSlot);
 
 module.exports = router;
