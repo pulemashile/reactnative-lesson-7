@@ -1,11 +1,12 @@
-const Restaurant = require("../models/Restaurant");
+const Restaurant = require("../models/restaurantModel");
 
 // Function to create a default restaurant if none exist
 exports.createDefaultRestaurant = async (req, res) => {
     console.log("attemp create default")
     try {
       const count = await Restaurant.countDocuments();
-      if (count === 0) {
+      if (count === 0) 
+      {
         const defaultRestaurant = new Restaurant({
           name: "Vault 101 Diner",
           description: "A classic American diner in the post-apocalyptic world.",
@@ -97,7 +98,10 @@ exports.getRestaurantById = async (req, res) => {
 
 // Add a new restaurant
 exports.createRestaurant = async (req, res) => {
-  try {
+  console.log("Add|Create Restaurant");
+  
+  try 
+  {
     const newRestaurant = new Restaurant(req.body);
     await newRestaurant.save();
     res.status(201).json({ message: "Restaurant added successfully", restaurant: newRestaurant });

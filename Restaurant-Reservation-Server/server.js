@@ -7,7 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const protect = require('./middleware/auth');
 const bookingRoutes = require('./routes/bookingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
-const restaurant = require('./models/restaurantModel');
+const restaurantRoutes = require('./routes/restaurantRoutes');
 
  // Load environment variables
 dotenv.config(); 
@@ -33,7 +33,7 @@ app.get('/api/profile', protect, (req, res) => {
 
 
 // restaurant API routes
-app.use("/api/restaurants", restaurant);
+app.use("/api/restaurants", restaurantRoutes);
 
 // Payment API routes
 app.use('/api', bookingRoutes);

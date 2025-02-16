@@ -21,8 +21,7 @@ const ownerSchema = new mongoose.Schema({
 
 const restaurantSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  description: String,
-  location: { type: String, required: true },  // Added location field
+  description: String,  
   address: String,
   cuisine: { type: String, required: true },  // Added cuisine field
   rating: { type: Number, default: 0, min: 0, max: 5 },  // Added rating with default & validation

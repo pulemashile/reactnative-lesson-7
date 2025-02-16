@@ -215,6 +215,10 @@ const rsaRestaurants = [
         name: "McDonald's",
         description: 'The world’s largest chain of fast food restaurants, known for its burgers, fries, and iconic golden arches.',
         address: '123 McDonald’s Ave, Cape Town, South Africa',
+        cuisine: "American",
+        rating: 4.5,
+        image: "https://upload.wikimedia.org/wikipedia/commons/c/c0/McDonald%27s_logo_2018.png",
+        isAvailable: true,
         gallery: [
           'https://upload.wikimedia.org/wikipedia/commons/c/c0/McDonald%27s_logo_2018.png',
           'https://www.mcdonalds.co.za/wp-content/uploads/2019/10/mcdonalds_international.jpg',
