@@ -1,5 +1,6 @@
 const express = require("express");
 const { 
+    createDefaultRestaurant,
     getAllRestaurants, 
     getRestaurantById, 
     createRestaurant, 
@@ -9,6 +10,7 @@ const {
 
 const router = express.Router();
 
+router.post("/default", createDefaultRestaurant); // Fetch all restaurants
 router.get("/", getAllRestaurants); // Fetch all restaurants
 router.get("/:id", getRestaurantById); // Fetch a single restaurant by ID
 router.post("/", createRestaurant); // Add a new restaurant
