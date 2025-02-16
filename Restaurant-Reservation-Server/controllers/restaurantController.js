@@ -121,6 +121,7 @@ exports.updateRestaurant = async (req, res) => {
   }
 };
 
+
 // Delete a restaurant
 exports.deleteRestaurant = async (req, res) => {
   try {
@@ -195,3 +196,49 @@ exports.removeSlot = async (req, res) => {
       res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.addSlot = async (req, res) => {
+  console.log("🔄 Attempting to add a slot...");
+
+  const { restaurantId } = req.params;
+  const { date, time, tableId } = req.body;
+
+  try 
+  {
+    const formattedDate = new Date(date).toISOString().split("T")[0]; // Ensure YYYY-MM-DD format
+    
+    // Find the restaurant
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    // Ensure the date exists in availableSlots
+    if (!restaurant.availableSlots[formattedDate]) {
+        restaurant.availableSlots[formattedDate] = {};
+    }
+
+    // Ensure the time slot exists
+    if (!restaurant.availableSlots[formattedDate][time]) {
+        restaurant.availableSlots[formattedDate][time] = [];
+    }
+
+    // Add table only if it’s not already available
+    if (!restaurant.availableSlots[formattedDate][time].includes(tableId)) {
+        restaurant.availableSlots[formattedDate][time].push(tableId);
+    } else {
+        return res.status(400).json({ message: "Table is already available in this slot" });
+    }
+
+    restaurant.markModified("availableSlots"); // Force Mongoose to detect changes
+    await restaurant.save();
+
+    res.status(200).json({ message: "Table added to the available slots", updatedSlots: restaurant.availableSlots[formattedDate][time] });
+  } 
+  catch (error) 
+  {
+    console.error("Error adding slot:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+

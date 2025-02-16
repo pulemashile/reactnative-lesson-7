@@ -18,8 +18,18 @@ google_map_api= AIzaSyD2bEZAck01UFkm4f5UgJ4Jm_2C1G2J2_Q
 
 AppServer: "https://reactnative-lesson-7.onrender.com"
 
-user_signup_api: `${AppServer}/api/auth/signup`
-user_signin_api: `${AppServer}/api/auth/signin`
+user_signup_api: `${AppServer}/api/auth/signup`, { POST }
+user_signin_api: `${AppServer}/api/auth/signin`, { POST }
+
+admin_signin_api: `${AppServer}/api/auth/admin_login`, { POST }
+
+refresh_slots_api: `${AppServer}/api/restaurants/refresh_slots`, { POST }
+get_All_Restaurants_api: `${AppServer}/api/restaurants/`, { GET }
+remove_slot_by_Restaurant_Id_api: `${AppServer}/api/restaurants/remove_slot/:id`, { PATCH } // remove by id, date and time and slotId(Table-#Nx)
+
+
+
+
 
 createBooking_api: 
 updateBooking_api: 
