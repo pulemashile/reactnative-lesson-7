@@ -3,10 +3,74 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/userModel');
+const restaurant = require('../models/restaurantModel');
 const router = express.Router();
 
 // Secret key for JWT
 const JWT_SECRET = 'restaurants_reservation_2025'; // Store this securely in environment variables
+
+
+// Function to clean outdated slots and update availability
+const cleanupAndUpdateSlots = async () => {
+  console.log("Cleaning outdated slots and refreshing availability...");
+  const today = new Date().toISOString().split("T")[0];
+  console.log(today)
+
+  const restaurants = await restaurant.find();
+
+  for (const restaurant of restaurants) 
+  {
+      // Remove past slots
+      Object.keys(restaurant.availableSlots).forEach(date => {
+        if (date < today) delete restaurant.availableSlots[date];
+      });
+
+      restaurant.markModified("availableSlots");
+      await restaurant.save();
+  }
+  console.log("Slots updated successfully.");
+};
+
+router.post("/refresh_slots", async (req, res) => {
+  try 
+  {
+      await cleanupAndUpdateSlots(); // Call the function that removes old slots
+      res.json({ message: "Slots updated successfully!" });
+  } 
+  catch (error) 
+  {
+      console.error("Error updating slots:", error);
+      res.status(500).json({ message: "Error updating slots" }); 
+  }
+});
+
+router.post("/admin-login ", async (req, res) => {
+  try 
+  {
+      const { email, password } = req.body;
+      const admin = await Admin.findOne({ email });
+
+      if (!admin || !(await admin.comparePassword(password))) {
+          return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      // Run slot cleanup before responding
+      await cleanupAndUpdateSlots();
+
+      res.json({ message: "Login successful", token: generateToken(admin._id) });
+  } 
+  catch (error) { res.status(500).json({ message: "Server error" }); }
+});
+
+
+router.post("/refresh_slots", async (req, res) => {
+  try {
+      await cleanupAndUpdateSlots(); // Call the function that removes old slots
+      res.json({ message: "Slots updated successfully!" });
+  } catch (error) {
+      res.status(500).json({ message: "Error updating slots" });
+  }
+});
 
 // Signup Route
 router.post('/signup', async (req, res) => {
