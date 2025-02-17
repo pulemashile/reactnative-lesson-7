@@ -112,7 +112,7 @@ router.put("/:id", updateRestaurant); // Update a restaurant
 router.delete("/:id", deleteRestaurant); // Delete a restaurant
 
 
-// Endpoint to remove a table from the available slots for a specific date and time
+// Endpoint to add/remove a table from the available slots for a specific date and time
 router.patch('/remove_slot/:id', removeSlot);
 router.patch("/add_slot/:restaurantId", addSlot);
 
