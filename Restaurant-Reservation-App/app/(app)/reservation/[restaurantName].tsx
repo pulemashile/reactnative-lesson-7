@@ -345,7 +345,7 @@ const Booking = () => {
     
     console.log(formattedDate, " ", formattedTime, " ", selectedSlot, "" , restaurant?._id);
     
-    const updateSlotsResponse = await fetch(`${ServerURL}/api/restaurants/remove_slot/${restaurant?._id}`, {
+    await fetch(`${ServerURL}/api/restaurants/remove_slot/${restaurant?._id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

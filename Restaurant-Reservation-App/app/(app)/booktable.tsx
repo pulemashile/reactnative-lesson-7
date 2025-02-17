@@ -84,12 +84,9 @@ const Booktable = ({restaurant}) => {
 
     const toggleText = () => {   setShowFullText(!showFullText);  };
 
-    console.log("RSA-Restaurants: ", rsaRestaurants);
-    
+    // console.log("RSA-Restaurants: ", rsaRestaurants);    
     console.log("selectedRestaurant: ", restaurant.name);
-    console.log("RSA-Restaurants: ", parsedRestaurant);
-
-    
+    console.log("Parsed-Restaurants: ", parsedRestaurant);    
 
     return (
         <View className="flex-1 bg-white fixed inset-0 z-10">
