@@ -3,62 +3,69 @@ import { View, Text, Pressable, Image, Modal, ScrollView, StyleSheet } from 'rea
 import { Ionicons } from '@expo/vector-icons';  // For the icons
 import { useNavigation } from '@react-navigation/native';  // For navigation
 import { Link, router } from 'expo-router';
-import rsaRestaurants from '@/utils/data';
+// import rsaRestaurants from '@/utils/data';
 
+const ServerURL = "https://reactnative-lesson-7.onrender.com";
 
 const Booktable = ({restaurant}) => {
-
+    const [rsaRestaurants, setRsaRestaurants] = useState([]);
+    const [parsedRestaurant, setParsedRestaurant] = useState(null);
     const [keyword, setKeyWord] = useState('');
-
-    useEffect(() => {
-        if (restaurant && restaurant.name) {
-          const extractedKeyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
-        console.log(extractedKeyword);
-        setKeyWord(extractedKeyword); // Set the extracted keyword state
-        }
-      }, [restaurant]);
-
-    const selectedRestaurant = rsaRestaurants.filter(_restaurant => {
-        // Get the keyword for comparison (e.g., "Spur" from "Amarillo Spur")
-        const keyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
-        console.log(keyword);  
-
-        // Check if any part of the restaurant name includes the keyword
-        return _restaurant.name.toLowerCase().includes(keyword);
-    });
-      
-    // Parse the selectedRestaurant data before use
-    const parseRestaurantData = (restaurant) => {
-        // Ensure gallery exists and is an array
-        if (!restaurant || !Array.isArray(restaurant.gallery) 
-            || restaurant.gallery.length === 0) 
-        {
-            // Provide a default image or handle the case when gallery is empty
-            restaurant.gallery = ['https://example.com/default-image.jpg'];
-        }
-      
-        // Ensure other properties like menu and reviews are correctly formatted
-        if (!restaurant.menu || !Array.isArray(restaurant.menu)) 
-        {
-          restaurant.menu = [];
-        }
-      
-        if (!restaurant.reviews || !Array.isArray(restaurant.reviews)) 
-        {
-          restaurant.reviews = [];
-        }
-      
-        return restaurant;
-    };
-      
-      // Now parse the first restaurant in the filtered list
-      const parsedRestaurant = selectedRestaurant.map(parseRestaurantData);
-      
-    //   console.log("Parsed Selected Restaurant: ", parsedRestaurant[0]);
-    //   console.log(restaurant);
-
     // State to track the selected tab
     const [selectedTab, setSelectedTab] = useState('Menu'); // Default to 'Menu'
+
+     // Fetch restaurants dynamically
+    useEffect(() => {
+        const fetchRestaurants = async () => {
+            try 
+            {
+                const response = await fetch(`${ServerURL}/api/restaurants`); // Replace with your actual API URL
+                const data = await response.json();
+                console.log(data);
+                
+                setRsaRestaurants(data);
+            } 
+            catch (error) { console.error("Error fetching restaurants:", error); }
+        };
+
+        fetchRestaurants();
+    }, []);
+
+    useEffect(() => {
+        if (restaurant && restaurant.name) 
+        {
+            const extractedKeyword = restaurant.name.split(' ')[1]?.toLowerCase() || restaurant.name.toLowerCase();
+            console.log(extractedKeyword);
+            setKeyWord(extractedKeyword); // Set the extracted keyword state
+        }
+    }, [restaurant]);
+
+    useEffect(() => {
+        if (keyword && rsaRestaurants.length > 0) {
+            const matchedRestaurant = rsaRestaurants.find((_restaurant) => 
+                _restaurant.name.toLowerCase().includes(keyword)
+            );
+
+            if (matchedRestaurant) {
+                setParsedRestaurant(parseRestaurantData(matchedRestaurant));
+            }
+        }
+    }, [keyword, rsaRestaurants]);
+    
+      
+    // Parse the selectedRestaurant data before use
+    const parseRestaurantData = (restaurant) => ({
+        ...restaurant,
+        gallery: restaurant.gallery?.length ? restaurant.gallery : ['https://example.com/default-image.jpg'],
+        menu: restaurant.menu ?? [],
+        reviews: restaurant.reviews ?? [],
+        owner: restaurant.owner ?? { name: "Unknown", profileImg: '', position: '' },
+        openingHours: restaurant.openingHours ?? {
+            mondayToFriday: "Not Available",
+            saturday: "Not Available",
+            sunday: "Not Available"
+        }
+    });
 
     // State for Modal (for gallery images)
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -77,16 +84,21 @@ const Booktable = ({restaurant}) => {
 
     const toggleText = () => {   setShowFullText(!showFullText);  };
 
+    console.log("RSA-Restaurants: ", rsaRestaurants);
+    
     console.log("selectedRestaurant: ", restaurant.name);
+    console.log("RSA-Restaurants: ", parsedRestaurant);
+
     
 
     return (
         <View className="flex-1 bg-white fixed inset-0 z-10">
             {/* Image on top */}
             <View className="relative">
+
                 <Image
-                    // source={require('../../assets/images/set.jpeg')}
-                    source={{uri: parsedRestaurant[0].gallery[0] }}
+                    // source={require('../../assets/images/set.j')}
+                    source={{uri: parsedRestaurant?.image ?? `https://example.com/default-image.jpg`}}
                     style={{ width: '100%', height: 300, borderRadius: 10 }}
                 />
 
@@ -94,11 +106,11 @@ const Booktable = ({restaurant}) => {
                 <View className="absolute top-5 right-5 flex-row gap-3">
                     <Pressable className="bg-white p-2 rounded-full shadow-lg">
                         <Ionicons name="share-social-outline" size={24} color="black" />
-                        <Text>🤝</Text>
+                        {/* <Text>🤝</Text> */}
                     </Pressable>
                     <Pressable className="bg-white p-2 rounded-full shadow-lg">
-                        {/* <Ionicons name="heart-outline" size={24} color="black" />  */}
-                        <Text>❤</Text>
+                        <Ionicons name="heart-outline" size={24} color="black" /> 
+                        {/* <Text>❤</Text> */}
                     </Pressable>
                 </View>
             </View>
@@ -143,8 +155,8 @@ const Booktable = ({restaurant}) => {
 
                         <View className="mt-5 space-y-3">
                             {/* Menu Items as Cards */}
-                            { parsedRestaurant.map((restaurant) =>
-                                restaurant.menu.map((item, index) => (
+                            { 
+                                parsedRestaurant?.menu.map((item, index) => (
                                 //   <MenuItemCard key={index} item={item} />
                                 <View className="bg-white p-5 rounded-xl shadow-lg">
                                     <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>{item.name}</Text>
@@ -155,7 +167,7 @@ const Booktable = ({restaurant}) => {
                                     </Pressable>
                                 </View>
                                 ))
-                            )}   
+                            }   
                         </View>
                     </View>
                 )}
@@ -167,20 +179,20 @@ const Booktable = ({restaurant}) => {
                         <Text className="text-lg text-gray-700"style={styles.poppinsRegular}>
                             {/* Welcome to our restaurant! We are a family-owned business dedicated to
                              providing a memorable dining experience with the finest ingredients and a variety of mouth-watering dishes. */}
-                             { `${parsedRestaurant[0].description}` }
+                             { `${parsedRestaurant?.description}` }
                         </Text>
                         {/* <Text className="text-lg text-gray-700 mt-3">
                             Our chefs specialize in creating authentic flavors from around the world, 
                             bringing you the best of both local and international cuisine. We pride ourselves on exceptional service and a welcoming atmosphere.
                         </Text> */}
                         <Text className="text-lg text-gray-700 mt-3"style={styles.poppinsRegular}>
-                            { `${parsedRestaurant[0].contactUs}` }
+                            { `${parsedRestaurant?.contactUs}` }
                         </Text>
 
                         {/* Read More/Read Less */}
                         {showFullText && (
                             <Text className="text-lg text-gray-700 mt-3"style={styles.poppinsRegular}>
-                                { `${parsedRestaurant[0].readMore}` }                               
+                                { `${parsedRestaurant?.readMore}` }                               
                             </Text>
                         )}
 
@@ -193,12 +205,21 @@ const Booktable = ({restaurant}) => {
                         {/* Contact Card */}
                         <View className="mt-7 bg-white rounded-lg shadow-md p-5 flex-row items-center">
                             <Image
-                                source={{ uri:  parsedRestaurant[0].owner.profileImg }}  
+                                source={{ uri:  parsedRestaurant?.owner.profileImg }}  
                                 style={{ width: 60, height: 60, borderRadius: 30 }}
                             />
                             <View className="ml-4 flex-1">
-                                <Text className="text-lg font-semibold text-gray-800"style={styles.poppinsRegular}>{ `${parsedRestaurant[0].owner.name}` }</Text>
-                                <Text className="text-gray-600"style={styles.poppinsRegular}>{ `${parsedRestaurant[0].owner.position}` }</Text>
+                                <Text className="text-lg font-semibold text-gray-800" 
+                                    style={styles.poppinsRegular}
+                                > 
+                                    { `${parsedRestaurant?.owner.name}` }
+                                </Text>
+
+                                <Text className="text-gray-600" 
+                                    style={styles.poppinsRegular}
+                                > 
+                                    { `${parsedRestaurant?.owner.position}` }
+                                </Text>
 
                                 <View className="flex-row justify-between mt-2">
                                     <Pressable className="p-2 bg-gray-200 rounded-full">
@@ -213,14 +234,22 @@ const Booktable = ({restaurant}) => {
 
                         {/* Opening Hours */}
                         <View className="mt-7">
-                            <Text className="text-2xl font-bold text-gray-700 mb-3"style={styles.poppinsRegular}>Opening Hours</Text>
+                            <Text className="text-2xl font-bold text-gray-700 mb-3"
+                                style={styles.poppinsRegular}>
+                                    Opening Hours
+                            </Text>
+                            
                             <View className="text-lg text-gray-700">
-                                <Text className='mb-2 text-gray-700 font-thin ' style={styles.poppinsRegular}> Monday - Friday: {`${parsedRestaurant[0].openingHours.mondayToFriday}`}</Text>
-                                <Text style={styles.poppinsRegular}>
-                                    Saturday: {`${parsedRestaurant[0].openingHours.saturday}`}
+                                <Text className='mb-2 text-gray-700 font-thin ' 
+                                    style={styles.poppinsRegular}
+                                > 
+                                    Monday - Friday: {`${parsedRestaurant?.openingHours.mondayToFriday}`}
                                 </Text>
                                 <Text style={styles.poppinsRegular}>
-                                    Sunday: {`${parsedRestaurant[0].openingHours.sunday}`}
+                                    Saturday: {`${parsedRestaurant?.openingHours.saturday}`}
+                                </Text>
+                                <Text style={styles.poppinsRegular}>
+                                    Sunday: {`${parsedRestaurant?.openingHours.sunday}`}
                                 </Text>
                             </View>
                         </View>

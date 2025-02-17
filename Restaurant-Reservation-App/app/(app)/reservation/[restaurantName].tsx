@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import WebView from 'react-native-webview';
 import BookingSummaryModal from '../bookingSummaryModal';
-import rsaRestaurants from '@/utils/data';
+// import rsaRestaurants from '@/utils/data';
 import { useSession } from '@/context/AuthContext';
 
 const ServerURL = "https://reactnative-lesson-7.onrender.com";
@@ -19,6 +19,8 @@ const Booking = () => {
     
   const { restaurantName } = useLocalSearchParams(); 
   console.log("param ", restaurantName);    
+  const [rsaRestaurants, setRsaRestaurants] = useState([]);
+  
 
   // Guest and booking details
   const [restaurant, setRestaurant] = useState(null);
@@ -83,33 +85,76 @@ const Booking = () => {
   const [availableTables, setAvailableTables] = useState([]);
   const [selectedTables, setSelectedTables] = useState([]);
 
+  // Fetch restaurants dynamically
   useEffect(() => {
-    if (restaurantName) 
+      const fetchRestaurants = async () => {
+          try 
+          {
+            const response = await fetch(`${ServerURL}/api/restaurants`); // Replace with your actual API URL
+            const data = await response.json();
+            if (Array.isArray(data)) 
+            {
+              // console.log("Fetched restaurants:", data);              
+              setRsaRestaurants(data);
+            } 
+            else { console.error("Invalid restaurant data format:", data); }
+          } 
+          catch (error) { console.error("Error fetching restaurants:", error); }
+      };
+
+      fetchRestaurants();
+  }, []);
+
+  const parseAvailableSlots = (restaurant) => ({
+    ...restaurant,
+    availableSlots: restaurant.availableSlots
+        ? Object.keys(restaurant.availableSlots).reduce((acc, date) => ({
+            ...acc,
+            [date]: typeof restaurant.availableSlots[date] === 'object' 
+                ? Object.keys(restaurant.availableSlots[date]).reduce((timeAcc, time) => ({
+                    ...timeAcc,
+                    [time]: Array.isArray(restaurant.availableSlots[date][time]) 
+                        ? restaurant.availableSlots[date][time] 
+                        : [] // Ensure each time slot contains an array
+                }), {})
+                : {} // Default empty object if date data is invalid
+        }), {})
+        : {}  // Default to empty object
+});
+
+
+  useEffect(() => {
+    if (restaurantName && rsaRestaurants.length > 0) 
     {
-      console.log("find res");
-    
+      console.log("Finding restaurant...");
+
       let selectedRestaurant = null;
       for (let i = 0; i < rsaRestaurants.length; i++) 
       {
-        if (rsaRestaurants[i].name.toLowerCase() === restaurantName.toLowerCase()) 
+        if (rsaRestaurants[i]?.name.toLowerCase() === restaurantName.toLowerCase()) 
         {
-          console.log("rest... found!!");
-          
+          console.log("Restaurant found!");
           selectedRestaurant = rsaRestaurants[i];
           break; // Exit loop once the match is found
         }
       }
-      setRestaurant(selectedRestaurant);
+
+      if (selectedRestaurant) 
+      {
+        setRestaurant(parseAvailableSlots(selectedRestaurant)); // Parse before setting
+      }
     }
+  }, [restaurantName, rsaRestaurants]);
 
-
-  }, [restaurantName]);
+  console.log("restaurantID:", restaurant?._id);
+  
+  console.log("restaurant?parsed: ", restaurant);
+  
 
   useEffect(()=> {
-
     if (restaurant && date && time) 
     {
-        // Normalize the time and date format
+      // Normalize the time and date format
       const selectedDate = new Date(date); // Assuming `date` is in "YYYY-MM-DD" format
       const selectedTime = new Date(`${selectedDate.toISOString().split("T")[0]}T${time}:00Z`); // Normalize to ISO string time
 
@@ -233,7 +278,7 @@ const Booking = () => {
   // Handle table selection
   const handleTableSelection = (table) => {
     // Handle table selection (you can allow up to 3 table selection here)
-    console.log(`Selected table: ${table}`);
+    // console.log(`Selected table: ${table}`);
     setSelectedSlot(table);
   }
 
@@ -274,7 +319,7 @@ const Booking = () => {
         paymentId: data.paymentId,  
         status: "Paid", 
       }),
-    });
+    });    
 
     console.log("updateResponse", updateResponse)
 
@@ -285,6 +330,19 @@ const Booking = () => {
 
     const updatedBookingData = await updateResponse.json();
     console.log('Booking confirmed:', updatedBookingData); 
+
+    // const updateSlotsResponse = await fetch(`${ServerURL}/api/restaurants/remove_slot/${restaurant._id}`, {
+    //   method: 'PUT',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+
+    //   body: JSON.stringify({
+    //     date: date,
+    //     time: time,
+    //     tableId: selectedSlot
+    //   }),
+    // });
 
     // Close the summary modal after booking is confirmed
     setShowSummaryModal(false);
@@ -381,6 +439,8 @@ const Booking = () => {
   console.log("paymentURL", paymentUrl)
   // console.log("restaurant: ", restaurant)
   console.log("Available: ", availableTables)
+  
+  console.log("SelectedSlot", selectedSlot, date, time, " restaurantID: ", restaurant?._id);
   
 
   return (

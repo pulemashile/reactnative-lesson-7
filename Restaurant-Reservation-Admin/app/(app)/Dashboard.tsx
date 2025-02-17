@@ -197,71 +197,70 @@ const AdminDashboard = () => {
             style={styles.poppinsSemiBold}>
             Notifications
           </Text>
-          {messages.slice(1).map((message) => (
-            <View key={message.id} className="border-b border-gray-300 py-4">
-              <View className="flex-row items-center justify-between">
-                <Image source={message.image} alt='1' className="w-12 h-12 rounded-full mr-4 bg-red-600" style={styles.imageIcon} />
-                <View className="flex-1">
-                  <Text className="font-semibold text-gray-800" style={styles.poppinsRegular}>{message.name}</Text>
-                  <Text className="text-sm text-gray-600" style={styles.poppinsRegular}>{message.position}</Text>
-                </View>
-                <Pressable
-                  className="ml-4"
-                  onPress={() => handleAccordionToggle(message.id)}
-                >
-                  <Ionicons name="chatbubble-outline" size={24} color="black" />
-                </Pressable>
-                <Pressable
-                  className="ml-4"
-                  onPress={() => alert('Calling...')}
-                >
-                  <Ionicons name="call-outline" size={24} color="black" />
-                </Pressable>
-              </View>
 
-              {/* Accordion: Show message if it's the active message */}
-              {activeMessageId === message.id && (
-                <>
-                  <View className="mt-3 px-4">
-                    <Text className="text-gray-800" style={styles.poppinsRegular}>{message.message}</Text>
-                  </View>
-
-                  {/* This is the "dropdown" card with more info */}
-                  <View className="bg-gray-200 p-3 mt-3 rounded-lg">
-                    <Text className="text-gray-600" style={styles.poppinsRegular}>
-                      {message.additionalInfo}
-                    </Text>
+          {
+            messages.slice(1).map((message) => (
+              <View key={message.id} className="border-b border-gray-300 py-4">
+                <View className="flex-row items-center justify-between">
+                  <Image source={message.image} alt='1' className="w-12 h-12 rounded-full mr-4 bg-red-600" style={styles.imageIcon} />
+                  <View className="flex-1">
+                    <Text className="font-semibold text-gray-800" style={styles.poppinsRegular}>{message.name}</Text>
+                    <Text className="text-sm text-gray-600" style={styles.poppinsRegular}>{message.position}</Text>
                   </View>
                   <Pressable
-                    onPress={() => {
-                      alert("try manage user");
-                      router.push(`/(app)/user/${message.id}`)
-                    }}
+                    className="ml-4"
+                    onPress={() => handleAccordionToggle(message.id)}
                   >
-                    <Text>Manage</Text>
+                    <Ionicons name="chatbubble-outline" size={24} color="black" />
                   </Pressable>
-                </>
-              )}
-            </View>
-          ))}
+                  <Pressable
+                    className="ml-4"
+                    onPress={() => alert('Calling...')}
+                  >
+                    <Ionicons name="call-outline" size={24} color="black" />
+                  </Pressable>
+                </View>
+
+                {/* Accordion: Show message if it's the active message */}
+                {activeMessageId === message.id && (
+                  <>
+                    <View className="mt-3 px-4">
+                      <Text className="text-gray-800" style={styles.poppinsRegular}>{message.message}</Text>
+                    </View>
+
+                    {/* This is the "dropdown" card with more info */}
+                    <View className="bg-gray-200 p-3 mt-3 rounded-lg">
+                      <Text className="text-gray-600" style={styles.poppinsRegular}>
+                        {message.additionalInfo}
+                      </Text>
+                    </View>
+                    <Pressable
+                      onPress={() => {
+                        alert("try manage user");
+                        router.push(`/(app)/user/${message.id}`)
+                      }}
+                    >
+                      <Text>Manage</Text>
+                    </Pressable>
+                  </>
+                )}
+              </View>
+            ))
+          }
 
           <Text
             className="text-lg font-semibold text-gray-600 mt-2 text-center w-full"
             style={styles.poppinsSemiBold}>More
           </Text>
-
-
         </View>
+
         <View style={styles.card} className=' mt-4 text-gray-600'>
           <Text style={styles.cardTitle} className=' font-bold text-gray-600 mb-3'>Customer Demographics</Text>
           <PieChart
             data={pieData}
             width={width - 40}
             height={220}
-            chartConfig={{
-              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-
-            }}
+            chartConfig={{ color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, }}
               accessor="population"
               backgroundColor="#808080"
               paddingLeft="10"
