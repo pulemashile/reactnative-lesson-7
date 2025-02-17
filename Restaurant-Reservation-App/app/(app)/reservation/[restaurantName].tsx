@@ -209,7 +209,8 @@ const Booking = () => {
   
     // Restrict time to be within restaurant open hours (9 AM to 9 PM)
     const selectedHour = currentTime.getHours();
-    if (selectedHour < openHour) {
+    if (selectedHour < openHour) 
+    {
       currentTime.setHours(openHour, 0, 0); // Set to opening hour if user selects before open time
     } else if (selectedHour >= closeHour) {
       currentTime.setHours(closeHour - 1, 0, 0); // Set to one hour before closing if user selects after close time
@@ -226,7 +227,8 @@ const Booking = () => {
     }
   
     // Ensure the selected time is no later than 1 hour before closing
-    if (currentTime > latestBookingTime) {
+    if (currentTime > latestBookingTime) 
+    {
       Alert.alert(
         'Time Selection Error',
         `You can only book reservations up to 1 hour before closing time. Please select a time earlier than ${formatTime(latestBookingTime)}.`,
@@ -238,11 +240,14 @@ const Booking = () => {
   
     // Round time to the nearest hour (round to next hour if 30 minutes or more)
     const minutes = currentTime.getMinutes();
-    if (minutes >= 30) {
+    if (minutes >= 30)
+    {
       currentTime.setHours(currentTime.getHours() + 1, 0, 0); // Round up to the next hour
-    } else {
-      currentTime.setMinutes(0, 0, 0); // Round down to the current hour
-    }
+    } 
+    else { currentTime.setMinutes(0, 0, 0); }
+
+    console.log("ct",currentTime);
+    
   
     setTime(currentTime);
   
@@ -260,7 +265,11 @@ const Booking = () => {
 
   // Calculate the time range to display
   const getTimeRange = () => {
+    console.log(time);
+    
     const formattedStartTime = formatTime(time);
+    console.log(formattedStartTime);
+
     const formattedEndTime = formatTime(checkoutTime);
     return `${formattedStartTime} - ${formattedEndTime}`;
   };
@@ -331,18 +340,23 @@ const Booking = () => {
     const updatedBookingData = await updateResponse.json();
     console.log('Booking confirmed:', updatedBookingData); 
 
-    // const updateSlotsResponse = await fetch(`${ServerURL}/api/restaurants/remove_slot/${restaurant._id}`, {
-    //   method: 'PUT',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
+    const formattedDate = date.toISOString().split("T")[0]; // "2025-02-12"
+    const formattedTime = time.toISOString().split("T")[1].split(":")[0] + ":" + time.toISOString().split("T")[1].split(":")[1]; // "10:00"
+    
+    console.log(formattedDate, " ", formattedTime, " ", selectedSlot, "" , restaurant?._id);
+    
+    const updateSlotsResponse = await fetch(`${ServerURL}/api/restaurants/remove_slot/${restaurant?._id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
 
-    //   body: JSON.stringify({
-    //     date: date,
-    //     time: time,
-    //     tableId: selectedSlot
-    //   }),
-    // });
+      body: JSON.stringify({
+        date: formattedDate,
+        time: formattedTime,
+        tableId: selectedSlot
+      }),
+    });
 
     // Close the summary modal after booking is confirmed
     setShowSummaryModal(false);
@@ -548,7 +562,7 @@ const Booking = () => {
       {time && date && checkoutTime && (
         <>
           <Text className="mb-3 font-semibold text-[#14213d]">
-            Available Tables for {date.toLocaleDateString()}, {getTimeRange()}
+            Available Tables for {date.toLocaleDateString()}, { getTimeRange() }
           </Text>
           {availableTables.length > 0 ? (
             <Picker
