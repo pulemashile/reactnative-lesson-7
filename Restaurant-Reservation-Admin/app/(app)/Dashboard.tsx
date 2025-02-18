@@ -8,7 +8,7 @@ import { useBooking } from '@/context/BookingContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-const screenWidth = Dimensions.get('window').width;
+// const screenWidth = Dimensions.get('window').width;
 
 const messages = [
   { id: 1, name: 'Mapula mashile', position: 'Owner & Chef', image: require('../../assets/images/red.jpg'), message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce euismod.', additionalInfo: 'More info about Mapula: She is the owner and chef with over 10 years of experience.' },
@@ -19,8 +19,9 @@ const messages = [
 
 const AdminDashboard = () => {
   const { bookings, loading, error, fetchBookings } = useBooking();
-  const { width } = useWindowDimensions();
   const [activeMessageId, setActiveMessageId] = useState(null);
+
+  const { width } = useWindowDimensions();
 
   useEffect(() => {    
       fetchBookings();      
@@ -41,35 +42,41 @@ const AdminDashboard = () => {
   };
 
   const pieData = [
-    { name: 'Dine-in', population: 40, color: '#56021F', legendFontColor: '#FFF', legendFontSize: 14 },
-    { name: 'Desserts', population: 25, color: '#7D1C4A', legendFontColor: '#FFF', legendFontSize: 14 },
-    { name: 'Dinner', population: 20, color: '#D17D98', legendFontColor: '#FFF', legendFontSize: 14 },
-    { name: 'Lunch', population: 10, color: '#D91656', legendFontColor: '#FFF', legendFontSize: 14 },
-    { name: 'breakfast', population: 5, color: '#F4CCE9F', legendFontColor: '#FFF', legendFontSize: 14 },
+    { name: 'Dine-in', population: 40, color: '#56021F', legendFontColor: '#56021F', legendFontSize: 14 },
+    { name: 'Desserts', population: 25, color: '#7D1C4A', legendFontColor: '#7D1C4A', legendFontSize: 14 },
+    { name: 'Dinner', population: 20, color: '#D17D98', legendFontColor: '#D17D98', legendFontSize: 14 },
+    { name: 'Lunch', population: 10, color: '#D91656', legendFontColor: '#D91656', legendFontSize: 14 },
+    { name: 'breakfast', population: 5, color: '#F4CCE9', legendFontColor: '#F4CCE9', legendFontSize: 14 },
     
   ];
 
-  console.log("bookings: ", bookings);
-  
+  console.log("bookings: ", bookings);  
+  // {console.log(width)  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {/* Top Bar with Icons */}
       <View style={styles.topBar}>
         <Pressable style={styles.iconContainer}>
-          {/* Add your icons here */}
+          <Ionicons name="reload" size={24} color="black" />
+          {/* <Text> 🌘 </Text> */}
+          {/* <Text> 🌔 </Text> */}
         </Pressable>
+
         <Pressable style={styles.iconContainer}>
-          {/* Add your icons here */}
+          <Ionicons name="notifications" size={24} color="black" />
+          {/* <Text> 🔔 </Text> */}
         </Pressable>
+
         <Pressable style={styles.iconContainer}>
-          {/* Add your icons here */}
+          <Ionicons name="settings" size={24} color="black" />
+          {/* <Text> 🔄 </Text> */}
         </Pressable>
         <Pressable style={styles.iconContainer}>
           <Image source={messages[0].image} style={styles.imageIcon} />
         </Pressable>
       </View>
-
+      
       <ScrollView contentContainerStyle={styles.container} style={{ flex: 1 }}>
         {/* Sales Report with Line Chart */}
         <View style={styles.card}>
@@ -94,11 +101,11 @@ const AdminDashboard = () => {
                 }
               ]
             }}
-            width={width - 40} // from react-native
+            width={width - 48} 
             height={220}
             yAxisLabel="$"
             yAxisSuffix="k"
-            yAxisInterval={1} // optional, defaults to 1
+            yAxisInterval={1} 
             chartConfig={{
               backgroundColor: "#e26a00",
               backgroundGradientFrom: "black",
@@ -117,14 +124,19 @@ const AdminDashboard = () => {
             }}
             bezier
             style={{
-              marginVertical: 8,
-              borderRadius: 16
+              marginVertical: 2,
+              borderRadius: 8,             
             }}
           />
         </View>
 
         <View style={styles.hBar}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <View style={styles.revenueDetails}>
+              <Text style={styles.revenueLabel}>Total Revenue:</Text>
+              <Text style={styles.revenueAmount}>$5,320.00</Text>
+            </View>
+
             <Pressable style={styles.iconSummery}>
               <Text style={styles.poppinsRegular}>5</Text>
               <Text style={styles.poppinsRegular}>Available</Text>
@@ -181,10 +193,12 @@ const AdminDashboard = () => {
             <View key={message.id} style={styles.messageContainer}>
               <View style={styles.messageTextContainer}>
                 <Image source={message.image} style={styles.imageIcon} />
-                <View style={styles.messageTextContainer}>
+
+                <View style={{}}>
                   <Text style={styles.messageName}>{message.name}</Text>
                   <Text style={styles.messagePosition}>{message.position}</Text>
                 </View>
+
                 <Pressable onPress={() => handleAccordionToggle(message.id)}>
                   <Ionicons name="chatbubble-outline" size={24} color="black" />
                 </Pressable>
@@ -202,9 +216,10 @@ const AdminDashboard = () => {
                   <View style={styles.dropdownCard}>
                     <Text>{message.additionalInfo}</Text>
                   </View>
+
                   <Pressable
                     onPress={() => {
-                      alert("try manage user");
+                      router.push("/(app)/bookingManager/manage")
                     }}>
                     <Text style={styles.manageUser}>Manage User</Text>
                   </Pressable>
@@ -213,28 +228,29 @@ const AdminDashboard = () => {
             </View>
           ))}
         </View>
+        
          {/* Customer Demographics (Pie Chart) */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Customer Demographics</Text>
-        <PieChart
-          data={pieData}
-          width={screenWidth - 40}
-          height={220}
-          chartConfig={{
-            backgroundColor: '#ffffff',
-            backgroundGradientFrom: '#ffffff',
-            backgroundGradientTo: '#ffffff',
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          accessor="population"
-          backgroundColor="transparent"
-          paddingLeft="15"
-        />
-      </View>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Customer Demographics</Text>
+          <PieChart
+            data={pieData}
+            width={width - 40}
+            height={220}
+            chartConfig={{
+              backgroundColor: '#ffffff',
+              backgroundGradientFrom: '#ffffff',
+              backgroundGradientTo: '#ffffff',
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+            }}
+            accessor="population"
+            backgroundColor="transparent"
+            paddingLeft="15"
+          />
+        </View>
       </ScrollView>
 
      
@@ -244,17 +260,24 @@ const AdminDashboard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 8,
     flexGrow: 1,
     justifyContent: 'flex-start',
   },
   topBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+    justifyContent:`flex-end`,
+    margin: 8,
+    gap: 2
   },
   iconContainer: {
-    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 4,
+    // borderColor: "grey",
+    // borderWidth: 1,
+    width: 48,
+    height: 48
   },
   imageIcon: {
     width: 35,
@@ -262,10 +285,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   card: {
-    padding: 20,
+    padding: 16,
     borderRadius: 12,
     backgroundColor: '#fff',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   cardTitle: {
     fontSize: 18,
@@ -276,6 +299,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+  },
+  revenueDetails: {
+    justifyContent: 'space-around',
+    marginRight: 8,
+  },
+  revenueLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  revenueAmount: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   iconSummery: {
     backgroundColor: '#f7f7f7',

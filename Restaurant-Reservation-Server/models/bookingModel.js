@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
+  // userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   guestName: String,
   email: String,
   phone: String,
@@ -15,8 +16,16 @@ const bookingSchema = new mongoose.Schema({
   specialRequest: String,
   totalPrice: { type: Number, required: true },
   
-  status: { type: String, default: 'Pending' },
+  status: { 
+    type: String, 
+    enum: ['prending', 'approved', 'canceled', 'overdue'],
+    default: 'Pending' 
+  },
   paymentId: String, // PayPal Payment ID
+  notification_status: {
+    adminSeen: { type: Boolean, default: false },
+    guestNotified: { type: Boolean, default: false },
+  },
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

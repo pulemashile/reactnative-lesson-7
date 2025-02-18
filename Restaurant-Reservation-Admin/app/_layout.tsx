@@ -50,6 +50,7 @@ export default function RootLayout() {
 
           <Stack.Screen name="(app)" />
           <Stack.Screen name="(app)/Dashboard" />
+          <Stack.Screen name="(app)/bookingManager/manage" />
           <Stack.Screen name="(app)/Calender" />
           <Stack.Screen name="(app)/Contacts" />
           <Stack.Screen name="(app)/Mail" />
