@@ -100,7 +100,7 @@ const UserProfileScreen = () => {
           getUpcomingReservations().map((res) => (
             <View key={res._id} className="bg-white p-4 rounded-lg shadow-md mb-3">
               <Text className="text-lg font-bold">Restaurant: {res.restaurantName}</Text>
-              <Text className="text-gray-600">Date: {new Date(res.date).toLocaleDateString()}</Text>
+              <Text className="text-gray-600">Date: {new Date(res.date).toLocaleDateString()} : {new Date(res.time).toLocaleDateString()}</Text>
               <Text className="text-gray-600">Status: {res.status}</Text>
             </View>
           ))

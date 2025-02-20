@@ -72,10 +72,8 @@ const AdminDashboard = () => {
             status="error"
             badgeStyle={styles.badge}
             invisible={false}
-          >
-            <Ionicons name="notifications" size={24} color="black" />
-          </Badge>
-          
+          />             
+          <Ionicons name="notifications" size={24} color="black" />          
           {/* <Text> 🔔 </Text> */}
         </Pressable>
 
@@ -298,10 +296,11 @@ const styles = StyleSheet.create({
   },
   badge: {
     position: 'absolute',
-    top: -3,
-    right: -3,
+    top: -8,
+    right: -18,
     borderRadius: 50,
     backgroundColor: 'red',
+    zIndex: 9
   },
   imageIcon: {
     width: 35,
