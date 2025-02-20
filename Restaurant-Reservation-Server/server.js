@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cron = require("node-cron");
+const axios = require('axios');
 
 const authRoutes = require('./routes/authRoutes');
 const protect = require('./middleware/auth');
@@ -34,6 +36,17 @@ app.get('/api/profile', protect, (req, res) => {
 
 // restaurant API routes
 app.use("/api/restaurants", restaurantRoutes);
+
+cron.schedule('0 0 * * *', async () => {
+    try 
+    {
+      console.log('Running cron job: Refreshing slots...');
+      // Make a POST request to the refresh_slots endpoint
+      await axios.post('https://reactnative-lesson-7.onrender.com/api/restaurants/refresh_slots');
+      console.log('Slots refreshed successfully.');
+    } 
+    catch (error) { console.error('Error refreshing slots:', error); }
+});
 
 // Payment API routes
 app.use('/api', bookingRoutes);

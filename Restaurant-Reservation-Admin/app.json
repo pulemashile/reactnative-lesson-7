@@ -8,13 +8,12 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
-    "runtimeVersion": "1.0.1",  
+    "runtimeVersion": "1.0.1",
     "android": {
-      "runtimeVersion": "1.0.1", 
+      "runtimeVersion": "1.0.1",
       "package": "com.matlakalakabelo1.RestaurantReservationAdminApp",
       "versionCode": 5
     },
-        
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -36,7 +35,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow Restaurant Reservation Admin App to use your location."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
@@ -44,7 +44,7 @@
     "extra": {
       "router": {
         "origin": false
-      }     
+      }
     }
   }
 }

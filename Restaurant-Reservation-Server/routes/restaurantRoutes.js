@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 const { 
     createDefaultRestaurant,    
@@ -90,6 +91,9 @@ const updateAvailableSlots = async () => {
         console.error("❌ Error updating slots:", error);
     }
 };
+
+
+  
   
 router.post("/refresh_slots", async (req, res) => {
     try 
@@ -104,6 +108,8 @@ router.post("/refresh_slots", async (req, res) => {
         res.status(500).json({ message: "Error updating slots" }); 
     }
 });
+
+
 
 router.get("/", getAllRestaurants); // Fetch all restaurants
 router.get("/:id", getRestaurantById); // Fetch a single restaurant by ID

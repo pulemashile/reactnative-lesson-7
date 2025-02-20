@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View, Image, Pressable, StyleSheet, Dimensions, useWindowDimensions } from 'react-native';
 import { BarChart, LineChart, PieChart } from 'react-native-chart-kit';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Badge } from 'react-native-elements';
 
 import { useBooking } from '@/context/BookingContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,15 +11,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 // const screenWidth = Dimensions.get('window').width;
 
-const messages = [
-  { id: 1, name: 'Mapula mashile', position: 'Owner & Chef', image: require('../../assets/images/red.jpg'), message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce euismod.', additionalInfo: 'More info about Mapula: She is the owner and chef with over 10 years of experience.' },
-  { id: 2, name: 'Jane Smith', position: 'Manager', image: require('../../assets/images/girl56.jpg'), message: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', additionalInfo: 'More info about Jane: She is the manager who has been with the company for 5 years.' },
-  { id: 3, name: 'Emily Clark', position: 'Waitress', image: require('../../assets/images/granny.jpg'), message: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.', additionalInfo: 'More info about Emily: She is an experienced waitress who loves interacting with customers.' },
-  { id: 4, name: 'Alex Johnson', position: 'Host', image: require('../../assets/images/man.jpg'), message: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.', additionalInfo: 'More info about Alex: He is the host who ensures all guests are welcomed with a smile.' },
-];
+// const messages = [
+//   { id: 1, name: 'Mapula mashile', position: 'Owner & Chef', image: require('../../assets/images/red.jpg'), message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce euismod.', additionalInfo: 'More info about Mapula: She is the owner and chef with over 10 years of experience.' },
+//   { id: 2, name: 'Jane Smith', position: 'Manager', image: require('../../assets/images/girl56.jpg'), message: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', additionalInfo: 'More info about Jane: She is the manager who has been with the company for 5 years.' },
+//   { id: 3, name: 'Emily Clark', position: 'Waitress', image: require('../../assets/images/granny.jpg'), message: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.', additionalInfo: 'More info about Emily: She is an experienced waitress who loves interacting with customers.' },
+//   { id: 4, name: 'Alex Johnson', position: 'Host', image: require('../../assets/images/man.jpg'), message: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.', additionalInfo: 'More info about Alex: He is the host who ensures all guests are welcomed with a smile.' },
+// ];
 
 const AdminDashboard = () => {
-  const { bookings, loading, error, fetchBookings } = useBooking();
+  const { bookings, loading, error, fetchBookings, filteredBookings } = useBooking();
   const [activeMessageId, setActiveMessageId] = useState(null);
 
   const { width } = useWindowDimensions();
@@ -57,14 +58,24 @@ const AdminDashboard = () => {
     <SafeAreaView style={{ flex: 1 }}>
       {/* Top Bar with Icons */}
       <View style={styles.topBar}>
-        <Pressable style={styles.iconContainer}>
+        <Pressable style={styles.iconContainer}
+          onPress={() => fetchBookings()}
+        >
           <Ionicons name="reload" size={24} color="black" />
           {/* <Text> 🌘 </Text> */}
           {/* <Text> 🌔 </Text> */}
         </Pressable>
 
         <Pressable style={styles.iconContainer}>
-          <Ionicons name="notifications" size={24} color="black" />
+          <Badge
+            value={filteredBookings.today.length}
+            status="error"
+            badgeStyle={styles.badge}
+            invisible={true}
+          >
+            <Ionicons name="notifications" size={24} color="black" />
+          </Badge>
+          
           {/* <Text> 🔔 </Text> */}
         </Pressable>
 
@@ -72,8 +83,9 @@ const AdminDashboard = () => {
           <Ionicons name="settings" size={24} color="black" />
           {/* <Text> 🔄 </Text> */}
         </Pressable>
+
         <Pressable style={styles.iconContainer}>
-          <Image source={messages[0].image} style={styles.imageIcon} />
+          <Image source={ "Restaurant-Reservation-Admin/assets/images/red.jpg"} style={styles.imageIcon} />
         </Pressable>
       </View>
       
@@ -134,7 +146,7 @@ const AdminDashboard = () => {
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={styles.revenueDetails}>
               <Text style={styles.revenueLabel}>Total Revenue:</Text>
-              <Text style={styles.revenueAmount}>$5,320.00</Text>
+              <Text style={styles.revenueAmount}> * *** ***.**</Text>
             </View>
 
             <Pressable style={styles.iconSummery}>
@@ -189,17 +201,17 @@ const AdminDashboard = () => {
         <View style={styles.messageContainer}>
           <Text style={styles.poppinsSemiBold}>Notifications</Text>
 
-          {messages.slice(1).map((message) => (
-            <View key={message.id} style={styles.messageContainer}>
+          {bookings.slice(1).map((booking) => (
+            <View key={booking._id} style={styles.messageContainer}>
               <View style={styles.messageTextContainer}>
-                <Image source={message.image} style={styles.imageIcon} />
+                <Image source={"Restaurant-Reservation-Admin/assets/images/joy.jpeg"} style={styles.imageIcon} />
 
                 <View style={{}}>
-                  <Text style={styles.messageName}>{message.name}</Text>
-                  <Text style={styles.messagePosition}>{message.position}</Text>
+                  <Text style={styles.messageName}>{booking.guestName}</Text>
+                  <Text style={styles.messagePosition}>{booking.status}</Text>
                 </View>
 
-                <Pressable onPress={() => handleAccordionToggle(message.id)}>
+                <Pressable onPress={() => handleAccordionToggle(booking._id)}>
                   <Ionicons name="chatbubble-outline" size={24} color="black" />
                 </Pressable>
                 <Pressable onPress={() => alert('Calling...')}>
@@ -208,13 +220,13 @@ const AdminDashboard = () => {
               </View>
 
               {/* Accordion: Show message if it's the active message */}
-              {activeMessageId === message.id && (
+              {activeMessageId === booking._id && (
                 <>
                   <View style={{ marginTop: 3 }}>
-                    <Text>{message.message}</Text>
+                    <Text>{booking.time}</Text>
                   </View>
                   <View style={styles.dropdownCard}>
-                    <Text>{message.additionalInfo}</Text>
+                    <Text>{booking.mealType}</Text>
                   </View>
 
                   <Pressable
@@ -227,6 +239,11 @@ const AdminDashboard = () => {
               )}
             </View>
           ))}
+          
+          <Pressable>
+            <Text>More</Text>
+          </Pressable>      
+
         </View>
         
          {/* Customer Demographics (Pie Chart) */}
@@ -252,8 +269,7 @@ const AdminDashboard = () => {
           />
         </View>
       </ScrollView>
-
-     
+           
     </SafeAreaView>
   );
 };
@@ -271,6 +287,7 @@ const styles = StyleSheet.create({
     gap: 2
   },
   iconContainer: {
+    position: "relative",
     justifyContent: "center",
     alignItems: "center",
     padding: 4,
@@ -278,6 +295,13 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     width: 48,
     height: 48
+  },
+  badge: {
+    position: 'absolute',
+    top: -3,
+    right: -3,
+    borderRadius: 50,
+    backgroundColor: 'red',
   },
   imageIcon: {
     width: 35,
@@ -331,6 +355,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingBottom: 4,
+    borderBottomColor: 'grey',
+    borderBottomWidth: 1,
   },
   messageName: {
     fontWeight: '600',
