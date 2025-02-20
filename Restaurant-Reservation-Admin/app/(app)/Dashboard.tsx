@@ -62,8 +62,7 @@ const AdminDashboard = () => {
           onPress={() => fetchBookings()}
         >
           <Ionicons name="reload" size={24} color="black" />
-          {/* <Text> 🌘 </Text> */}
-          {/* <Text> 🌔 </Text> */}
+          <Text> 🔄 </Text>
         </Pressable>
 
         <Pressable style={styles.iconContainer}>
@@ -74,16 +73,17 @@ const AdminDashboard = () => {
             invisible={false}
           />             
           <Ionicons name="notifications" size={24} color="black" />          
-          {/* <Text> 🔔 </Text> */}
+          <Text> 🔔 </Text>
         </Pressable>
 
         <Pressable style={styles.iconContainer}>
           <Ionicons name="settings" size={24} color="black" />
-          {/* <Text> 🔄 </Text> */}
+          <Text> 🌘 </Text>
+          {/* <Text> 🌔 </Text> */}          
         </Pressable>
 
         <Pressable style={styles.iconContainer}>
-          <Image source={ "Restaurant-Reservation-Admin/assets/images/red.jpg"} style={styles.imageIcon} />
+          <Image source={ "../../assets/images/red.jpg"} style={styles.imageIcon} />
         </Pressable>
       </View>
       
@@ -207,12 +207,18 @@ const AdminDashboard = () => {
                 <View style={{}}>
                   <Text style={styles.messageName}>{booking.guestName}</Text>
                   <Text style={styles.messagePosition}>{booking.status}</Text>
+                  <Text style={styles.messagePosition}>
+                    { new Date(booking.date).toLocaleDateString() }
+                  </Text>
                 </View>
 
                 <Pressable onPress={() => handleAccordionToggle(booking._id)}>
+                  {/* <Text>👁🗨</Text>                   */}
+                  <Text>🗨</Text>                  
                   <Ionicons name="chatbubble-outline" size={24} color="black" />
                 </Pressable>
                 <Pressable onPress={() => alert('Calling...')}>
+                  <Text>📞</Text>                  
                   <Ionicons name="call-outline" size={24} color="black" />
                 </Pressable>
               </View>

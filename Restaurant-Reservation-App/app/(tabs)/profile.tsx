@@ -82,15 +82,15 @@ const UserProfileScreen = () => {
       {/* Current Reservation Section */}
       <View className="mt-6">
         <Text className="text-lg font-semibold mb-3">Current Reservation</Text>
-        {getCurrentReservation() ? (
-          <View className="bg-white p-4 rounded-lg shadow-md mb-3">
-            <Text className="text-lg font-bold">Restaurant: {getCurrentReservation().restaurantName}</Text>
-            <Text className="text-gray-600">Date: {new Date(getCurrentReservation().date).toLocaleDateString()}</Text>
-            <Text className="text-gray-600">Status: {getCurrentReservation().status}</Text>
-          </View>
-        ) : (
-          <Text>No upcoming reservations.</Text>
-        )}
+        {
+          getCurrentReservation() ? (
+            <View className="bg-white p-4 rounded-lg shadow-md mb-3">
+              <Text className="text-lg font-bold">Restaurant: {getCurrentReservation().restaurantName}</Text>
+              <Text className="text-gray-600">Date: {new Date(getCurrentReservation().date).toLocaleDateString()}</Text>
+              <Text className="text-gray-600">Status: {getCurrentReservation().status}</Text>
+            </View>
+          ) : ( <Text>No upcoming reservations.</Text> )
+        }
       </View>
 
       {/* Upcoming Reservations Section */}
@@ -100,7 +100,7 @@ const UserProfileScreen = () => {
           getUpcomingReservations().map((res) => (
             <View key={res._id} className="bg-white p-4 rounded-lg shadow-md mb-3">
               <Text className="text-lg font-bold">Restaurant: {res.restaurantName}</Text>
-              <Text className="text-gray-600">Date: {new Date(res.date).toLocaleDateString()} : {new Date(res.time).toLocaleDateString()}</Text>
+              <Text className="text-gray-600">Date: {new Date(res.date).toLocaleDateString()}</Text>
               <Text className="text-gray-600">Status: {res.status}</Text>
             </View>
           ))

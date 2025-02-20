@@ -80,45 +80,47 @@ const AdminDashboard = () => {
 
       {/* Messages Section with Accordion Behavior */}
       <View className="bg-white rounded-lg shadow-md p-4 mt-5">
-  <Text className="text-lg font-semibold text-gray-600 mb-4" style={styles.poppinsSemiBold}>Notifications</Text>
-  {messages.map((message) => (
-    <View key={message.id} className="border-b border-gray-300 py-4">
-      <View className="flex-row items-center justify-between">
-        <Image source={message.image} alt='1' className="w-12 h-12 rounded-full mr-4 bg-red-600" style={styles.imageIcon} />
-        <View className="flex-1">
-          <Text className="font-semibold text-gray-800" style={styles.poppinsRegular}>{message.name}</Text>
-          <Text className="text-sm text-gray-600" style={styles.poppinsRegular}>{message.position}</Text>
-        </View>
-        <Pressable
-          className="ml-4"
-          onPress={() => handleAccordionToggle(message.id)}
-        >
-          <Ionicons name="chatbubble-outline" size={24} color="black" />
-        </Pressable>
-        <Pressable
-          className="ml-4"
-          onPress={() => alert('Calling...')}
-        >
-          <Ionicons name="call-outline" size={24} color="black" />
-        </Pressable>
+        <Text className="text-lg font-semibold text-gray-600 mb-4" 
+          style={styles.poppinsSemiBold}>Notifications
+        </Text>
+        {messages.map((message) => (
+          <View key={message.id} className="border-b border-gray-300 py-4">
+            <View className="flex-row items-center justify-between">
+              <Image source={message.image} alt='1' className="w-12 h-12 rounded-full mr-4 bg-red-600" style={styles.imageIcon} />
+              <View className="flex-1">
+                <Text className="font-semibold text-gray-800" style={styles.poppinsRegular}>{message.name}</Text>
+                <Text className="text-sm text-gray-600" style={styles.poppinsRegular}>{message.position}</Text>
+              </View>
+              <Pressable
+                className="ml-4"
+                onPress={() => handleAccordionToggle(message.id)}
+              >
+                <Ionicons name="chatbubble-outline" size={24} color="black" />
+              </Pressable>
+              <Pressable
+                className="ml-4"
+                onPress={() => alert('Calling...')}
+              >
+                <Ionicons name="call-outline" size={24} color="black" />
+              </Pressable>
+            </View>
+
+            {/* Accordion: Show message if it's the active message */}
+            {activeMessageId === message.id && (
+              <>
+                <View className="mt-3 px-4">
+                  <Text className="text-gray-800" style={styles.poppinsRegular}>{message.message}</Text>
+                </View>
+
+                {/* This is the "dropdown" card with more info */}
+                <View className="bg-gray-200 p-3 mt-3 rounded-lg">
+                  <Text className="text-gray-600" style={styles.poppinsRegular}>{message.additionalInfo}</Text>
+                </View>
+              </>
+            )}
+          </View>
+        ))}
       </View>
-
-      {/* Accordion: Show message if it's the active message */}
-      {activeMessageId === message.id && (
-        <>
-          <View className="mt-3 px-4">
-            <Text className="text-gray-800" style={styles.poppinsRegular}>{message.message}</Text>
-          </View>
-
-          {/* This is the "dropdown" card with more info */}
-          <View className="bg-gray-200 p-3 mt-3 rounded-lg">
-            <Text className="text-gray-600" style={styles.poppinsRegular}>{message.additionalInfo}</Text>
-          </View>
-        </>
-      )}
-    </View>
-  ))}
-</View>
 
 
     </ScrollView>
