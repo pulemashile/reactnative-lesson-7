@@ -71,7 +71,7 @@ const AdminDashboard = () => {
             value={filteredBookings.today.length}
             status="error"
             badgeStyle={styles.badge}
-            invisible={true}
+            invisible={false}
           >
             <Ionicons name="notifications" size={24} color="black" />
           </Badge>
