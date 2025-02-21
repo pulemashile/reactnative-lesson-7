@@ -60,8 +60,8 @@ const BookingManager = () => {
       <View style={styles.buttonContainer}>
         {item.isCurrent && item.status === 'Paid' && (
           <>
-            <Button title="Approve (Check-In)" onPress={() => approveBooking(item.id)} />
             <Button title="Confirm Booking" onPress={() => confirmBooking(item.id)} />
+            <Button title="Approve (Check-In)" onPress={() => approveBooking(item.id)} />            
           </>
         )}
         {item.isCurrent && item.status === 'Paid' && (
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  bookingContainer: {
+  bookingContainer: {    
     backgroundColor: '#fff',
     padding: 15,
     marginBottom: 15,
@@ -142,9 +142,10 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     marginTop: 10,
+    gap: 4
   },
 });
 
