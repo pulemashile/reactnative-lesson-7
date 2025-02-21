@@ -73,6 +73,12 @@ const AdminDashboard = () => {
 
         {/* Search Icon */}
         <Pressable style={styles.iconContainer}>
+          {/* Badge */}
+          <Badge
+            value={bookings.length}
+            status="error"
+            containerStyle={styles.badge}
+          />
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
             <Path
               d="M5.14286 14C4.41735 12.8082 4 11.4118 4 9.91886C4 5.54539 7.58172 2 12 2C16.4183 2 20 5.54539 20 9.91886C20 11.4118 19.5827 12.8082 18.8571 14"
@@ -99,7 +105,7 @@ const AdminDashboard = () => {
         </Pressable>
 
         {/* Bulb Icon */}
-        <Pressable style={styles.iconContainer}>
+        <Pressable style={styles.iconContainer}>           
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
             <Path
               d="M14 14L16.5 16.5"
@@ -368,15 +374,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 4,
-    // borderColor: "grey",
-    // borderWidth: 1,
     width: 48,
-    height: 48
+    height: 48,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 5,
+    // elevation: 3,
   },
   badge: {
     position: 'absolute',
-    top: -8,
-    right: -18,
+    top: -4,
+    right: 0,
     borderRadius: 50,
     backgroundColor: 'red',
     zIndex: 9
