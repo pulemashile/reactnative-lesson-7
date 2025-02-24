@@ -8,7 +8,8 @@ import { useFonts } from "expo-font";
 import { BookingProvider } from "@/context/BookingContext";
 
 
-export default function RootLayout() {
+export default function RootLayout() 
+{
   const [loaded, error] = useFonts({
     poppinsRegular: require("@/assets/fonts/Poppins/Poppins-Regular.ttf"),
     poppinsMedium: require("@/assets/fonts/Poppins/Poppins-Medium.ttf"),
@@ -19,7 +20,6 @@ export default function RootLayout() {
     poppinsExtraLight: require("@/assets/fonts/Poppins/Poppins-ExtraLight.ttf"),
     poppinsitalic: require("@/assets/fonts/Poppins/Poppins-Italic.ttf"),
     poppinsBoldItalic: require("@/assets/fonts/Poppins/Poppins-BoldItalic.ttf"),
-
   })
 
   useEffect(() => {

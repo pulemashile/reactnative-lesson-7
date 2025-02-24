@@ -116,3 +116,23 @@ exports.getAllBookings = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// Get bookings for a specific date range (today, upcoming, custom)
+exports.getBookingsByDate = async (req, res) => {
+  try {
+    const { from } = req.query; // Get "from" date from query params
+    console.log("From: ",from);
+    
+
+    // Default: Fetch bookings from today onwards
+    let startDate = from ? new Date(from) : new Date();
+    startDate.setHours(0, 0, 0, 0); // Start of the day
+
+    // Fetch all bookings from startDate onwards
+    const bookings = await Booking.find({ date: { $gte: startDate } }).sort({ date: 1 }); // Sort by date (oldest first)
+
+    res.json({ bookings });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

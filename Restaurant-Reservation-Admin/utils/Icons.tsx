@@ -78,6 +78,10 @@ type IconProps = {
         return <Icon name="magnifying-glass-location" size={30} color="black" />
         break;
 
+      case "user":
+        return <Icon name="user" size={size} color={color} />
+        break;
+
       default:
           return <Icon name="pageline" size={30} color="white" />
           break;

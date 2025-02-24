@@ -8,7 +8,8 @@ const {
     updateRestaurant,
     deleteRestaurant,
     removeSlot,
-    addSlot, 
+    addSlot,
+    getAvailableSlots, 
 } = require("../controllers/restaurantController");
 const Restaurant = require("../models/restaurantModel");
 
@@ -107,6 +108,8 @@ router.post("/refresh_slots", async (req, res) => {
 
 router.get("/", getAllRestaurants); // Fetch all restaurants
 router.get("/:id", getRestaurantById); // Fetch a single restaurant by ID
+router.get("/:id/available_slots", getAvailableSlots); // Fetch a single restaurant by ID
+
 router.post("/", createRestaurant); // Add a new restaurant
 router.put("/:id", updateRestaurant); // Update a restaurant
 router.delete("/:id", deleteRestaurant); // Delete a restaurant

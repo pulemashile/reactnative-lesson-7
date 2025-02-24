@@ -87,7 +87,7 @@ export default function Onboarding() {
           className="bg-black py-3 mx-6 rounded-lg"
         >
           <Text className="text-white text-center text-lg font-semibold">
-            Get Started
+            <Icons name="user" color="black"/>        Get Started
           </Text>
         </TouchableOpacity>
       ) : null}
